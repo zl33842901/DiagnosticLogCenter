@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using xLiAd.DiagnosticLogCenter.Abstract;
+using xLiAd.DiagnosticLogCenter.Agent.Helper;
 
 namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
 {
@@ -11,7 +13,18 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
         [DiagnosticName("xLiAd.DapperEx.CommandBefore")]
         public void BeforeExecuteCommand([Property(Name = "SqlString")] string sqlCommand, [Property(Name = "Params")] object para)
         {
-            
+            if (GuidHolder.Holder.Value == Guid.Empty)
+                return;
+            LogEntity log = new LogEntity()
+            {
+                CommandText = sqlCommand,
+                StackTrace = sqlCommand,
+                Parameters = para.FormatDynamicString(),
+                LogType = LogTypeEnum.DapperExSqlBefore,
+                HappenTime = DateTime.Now,
+                GroupGuid = GuidHolder.Holder.Value.ToString()
+            };
+            Helper.PostHelper.ProcessLog(log);
         }
     }
 }

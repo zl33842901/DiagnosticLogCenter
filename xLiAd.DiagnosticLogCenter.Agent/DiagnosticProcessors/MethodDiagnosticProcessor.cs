@@ -12,7 +12,18 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
         [DiagnosticName("xLiAd.DiagnosticLogCenter.Log")]
         public void Log([Property(Name = "LogType")] LogTypeEnum logType, [Property(Name = "ClassName")] string className, [Property(Name = "MethodName")] string methodName, [Property(Name = "LogContent")] string logContent)
         {
-
+            if (GuidHolder.Holder.Value == Guid.Empty)
+                return;
+            LogEntity log = new LogEntity()
+            {
+                LogType = logType,
+                ClassName = className,
+                MethodName = methodName,
+                StackTrace = logContent,
+                GroupGuid = GuidHolder.Holder.Value.ToString(),
+                HappenTime = DateTime.Now
+            };
+            Helper.PostHelper.ProcessLog(log);
         }
     }
 }

@@ -11,6 +11,16 @@ namespace xLiAd.DiagnosticLogCenter.Abstract
 
         SqlBefore = 11,
         SqlAfter = 12,
-        SqlException = 13
+        SqlException = 13,
+
+        RequestBegin = 21,
+        RequestEndSuccess = 22,
+        RequestEndException = 23,
+
+        HttpClientRequest = 31,
+        HttpClientResponse = 32,
+        HttpClientException = 33,
+
+        DapperExSqlBefore = 41
     }
 }

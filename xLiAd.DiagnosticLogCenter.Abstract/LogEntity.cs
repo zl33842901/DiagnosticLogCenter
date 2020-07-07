@@ -8,9 +8,6 @@ namespace xLiAd.DiagnosticLogCenter.Abstract
     {
         public string EnvironmentName { get; set; }
         public string ClientName { get; set; }
-        public LogTypeEnum LogType { get; set; }
-        public string ClassName { get; set; }
-        public string MethodName { get; set; }
         /// <summary>
         /// 远程时间
         /// </summary>
@@ -18,11 +15,17 @@ namespace xLiAd.DiagnosticLogCenter.Abstract
         public string Message { get; set; }
         public string StackTrace { get; set; }
         public LogLeveEnum Level { get; set; }
-        /// <summary>
-        /// 接口是否成功
-        /// </summary>
-        public bool Success { get; set; }
         public string GroupGuid { get; set; }
+
+        //下面是新的
+
+        public LogTypeEnum LogType { get; set; }
+        public string ClassName { get; set; }
+        public string MethodName { get; set; }
+
+        public string Ip { get; set; }
+
+        public int StatuCode { get; set; }
 
         #region SQL专用
         public string DataSource { get; set; }

@@ -9,3 +9,6 @@
 /xLiAd.DiagnosticLogCenter.Abstract/obj
 /xLiAd.DiagnosticLogCenter.Agent/bin/Debug/netstandard2.0
 /xLiAd.DiagnosticLogCenter.Agent/obj
+/.vs/xLiAd.DiagnosticLogCenter/DesignTimeBuild
+/xLiAd.DiagnosticLogCenter.CollectServer/bin/Debug/netcoreapp3.1
+/xLiAd.DiagnosticLogCenter.CollectServer/obj

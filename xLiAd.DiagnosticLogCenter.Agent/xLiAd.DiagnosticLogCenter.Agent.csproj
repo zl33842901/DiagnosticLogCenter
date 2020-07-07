@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -6,6 +6,12 @@
 
   <ItemGroup>
     <PackageReference Include="AspectCore.Extensions.Reflection" Version="2.1.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.10.0" />
+    <PackageReference Include="Grpc.Core" Version="2.24.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.24.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.0.0" />
@@ -13,6 +19,8 @@
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="2.0.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.7.0" />
     <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="4.6.0" />
+    <PackageReference Include="xLiAd.ExtMethods" Version="1.1.9.5" />
+    <Protobuf Link="Protos\diaglog.proto" GrpcServices="Client" Include="..\xLiAd.DiagnosticLogCenter.CollectServer\Protos\diaglog.proto" />
   </ItemGroup>
 
   <ItemGroup>

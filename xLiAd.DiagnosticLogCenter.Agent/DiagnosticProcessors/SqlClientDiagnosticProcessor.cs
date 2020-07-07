@@ -14,6 +14,8 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
         [DiagnosticName("System.Data.SqlClient.WriteCommandBefore")]
         public void BeforeExecuteCommand([Property(Name = "Command")] SqlCommand sqlCommand)
         {
+            if (GuidHolder.Holder.Value == Guid.Empty)
+                return;
             var datasource = sqlCommand.Connection.DataSource;
             var database = sqlCommand.Connection.Database;
             var commandText = sqlCommand.CommandText;
@@ -23,9 +25,13 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
                 DataSource = datasource,
                 Database = database,
                 CommandText = commandText,
-                Parameters = para.ConvertToString()
+                StackTrace = commandText,
+                Parameters = para.ConvertToString(),
+                LogType = LogTypeEnum.SqlBefore,
+                HappenTime = DateTime.Now,
+                GroupGuid = GuidHolder.Holder.Value.ToString()
             };
-
+            Helper.PostHelper.ProcessLog(log);
         }
 
         [DiagnosticName("System.Data.SqlClient.WriteCommandAfter")]
@@ -37,7 +43,16 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
         [DiagnosticName("System.Data.SqlClient.WriteCommandError")]
         public void ErrorExecuteCommand([Property(Name = "Exception")] Exception ex)
         {
-            
+            if (GuidHolder.Holder.Value == Guid.Empty)
+                return;
+            LogEntity log = new LogEntity()
+            {
+                Message = ex.Message,
+                StackTrace = ex.StackTrace,
+                HappenTime = DateTime.Now,
+                GroupGuid = GuidHolder.Holder.Value.ToString()
+            };
+            Helper.PostHelper.ProcessLog(log);
         }
     }
 }
