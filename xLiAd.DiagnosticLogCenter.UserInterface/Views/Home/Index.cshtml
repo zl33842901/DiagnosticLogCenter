@@ -1,0 +1,126 @@
+﻿
+<el-row style="padding:3px;margin:3px;">
+    <el-breadcrumb separator="/">
+        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item>日志管理</el-breadcrumb-item>
+    </el-breadcrumb>
+</el-row>
+
+<el-row style="width: 100%;margin: 5px 0 5px 0;background-color:#ddd;padding:4px 0 4px 0;" :gutter="10">
+    <el-col :span="2"><el-button type="primary" v-on:click="PrevDay">前一天</el-button></el-col>
+    <el-col :span="5">
+        <el-date-picker type="date"
+                        format="yyyy-MM-dd"
+                        value-format="yyyy-MM-dd"
+                        placeholder="创建开始时间"
+                        v-model="Query.Date"
+                        style="width: 100%;"
+                        v-on:change="QueryClick"
+                        :picker-options="pickerOptionsMaxToday"></el-date-picker>
+    </el-col>
+    <el-col :span="2"><el-button type="primary" v-on:click="NextDay" :disabled="Query.Date == Today">后一天</el-button></el-col>
+
+    <el-col :span="5"><el-button type="primary" v-on:click="DownViewer">下载日志查看器</el-button></el-col>
+</el-row>
+
+
+<el-table :data="tableData" style="width: 100%" class="spHeight">
+
+    <el-table-column label="所属系统" width="200">
+        <template slot-scope="scope">
+            <span style="margin-left: 1px">{{ scope.row.ClientName }}</span>
+        </template>
+    </el-table-column>
+
+    <el-table-column label="所在环境" width="200">
+        <template slot-scope="scope">
+            <span style="margin-left: 1px">{{ scope.row.EnvironmentName }}</span>
+        </template>
+    </el-table-column>
+
+    <el-table-column label="所属日期" width="260">
+        <template slot-scope="scope">
+            <span style="margin-left: 1px">{{ scope.row.HappenTimeString }}</span>
+        </template>
+    </el-table-column>
+
+    <el-table-column label="是否存在" width="260">
+        <template slot-scope="scope">
+            <span style="margin-left: 1px">{{ scope.row.Exist }}</span>
+        </template>
+    </el-table-column>
+
+
+    <el-table-column label="操作">
+        <template slot-scope="scope">
+            <span style="margin-left: 1px">
+                <a :href="scope.row.LookUrl" target="_blank" v-if="scope.row.Exist">查看</a>
+                <a :href="scope.row.DownUrl" target="_blank" v-if="scope.row.Exist">下载</a>
+            </span>
+        </template>
+    </el-table-column>
+
+</el-table>
+
+
+@section Scripts{
+    <script type="text/javascript">
+        var app = new Vue({
+            el: '#app',
+            data: {
+                activeIndex: "1",
+                fullscreenLoading: true, //加载loading
+                menus: [],
+                Query: {
+                    Date: '@(DateTime.Now.ToString("yyyy-MM-dd"))'
+                },
+                Today: '@(DateTime.Now.ToString("yyyy-MM-dd"))',
+                tableData: [],
+                pickerOptionsMaxToday: {
+                    disabledDate : function(time) {
+                        return time.getTime() > Date.now();
+                    }
+                }
+            },
+            methods: {
+                GetData: function() {
+                    var that = this;
+                    $.post("/Home/GetIndexData",
+                        this.Query,
+                        function(data) {
+                            that.tableData = data;
+                        });
+                },
+                QueryClick: function () {
+                    if (this.Query.Date != '')
+                        this.GetData();
+                },
+                PrevDay: function () {
+                    var that = this;
+                    $.post("/Home/GetPrevDay/" + this.Query.Date, {}, function (data) {
+                        that.Query.Date = data.Date;
+                        that.GetData();
+                    });
+                },
+                NextDay: function () {
+                    var that = this;
+                    $.post("/Home/GetNextDay/" + this.Query.Date, {}, function (data) {
+                        that.Query.Date = data.Date;
+                        that.GetData();
+                    });
+                },
+                open: function (url) { location = url; },
+                DownViewer: function () {
+                    window.open("/CigExceptionLogViewer.rar");
+                }
+            },
+            mounted: function() {
+                this.menus = Menus;
+                this.GetData();
+                this.fullscreenLoading = false;
+            }
+        });
+
+
+    </script>
+}

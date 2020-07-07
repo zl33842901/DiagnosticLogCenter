@@ -1,0 +1,68 @@
+﻿body {
+    margin: 0px;
+}
+
+/* 所有 */
+#app {
+    width: 100%;
+    height: 100%;
+}
+
+/* 头 */
+.header {
+    color: rgba(255, 255, 255, 1);
+    line-height: 60px;
+    background-color: #34393e;
+    text-align: center;
+}
+
+    .header div {
+        display: inline;
+    }
+
+.title {
+}
+
+.author {
+    float: right;
+}
+
+.author-img {
+    width: 20px;
+    height: 20px;
+}
+
+.author-github {
+    cursor: pointer;
+}
+
+/* 内容区 */
+.container {
+    min-height: 600px;
+    width: 100%;
+    height: 100%
+}
+
+/* 左边内容区 */
+.left {
+    color: #4b595f;
+    width: 200px;
+}
+
+    .left .totalUl {
+        height: 93%;
+    }
+
+/* 右边内容区 */
+.right {
+    min-width: 200px;
+    background-color:#eeeeee;
+    overflow-y:auto;
+}
+
+tbody {
+    font-size: 15px;
+    color: #4b595f;
+}
+
+
