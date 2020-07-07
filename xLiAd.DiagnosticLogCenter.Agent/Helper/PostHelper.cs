@@ -24,6 +24,8 @@ namespace xLiAd.DiagnosticLogCenter.Agent.Helper
             {
                 dto.Items.Add(log);
             }
+            if (!dto.Items.AnyX())
+                return;
             try
             {
                 var channel = new Channel(address, ChannelCredentials.Insecure);
@@ -52,21 +54,21 @@ namespace xLiAd.DiagnosticLogCenter.Agent.Helper
             logEntity.EnvironmentName = evn;
             LogDtoItem logDtoItem = new LogDtoItem()
             {
-                ClassName = logEntity.ClassName,
-                CommandText = logEntity.CommandText,
-                ClientName = logEntity.ClientName,
-                Database = logEntity.Database,
-                DataSource = logEntity.DataSource,
-                EnvironmentName = logEntity.EnvironmentName,
+                ClassName = logEntity.ClassName ?? string.Empty,
+                CommandText = logEntity.CommandText ?? string.Empty,
+                ClientName = logEntity.ClientName ?? string.Empty,
+                Database = logEntity.Database ?? string.Empty,
+                DataSource = logEntity.DataSource ?? string.Empty,
+                EnvironmentName = logEntity.EnvironmentName ?? string.Empty,
                 GroupGuid = logEntity.GroupGuid,
                 HappenTime = System.ExtMethods.ToTimeStamp(logEntity.HappenTime, true),
-                Ip = logEntity.Ip,
+                Ip = logEntity.Ip ?? string.Empty,
                 Level = (int)logEntity.Level,
                 LogType = (int)logEntity.LogType,
-                Message = logEntity.Message,
-                MethodName = logEntity.MethodName,
-                Parameters = logEntity.Parameters,
-                StackTrace = logEntity.StackTrace,
+                Message = logEntity.Message ?? string.Empty,
+                MethodName = logEntity.MethodName ?? string.Empty,
+                Parameters = logEntity.Parameters ?? string.Empty,
+                StackTrace = logEntity.StackTrace ?? string.Empty,
                 StatuCode = logEntity.StatuCode
             };
             LogContainer.Enqueue(logDtoItem);

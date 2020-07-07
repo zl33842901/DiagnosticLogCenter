@@ -11,8 +11,8 @@ namespace xLiAd.DiagnosticLogCenter.CollectServer
     public class DiaglogService : Diagloger.DiaglogerBase
     {
         private readonly ILogger<DiaglogService> _logger;
-        private readonly LogBatchService logBatchService;
-        public DiaglogService(ILogger<DiaglogService> logger, LogBatchService logBatchService)
+        private readonly ILogBatchService logBatchService;
+        public DiaglogService(ILogger<DiaglogService> logger, ILogBatchService logBatchService)
         {
             _logger = logger;
             this.logBatchService = logBatchService;

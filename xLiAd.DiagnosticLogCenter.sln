@@ -11,6 +11,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xLiAd.DiagnosticLogCenter.A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xLiAd.DiagnosticLogCenter.CollectServer", "xLiAd.DiagnosticLogCenter.CollectServer\xLiAd.DiagnosticLogCenter.CollectServer.csproj", "{DCBC3146-2E4F-4C1D-9F4B-6462628B5D8D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sample", "Sample", "{92141009-739B-4CD1-B5F4-2ACF5A761E5E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xLiAd.DiagnosticLogCenter.SampleAspNetCore", "xLiAd.DiagnosticLogCenter.SampleAspNetCore\xLiAd.DiagnosticLogCenter.SampleAspNetCore.csproj", "{3523A740-0607-4FB4-AF79-BEF3FC592193}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,9 +37,16 @@ Global
 		{DCBC3146-2E4F-4C1D-9F4B-6462628B5D8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCBC3146-2E4F-4C1D-9F4B-6462628B5D8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCBC3146-2E4F-4C1D-9F4B-6462628B5D8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3523A740-0607-4FB4-AF79-BEF3FC592193}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3523A740-0607-4FB4-AF79-BEF3FC592193}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3523A740-0607-4FB4-AF79-BEF3FC592193}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3523A740-0607-4FB4-AF79-BEF3FC592193}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3523A740-0607-4FB4-AF79-BEF3FC592193} = {92141009-739B-4CD1-B5F4-2ACF5A761E5E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {17077534-6DF0-4A39-B0D6-8E429BC7CC4E}

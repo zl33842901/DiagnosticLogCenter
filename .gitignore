@@ -12,3 +12,5 @@
 /.vs/xLiAd.DiagnosticLogCenter/DesignTimeBuild
 /xLiAd.DiagnosticLogCenter.CollectServer/bin/Debug/netcoreapp3.1
 /xLiAd.DiagnosticLogCenter.CollectServer/obj
+/xLiAd.DiagnosticLogCenter.SampleAspNetCore/bin/Debug/netcoreapp3.1
+/xLiAd.DiagnosticLogCenter.SampleAspNetCore/obj

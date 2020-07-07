@@ -24,6 +24,7 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
             GuidHolder.Holder.Value = guid;
             var log = ToLog(httpContext);
             log.LogType = LogTypeEnum.RequestBegin;
+            Helper.PostHelper.ProcessLog(log);
         }
 
         private LogEntity ToLog(HttpContext httpContext)
