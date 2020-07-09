@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xLiAd.DiagnosticLogCenter.S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xLiAd.DiagnosticLogCenter.UserInterface", "xLiAd.DiagnosticLogCenter.UserInterface\xLiAd.DiagnosticLogCenter.UserInterface.csproj", "{09EC46A7-912E-490D-BDC5-6507173C3A0C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xLiAd.DiagnosticLogCenter.SampleFulluseAspNetCore", "xLiAd.DiagnosticLogCenter.SampleFulluseAspNetCore\xLiAd.DiagnosticLogCenter.SampleFulluseAspNetCore.csproj", "{51D7C0E2-E4D3-408D-9F0A-9C34F0AA3654}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,12 +49,17 @@ Global
 		{09EC46A7-912E-490D-BDC5-6507173C3A0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09EC46A7-912E-490D-BDC5-6507173C3A0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09EC46A7-912E-490D-BDC5-6507173C3A0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51D7C0E2-E4D3-408D-9F0A-9C34F0AA3654}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51D7C0E2-E4D3-408D-9F0A-9C34F0AA3654}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51D7C0E2-E4D3-408D-9F0A-9C34F0AA3654}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51D7C0E2-E4D3-408D-9F0A-9C34F0AA3654}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{3523A740-0607-4FB4-AF79-BEF3FC592193} = {92141009-739B-4CD1-B5F4-2ACF5A761E5E}
+		{51D7C0E2-E4D3-408D-9F0A-9C34F0AA3654} = {92141009-739B-4CD1-B5F4-2ACF5A761E5E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {17077534-6DF0-4A39-B0D6-8E429BC7CC4E}

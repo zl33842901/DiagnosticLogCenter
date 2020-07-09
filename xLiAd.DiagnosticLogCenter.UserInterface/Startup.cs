@@ -36,7 +36,10 @@ namespace xLiAd.DiagnosticLogCenter.UserInterface
             services.AddScoped<ILogReadService, LogReadService>();
             services.AddHttpContextAccessor();
             services.AddHttpClient();
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddJsonOptions(x => {
+                x.JsonSerializerOptions.Encoder = System.Text.Encodings.Web.JavaScriptEncoder.Create(System.Text.Unicode.UnicodeRanges.All);
+                x.JsonSerializerOptions.PropertyNamingPolicy = null;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

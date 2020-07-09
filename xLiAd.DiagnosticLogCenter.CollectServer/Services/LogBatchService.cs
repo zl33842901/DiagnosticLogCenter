@@ -43,7 +43,7 @@ namespace xLiAd.DiagnosticLogCenter.CollectServer.Services
             bool hasStart = start != null;
             var end = item.FirstOrDefault(x => (LogTypeEnum)x.LogType == LogTypeEnum.RequestEndException || (LogTypeEnum)x.LogType == LogTypeEnum.RequestEndSuccess);
             bool hasEnd = end != null;
-            var addtions = item.Where(x => x.LogType > 20 && x.LogType <= 30).Select(x => new LogAdditionItem()
+            var addtions = item.Where(x => x.LogType != 21).Select(x => new LogAdditionItem()
             {
                 HappenTime = System.ExtMethods.ToTime(x.HappenTime.ToString()),
                 Content = x.StackTrace,
