@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MongoDB.Bson.Serialization.IdGenerators;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -53,10 +54,12 @@ namespace xLiAd.DiagnosticLogCenter.UserInterface.Models
     {
         public string Content { get; set; }
         public DateTime HappenTime { get; set; }
+        public string HappenTimeString => HappenTime.ToString("yyyy-MM-dd HH:mm:ss");
         #region 新字段
         public string Message { get; set; }
 
         public LogTypeEnum LogType { get; set; }
+        public string LogTypeString => LogType.GetDescription();
         public string ClassName { get; set; }
         public string MethodName { get; set; }
 

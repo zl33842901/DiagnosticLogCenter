@@ -29,6 +29,7 @@ namespace xLiAd.DiagnosticLogCenter.SampleFulluseAspNetCore.Services
         public string RequestWeb(string url)
         {
             var client = httpClientFactory.CreateClient();
+            DiagnosticLogCenter.AdditionLog("手写日志。");
             var task = client.GetAsync(url);
             task.ConfigureAwait(false);
             task.Wait();

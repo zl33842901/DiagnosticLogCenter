@@ -106,11 +106,33 @@
 
 @section Dialogs{ 
     <el-dialog title="查看日志追踪" :visible.sync="showLookAddtion" width="821px">
-        <el-col>
+        <el-row>
+            <el-row>
+                <el-col :span="9">
+                    动作：{{CurrentAddtion[CurrentAddtionIndex].LogTypeString}}
+                </el-col>
+                <el-col :span="15">
+                    <span>时间：{{CurrentAddtion[CurrentAddtionIndex].HappenTimeString}}</span>
+                </el-col>
+            </el-row>
+            <el-row v-if="CurrentAddtion[CurrentAddtionIndex].LogType==21">
+                路径：{{CurrentAddtion[CurrentAddtionIndex].Message}}
+            </el-row>
+            <el-row v-if="CurrentAddtion[CurrentAddtionIndex].LogType==21">
+                请求：{{CurrentAddtion[CurrentAddtionIndex].StackTrace}}
+            </el-row>
+
+
+            <el-row v-if="CurrentAddtion[CurrentAddtionIndex].LogType<=10">
+                类名：{{CurrentAddtion[CurrentAddtionIndex].ClassName}}
+            </el-row>
+            <el-row v-if="CurrentAddtion[CurrentAddtionIndex].LogType<=10">
+                方法：{{CurrentAddtion[CurrentAddtionIndex].MethodName}}
+            </el-row>
             <p>
-                <el-input type="textarea" :readonly="true" style="width:780px;" rows="12" :value="CurrentAddtion[CurrentAddtionIndex]"></el-input>
+                <el-input type="textarea" :readonly="true" style="width:780px;" rows="12" :value="CurrentAddtion[CurrentAddtionIndex].Content"></el-input>
             </p>
-        </el-col>
+        </el-row>
         <el-pagination style="width:750px;float:left;" background
                        v-on:current-change="CurrentAddtionIndexChange" :current-page="CurrentAddtionIndex+1"
                        layout="total, prev, pager, next, jumper"
@@ -151,7 +173,7 @@
                     total: 0
                 },
                 showLookAddtion: false,//是否显示追加信息
-                CurrentAddtion: [],
+                CurrentAddtion: [{}],
                 CurrentAddtionIndex:0,
             },
             methods: {
@@ -184,9 +206,9 @@
                 open: function (url) { location = url; },
                 LookAddtion: function (model) {
                     this.CurrentAddtion = [];
-                    this.CurrentAddtion.push(formatJson(model.StackTrace));
+                    this.CurrentAddtion.push($.extend({}, model, { LogTypeString: "请求开始", LogType: 21}));
                     for (var i = 0; i < model.Addtions.length; i++) {
-                        this.CurrentAddtion.push(formatJson(model.Addtions[i].Content));
+                        this.CurrentAddtion.push(model.Addtions[i]);
                     }
                     this.CurrentAddtionIndex = 0;
                     this.showLookAddtion = true;

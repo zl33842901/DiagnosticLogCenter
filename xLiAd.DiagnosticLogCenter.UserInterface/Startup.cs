@@ -51,7 +51,7 @@ namespace xLiAd.DiagnosticLogCenter.UserInterface
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseDeveloperExceptionPage();
             }
             app.UseStaticFiles();
 
