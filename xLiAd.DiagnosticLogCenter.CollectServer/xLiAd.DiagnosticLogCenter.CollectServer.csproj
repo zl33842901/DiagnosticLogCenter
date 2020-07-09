@@ -19,4 +19,10 @@
     <ProjectReference Include="..\xLiAd.DiagnosticLogCenter.Abstract\xLiAd.DiagnosticLogCenter.Abstract.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Dockerfile">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
