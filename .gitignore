@@ -17,3 +17,10 @@
 /.vs/xLiAd.DiagnosticLogCenter/config
 /xLiAd.DiagnosticLogCenter.UserInterface/bin/Debug/netcoreapp3.1
 /xLiAd.DiagnosticLogCenter.UserInterface/obj
+/xLiAd.DiagnosticLogCenter.Abstract/bin/Release/netstandard2.0
+/xLiAd.DiagnosticLogCenter.Abstract/nupkgs
+/xLiAd.DiagnosticLogCenter.Abstract/nupkgsSymb
+/xLiAd.DiagnosticLogCenter.Agent/bin/Release/netstandard2.0
+/xLiAd.DiagnosticLogCenter.Agent/nupkgs
+/xLiAd.DiagnosticLogCenter.Agent/nupkgsSymb
+/xLiAd.DiagnosticLogCenter.CollectServer/bin
