@@ -129,9 +129,14 @@
             <el-row v-if="CurrentAddtion[CurrentAddtionIndex].LogType<=10">
                 方法：{{CurrentAddtion[CurrentAddtionIndex].MethodName}}
             </el-row>
-            <p>
-                <el-input type="textarea" :readonly="true" style="width:780px;" rows="12" :value="CurrentAddtion[CurrentAddtionIndex].Content"></el-input>
-            </p>
+            <el-row>
+                <el-col :span="2">
+                    <span v-if="CurrentAddtion[CurrentAddtionIndex].LogType==1">参数：</span>
+                </el-col>
+                <el-col :span="22">
+                    <el-input type="textarea" :readonly="true" style="width:780px;" rows="12" :value="CurrentAddtion[CurrentAddtionIndex].Content"></el-input>
+                </el-col>
+            </el-row>
         </el-row>
         <el-pagination style="width:750px;float:left;" background
                        v-on:current-change="CurrentAddtionIndexChange" :current-page="CurrentAddtionIndex+1"
