@@ -106,8 +106,8 @@
 
 @section Dialogs{ 
     <el-dialog title="查看日志追踪" :visible.sync="showLookAddtion" width="821px">
-        <el-row>
-            <el-row>
+        <el-row style="min-height:239px;">
+            <el-row class="bottomspace">
                 <el-col :span="9">
                     动作：{{CurrentAddtion[CurrentAddtionIndex].LogTypeString}}
                 </el-col>
@@ -115,26 +115,54 @@
                     <span>时间：{{CurrentAddtion[CurrentAddtionIndex].HappenTimeString}}</span>
                 </el-col>
             </el-row>
-            <el-row v-if="CurrentAddtion[CurrentAddtionIndex].LogType==21">
-                路径：{{CurrentAddtion[CurrentAddtionIndex].Message}}
+            <el-row class="bottomspace" v-if="CurrentAddtion[CurrentAddtionIndex].LogType==21 || CurrentAddtion[CurrentAddtionIndex].LogType==31 || CurrentAddtion[CurrentAddtionIndex].LogType==33 || CurrentAddtion[CurrentAddtionIndex].LogType==23">
+                <span v-if="CurrentAddtion[CurrentAddtionIndex].LogType==21">路径</span>
+                <span v-if="CurrentAddtion[CurrentAddtionIndex].LogType==31">地址</span>
+                <span v-if="CurrentAddtion[CurrentAddtionIndex].LogType==33 || CurrentAddtion[CurrentAddtionIndex].LogType==23">消息</span>
+                ：{{CurrentAddtion[CurrentAddtionIndex].LogType==31?(CurrentAddtion[CurrentAddtionIndex].MethodName + " "):""}}{{CurrentAddtion[CurrentAddtionIndex].Message}}
             </el-row>
-            <el-row v-if="CurrentAddtion[CurrentAddtionIndex].LogType==21">
+            <el-row class="bottomspace" v-if="CurrentAddtion[CurrentAddtionIndex].LogType==21">
                 请求：{{CurrentAddtion[CurrentAddtionIndex].StackTrace}}
             </el-row>
 
 
-            <el-row v-if="CurrentAddtion[CurrentAddtionIndex].LogType<=10">
-                类名：{{CurrentAddtion[CurrentAddtionIndex].ClassName}}
+            <el-row class="bottomspace" v-if="CurrentAddtion[CurrentAddtionIndex].LogType<=10">
+                <el-col :span="12">
+                    类名：{{CurrentAddtion[CurrentAddtionIndex].ClassName}}
+                </el-col>
+                <el-col :span="12">
+                    方法：{{CurrentAddtion[CurrentAddtionIndex].MethodName}}
+                </el-col>
             </el-row>
-            <el-row v-if="CurrentAddtion[CurrentAddtionIndex].LogType<=10">
-                方法：{{CurrentAddtion[CurrentAddtionIndex].MethodName}}
+            <el-row class="bottomspace" v-if="CurrentAddtion[CurrentAddtionIndex].LogType==11">
+                <el-col :span="12">
+                    数据源：{{CurrentAddtion[CurrentAddtionIndex].DataSource}}
+                </el-col>
+                <el-col :span="12">
+                    数据库：{{CurrentAddtion[CurrentAddtionIndex].Database}}
+                </el-col>
             </el-row>
-            <el-row>
+
+            <el-row class="bottomspace" v-if="CurrentAddtion[CurrentAddtionIndex].LogType==11 || CurrentAddtion[CurrentAddtionIndex].LogType==41">
+                <el-row class="bottomspace">
+                    <el-col :span="2">SQL语句：</el-col>
+                    <el-col :span="22"><el-input type="textarea" :readonly="true" style="width:700px;" rows="2" :value="CurrentAddtion[CurrentAddtionIndex].CommandText"></el-input></el-col>
+                </el-row>
+                <el-row class="bottomspace">
+                    <el-col :span="2">参数：</el-col>
+                    <el-col :span="22"><el-input type="textarea" :readonly="true" style="width:700px;" rows="2" :value="CurrentAddtion[CurrentAddtionIndex].Parameters"></el-input></el-col>
+                </el-row>
+            </el-row>
+
+            <el-row class="bottomspace" v-if="CurrentAddtion[CurrentAddtionIndex].LogType==1 || CurrentAddtion[CurrentAddtionIndex].LogType==4 || CurrentAddtion[CurrentAddtionIndex].LogType==2 || CurrentAddtion[CurrentAddtionIndex].LogType==13 || CurrentAddtion[CurrentAddtionIndex].LogType==23 || CurrentAddtion[CurrentAddtionIndex].LogType==31 || CurrentAddtion[CurrentAddtionIndex].LogType==32 || CurrentAddtion[CurrentAddtionIndex].LogType==33">
                 <el-col :span="2">
                     <span v-if="CurrentAddtion[CurrentAddtionIndex].LogType==1">参数：</span>
+                    <span v-if="CurrentAddtion[CurrentAddtionIndex].LogType==31">参数：</span>
+                    <span v-if="CurrentAddtion[CurrentAddtionIndex].LogType==2">内容：</span>
+                    <span v-if="CurrentAddtion[CurrentAddtionIndex].LogType==4 || CurrentAddtion[CurrentAddtionIndex].LogType==33">跟踪：</span>
                 </el-col>
                 <el-col :span="22">
-                    <el-input type="textarea" :readonly="true" style="width:780px;" rows="12" :value="CurrentAddtion[CurrentAddtionIndex].Content"></el-input>
+                    <el-input type="textarea" :readonly="true" style="width:700px;" rows="6" :value="CurrentAddtion[CurrentAddtionIndex].Content"></el-input>
                 </el-col>
             </el-row>
         </el-row>

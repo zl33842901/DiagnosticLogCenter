@@ -20,7 +20,6 @@
     </el-col>
     <el-col :span="2"><el-button type="primary" v-on:click="NextDay" :disabled="Query.Date == Today">后一天</el-button></el-col>
 
-    <el-col :span="5"><el-button type="primary" v-on:click="DownViewer">下载日志查看器</el-button></el-col>
 </el-row>
 
 
@@ -109,10 +108,7 @@
                         that.GetData();
                     });
                 },
-                open: function (url) { location = url; },
-                DownViewer: function () {
-                    window.open("/CigExceptionLogViewer.rar");
-                }
+                open: function (url) { location = url; }
             },
             mounted: function() {
                 this.menus = Menus;

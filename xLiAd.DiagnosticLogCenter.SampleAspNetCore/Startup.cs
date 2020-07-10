@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -10,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using xLiAd.DiagnosticLogCenter.Agent;
+using xLiAd.DiagnosticLogCenter.SampleAspNetCore.Services;
 
 namespace xLiAd.DiagnosticLogCenter.SampleAspNetCore
 {
@@ -25,7 +28,17 @@ namespace xLiAd.DiagnosticLogCenter.SampleAspNetCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDiagnosticLog(x => x.CollectServerAddress = "172.16.250.149:8812");
+            services.AddDiagnosticLog(x =>
+            {
+                x.CollectServerAddress = "172.16.250.149:8812";
+                x.ClientName = "sample";
+                x.EnvName = "PRD";
+                x.RecordHttpClientBody = false;
+                x.RecordSqlParameters = false;
+            });
+            services.AddScoped<IDbConnection>(x => new SqlConnection("server=127.0.0.1;user id=sa;password=zhanglei;database=zhanglei;"));
+            services.AddScoped<ISampleService, SampleService>();
+            services.AddHttpClient();
             services.AddControllers();
         }
 

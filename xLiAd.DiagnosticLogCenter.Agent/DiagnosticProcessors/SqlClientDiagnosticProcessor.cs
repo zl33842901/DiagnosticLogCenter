@@ -26,7 +26,7 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
                 Database = database,
                 CommandText = commandText,
                 StackTrace = commandText,
-                Parameters = para.ConvertToString(),
+                Parameters = (DiagnosticLogConfig.Config?.RecordSqlParameters ?? false) ? para.ConvertToString() : string.Empty,
                 LogType = LogTypeEnum.SqlBefore,
                 HappenTime = DateTime.Now,
                 GroupGuid = GuidHolder.Holder.Value.ToString()
@@ -49,6 +49,7 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
             {
                 Message = ex.Message,
                 StackTrace = ex.StackTrace,
+                LogType = LogTypeEnum.SqlException,
                 HappenTime = DateTime.Now,
                 GroupGuid = GuidHolder.Holder.Value.ToString()
             };

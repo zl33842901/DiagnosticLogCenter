@@ -19,7 +19,7 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
             {
                 CommandText = sqlCommand,
                 StackTrace = sqlCommand,
-                Parameters = para.FormatDynamicString(),
+                Parameters = (DiagnosticLogConfig.Config?.RecordSqlParameters ?? false) ? para.FormatDynamicString() : string.Empty,
                 LogType = LogTypeEnum.DapperExSqlBefore,
                 HappenTime = DateTime.Now,
                 GroupGuid = GuidHolder.Holder.Value.ToString()

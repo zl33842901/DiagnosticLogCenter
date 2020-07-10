@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using xLiAd.DiagnosticLogCenter.SampleAspNetCore.Services;
 
 namespace xLiAd.DiagnosticLogCenter.SampleAspNetCore.Controllers
 {
@@ -11,29 +12,21 @@ namespace xLiAd.DiagnosticLogCenter.SampleAspNetCore.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
+        private readonly ISampleService sampleService;
         private readonly ILogger<WeatherForecastController> _logger;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, ISampleService sampleService)
         {
             _logger = logger;
+            this.sampleService = sampleService;
         }
 
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        public object Get()
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+            var dbresult = sampleService.QueryDb(2);
+            var httpResult = sampleService.RequestWeb("https://www.baidu.com/");
+            return new { dbresult, httpResult };
         }
     }
 }

@@ -6,6 +6,7 @@ namespace xLiAd.DiagnosticLogCenter.Agent
 {
     public class DiagnosticLogConfig
     {
+        internal static DiagnosticLogConfig Config { get; set; }
         /// <summary>
         /// 总开关
         /// </summary>

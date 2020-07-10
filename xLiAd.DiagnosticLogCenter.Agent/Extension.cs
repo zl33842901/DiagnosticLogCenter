@@ -16,7 +16,7 @@ namespace xLiAd.DiagnosticLogCenter.Agent
             action?.Invoke(config);
             if (!config.Enable)
                 return services;
-
+            DiagnosticLogConfig.Config = config;
             services.AddSingleton<ITracingDiagnosticProcessor, AspNetCoreDiagnosticProcessor>();
             if (config.EnableDapperEx)
                 services.AddSingleton<ITracingDiagnosticProcessor, DapperExDiagnosticProcessor>();
