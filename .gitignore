@@ -26,3 +26,6 @@
 /xLiAd.DiagnosticLogCenter.CollectServer/bin
 /xLiAd.DiagnosticLogCenter.SampleFulluseAspNetCore/bin/Debug/netcoreapp3.1
 /xLiAd.DiagnosticLogCenter.SampleFulluseAspNetCore/obj
+/xLiAd.DiagnosticLogCenter/bin/Release/netstandard2.0
+/xLiAd.DiagnosticLogCenter/nupkgs
+/xLiAd.DiagnosticLogCenter/nupkgsSymb
