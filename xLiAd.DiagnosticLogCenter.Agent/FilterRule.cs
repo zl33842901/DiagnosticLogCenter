@@ -29,7 +29,7 @@ namespace xLiAd.DiagnosticLogCenter.Agent
             {
                 if (path.NullOrEmpty())
                     return true;
-                foreach (var item in AllowPath)
+                foreach (var item in ForbbidenPath)
                 {
                     bool r = Regex.IsMatch(path, item);
                     if (r)
