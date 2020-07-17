@@ -26,6 +26,7 @@ namespace xLiAd.DiagnosticLogCenter.UserInterface
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            MongoDB.Bson.Serialization.BsonSerializer.RegisterSerializer(typeof(DateTime), MongoDB.Bson.Serialization.Serializers.DateTimeSerializer.LocalInstance);
             var conf = Configuration.GetSection("Configs").Get<ConfigEntity>();
             services.AddSingleton(new MongoUrl(conf.ConfigDbUrl));
             services.AddScoped<IClientRepository, ClientRepository>();
