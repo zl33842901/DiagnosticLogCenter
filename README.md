@@ -38,7 +38,7 @@ services.AddDiagnosticLog(x => x.CollectServerAddress = "192.168.1.22:8812");
 
 此时，运行您的项目，即可实现请求日志的记录。 可参考 SampleAspNetCore 项目。
 
-5，UserInterface 项目是用户查看日志的地方。发布，并运行即可。
+5，UserInterface 项目是用户查看日志的地方。发布，并运行，进入界面后添加客户端名称（默认 sample）并添加环境（默认 PRD）即可在首页看到日志。
 
 ### 更多
 1，如果您需要使用高级功能，您可以通过 Nuget 引用 xLiAd.DiagnosticLogCenter 包。
