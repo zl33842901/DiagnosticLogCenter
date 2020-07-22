@@ -30,9 +30,16 @@ namespace xLiAd.DiagnosticLogCenter.Agent.Helper
         {
             try
             {
+                if (parameters == null)
+                    return null;
                 var di = parameters.ToDictionary();
                 if (di == null)
-                    return null;
+                {
+                    if (parameters.GetType().IsValueType)
+                        return parameters.ToString();
+                    else
+                        return null;//实体类暂不记录 只有 QueryBySql 等的时候会用到。
+                }
                 StringBuilder sbP = new StringBuilder();
                 sbP.Append("{ \r\n");
                 List<string> ls = new List<string>();
