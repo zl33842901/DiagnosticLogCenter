@@ -154,9 +154,10 @@
                 </el-row>
             </el-row>
 
-            <el-row class="bottomspace" v-if="CurrentAddtion[CurrentAddtionIndex].LogType==1 || CurrentAddtion[CurrentAddtionIndex].LogType==4 || CurrentAddtion[CurrentAddtionIndex].LogType==2 || CurrentAddtion[CurrentAddtionIndex].LogType==13 || CurrentAddtion[CurrentAddtionIndex].LogType==23 || CurrentAddtion[CurrentAddtionIndex].LogType==31 || CurrentAddtion[CurrentAddtionIndex].LogType==32 || CurrentAddtion[CurrentAddtionIndex].LogType==33">
+            <el-row class="bottomspace" v-if="CurrentAddtion[CurrentAddtionIndex].LogType==1 || CurrentAddtion[CurrentAddtionIndex].LogType==3 || CurrentAddtion[CurrentAddtionIndex].LogType==4 || CurrentAddtion[CurrentAddtionIndex].LogType==2 || CurrentAddtion[CurrentAddtionIndex].LogType==13 || CurrentAddtion[CurrentAddtionIndex].LogType==23 || CurrentAddtion[CurrentAddtionIndex].LogType==31 || CurrentAddtion[CurrentAddtionIndex].LogType==32 || CurrentAddtion[CurrentAddtionIndex].LogType==33">
                 <el-col :span="2">
                     <span v-if="CurrentAddtion[CurrentAddtionIndex].LogType==1">参数：</span>
+                    <span v-if="CurrentAddtion[CurrentAddtionIndex].LogType==3">返回：</span>
                     <span v-if="CurrentAddtion[CurrentAddtionIndex].LogType==31">参数：</span>
                     <span v-if="CurrentAddtion[CurrentAddtionIndex].LogType==2">内容：</span>
                     <span v-if="CurrentAddtion[CurrentAddtionIndex].LogType==4 || CurrentAddtion[CurrentAddtionIndex].LogType==33">跟踪：</span>
