@@ -25,7 +25,20 @@ namespace xLiAd.DiagnosticLogCenter
             }
             else
             {
-                Listener.Write(LogTypeEnum.MethodLeave, className, methodName, Newtonsoft.Json.JsonConvert.SerializeObject(context.ReturnValue));
+                try
+                {
+                    bool isTask = context.ImplementationMethod.ReturnType.GetGenericTypeDefinition() == typeof(Task<>);
+                    object realResult;
+                    if (isTask)
+                        realResult = context.ImplementationMethod.ReturnType.GetProperty("Result", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).GetValue(context.ReturnValue);
+                    else
+                        realResult = context.ReturnValue;
+                    Listener.Write(LogTypeEnum.MethodLeave, className, methodName, Newtonsoft.Json.JsonConvert.SerializeObject(realResult));
+                }
+                catch
+                {
+                    Listener.Write(LogTypeEnum.MethodLeave, className, methodName, "没有获取到方法返回值。");
+                }
             }
             return t;
         }

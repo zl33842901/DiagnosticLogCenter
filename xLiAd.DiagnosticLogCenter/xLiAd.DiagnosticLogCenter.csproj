@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Authors>张磊</Authors>
     <Company>张磊 xLiAd</Company>
     <Description>DiagnosticLogCenter 侵入性很低的请求日系统统；扩展部分。</Description>

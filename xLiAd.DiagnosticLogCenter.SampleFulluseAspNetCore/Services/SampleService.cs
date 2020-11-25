@@ -43,11 +43,29 @@ namespace xLiAd.DiagnosticLogCenter.SampleFulluseAspNetCore.Services
                 return "error";
             }
         }
+
+        public async Task<string> Test()
+        {
+            return "abc";
+        }
+
+        public async Task Test1()
+        {
+
+        }
+
+        public void Test2()
+        {
+
+        }
     }
 
     public interface ISampleService
     {
         int QueryDb(int inputParam);
         string RequestWeb(string url);
+        Task<string> Test();
+        Task Test1();
+        void Test2();
     }
 }
