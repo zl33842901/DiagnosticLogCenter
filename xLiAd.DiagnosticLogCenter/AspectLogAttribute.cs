@@ -27,7 +27,7 @@ namespace xLiAd.DiagnosticLogCenter
             {
                 try
                 {
-                    bool isTask = context.ImplementationMethod.ReturnType.GetGenericTypeDefinition() == typeof(Task<>);
+                    bool isTask = context.ImplementationMethod.ReturnType.IsGenericType && context.ImplementationMethod.ReturnType.GetGenericTypeDefinition() == typeof(Task<>);
                     object realResult;
                     if (isTask)
                         realResult = context.ImplementationMethod.ReturnType.GetProperty("Result", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).GetValue(context.ReturnValue);
