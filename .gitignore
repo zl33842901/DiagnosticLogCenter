@@ -30,3 +30,5 @@
 /xLiAd.DiagnosticLogCenter/nupkgs
 /xLiAd.DiagnosticLogCenter/nupkgsSymb
 /xLiAd.DiagnosticLogCenter.UserInterface/bin/Release/netcoreapp3.1
+/xLiAd.DiagnosticLogCenter.SampleAspNet5/bin
+/xLiAd.DiagnosticLogCenter.SampleAspNet5/obj
