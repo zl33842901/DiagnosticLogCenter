@@ -30,7 +30,7 @@ namespace xLiAd.DiagnosticLogCenter.SampleAspNetCore
         {
             services.AddDiagnosticLog(x =>
             {
-                x.CollectServerAddress = "172.16.250.149:8812";
+                x.CollectServerAddress = "172.16.250.148:8812";
                 x.ClientName = "sample";
                 x.EnvName = "PRD";
                 x.RecordHttpClientBody = false;

@@ -32,7 +32,15 @@ namespace xLiAd.DiagnosticLogCenter.Agent.Helper
                 var grpcClient = new Diagloger.DiaglogerClient(channel);
                 grpcClient.PostLog(dto, new CallOptions(null, DateTime.Now.ToUniversalTime().AddSeconds(timeoutBySeconds)));
             }
-            catch { }
+            catch(Exception ex) 
+            {
+                var color = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("DiagnosticLogCenter 组件调用 Grpc 写入过程时出现错误，报错信息如下：");
+                Console.ForegroundColor = color;
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+            }
         }
 
         public static void Init(string _address, string _clientName, string _envName, int _timeoutBySeconds)
