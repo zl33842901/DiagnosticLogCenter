@@ -146,8 +146,8 @@ namespace xLiAd.DiagnosticLogCenter.UserInterface.Repositories
         public bool Exist(ICliEnvDate cli)
         {
             var repo = GetRepository(cli);
-            var result = repo.Count();
-            return result > 0;
+            var result = repo.Any();
+            return result;
         }
     }
 
