@@ -32,3 +32,7 @@
 /xLiAd.DiagnosticLogCenter.UserInterface/bin/Release/netcoreapp3.1
 /xLiAd.DiagnosticLogCenter.SampleAspNet5/bin
 /xLiAd.DiagnosticLogCenter.SampleAspNet5/obj
+/xLiAd.DiagnosticLogCenter.CollectServerByEs/bin
+/xLiAd.DiagnosticLogCenter.CollectServerByEs/obj
+/xLiAd.DiagnosticLogCenter.UserInterfaceByEs/bin
+/xLiAd.DiagnosticLogCenter.UserInterfaceByEs/obj

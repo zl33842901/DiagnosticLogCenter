@@ -1,0 +1,181 @@
+﻿
+<el-row style="padding:3px;margin:3px;">
+    <el-breadcrumb separator="/">
+        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item>客户端管理</el-breadcrumb-item>
+    </el-breadcrumb>
+</el-row>
+
+<el-row style="width: 100%;margin: 5px 0 5px 0;background-color:#ddd;padding:4px 0 4px 0;" :gutter="10">
+    <el-col :span="5"><el-button type="primary" v-on:click="InitAdd">添加客户端</el-button></el-col>
+</el-row>
+
+
+<el-table :data="tableData" style="width: 100%" class="spHeight">
+
+    <el-table-column label="名称" width="200">
+        <template slot-scope="scope">
+            <span style="margin-left: 1px">{{ scope.row.Name }}</span>
+        </template>
+    </el-table-column>
+
+    <el-table-column label="接收邮箱" width="600">
+        <template slot-scope="scope">
+            <span style="margin-left: 1px">{{ scope.row.Emails }}</span>
+        </template>
+    </el-table-column>
+
+    <el-table-column label="接收手机" width="200">
+        <template slot-scope="scope">
+            <span style="margin-left: 1px">{{ scope.row.Mobiles }}</span>
+        </template>
+    </el-table-column>
+
+    <el-table-column label="管理帐号" width="200">
+        <template slot-scope="scope">
+            <span style="margin-left: 1px">{{ scope.row.DomainAccounts }}</span>
+        </template>
+    </el-table-column>
+
+
+    <el-table-column label="操作">
+        <template slot-scope="scope">
+            <span style="margin-left: 1px">
+                <a v-on:click="InitEdit(scope.row)" style="cursor:pointer;">编辑</a>
+                <a v-on:click="Delete(scope.row.Id)" v-if="false" style="cursor:pointer;">删除</a>
+            </span>
+        </template>
+    </el-table-column>
+
+</el-table>
+
+
+@section Dialogs{
+    <el-dialog title="新增客户端" :visible.sync="showNewClient">
+        <el-form :model="NewClientForm">
+            <el-form-item label="客户端名称" label-width="120px;">
+                <el-input v-model="NewClientForm.Name" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="客户端邮箱" label-width="120px;">
+                <el-input type="textarea"
+                          :rows="2"
+                          placeholder="多个请用英文逗号分隔"
+                          v-model="NewClientForm.Email">
+                </el-input>
+            </el-form-item>
+            <el-form-item label="客户端手机" label-width="120px;">
+                <el-input type="textarea"
+                          :rows="2"
+                          placeholder="多个请用英文逗号分隔"
+                          v-model="NewClientForm.Mobile">
+                </el-input>
+            </el-form-item>
+            <el-form-item label="客户端管理员" label-width="120px;">
+                <el-input type="textarea"
+                          :rows="2"
+                          placeholder="多个请用英文逗号分隔"
+                          v-model="NewClientForm.DomainAccount">
+                </el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button v-on:click="showNewClient = false">取 消</el-button>
+            <el-button type="primary" v-on:click="AddClient">确 定</el-button>
+        </div>
+    </el-dialog>
+
+}
+
+@section Scripts{
+    <script type="text/javascript">
+        var app = new Vue({
+            el: '#app',
+            data: {
+                activeIndex: "ClientsMgrList",
+                fullscreenLoading: true, //加载loading
+                menus: [],
+                Query: {
+
+                },
+                tableData: [],
+                showNewClient: false,
+                NewClientForm: {
+                    Name: '',
+                    Email: '',
+                    Mobile: '',
+                    DomainAccount:'',
+                    Id: 0
+                },
+                EditMode: false
+            },
+            methods: {
+                InitAdd: function () {
+                    this.NewClientForm.Name = '';
+                    this.NewClientForm.Email = '';
+                    this.NewClientForm.Mobile = '';
+                    this.NewClientForm.DomainAccount = '';
+                    this.NewClientForm.Id = 0;
+                    this.showNewClient = true;
+                    this.EditMode = false;
+                },
+                InitEdit: function (m) {
+                    this.NewClientForm.Name = m.Name;
+                    this.NewClientForm.Email = m.Emails == null ? '' : m.Emails.join(',');
+                    this.NewClientForm.Mobile = m.Mobiles == null ? '' : m.Mobiles.join(',');
+                    this.NewClientForm.DomainAccount = m.DomainAccounts == null ? '' : m.DomainAccounts.join(',');
+                    this.NewClientForm.Id = m.Id;
+                    this.showNewClient = true;
+                    this.EditMode = true;
+                },
+                GetData: function () {
+                    var that = this;
+                    $.post("/Client/GetIndexData",
+                        this.Query,
+                        function (data) {
+                            that.tableData = data;
+                        });
+                },
+                open: function (url) { location = url; },
+                AddClient: function () {
+                    var that = this;
+                    if (this.NewClientForm.Name == '') {
+                        this.$alert("名称不能为空！");
+                        return;
+                    }
+                    var url;
+                    if (this.EditMode)
+                        url = "/Client/Edit";
+                    else
+                        url = "/Client/Add";
+                    $.post(url, this.NewClientForm, function (data) {
+                        if (data.Success) {
+                            that.$alert("操作成功");
+                            that.GetData();
+                            that.NewClientForm.Name = '';
+                            that.NewClientForm.Email = '';
+                            that.NewClientForm.Mobile = '';
+                            that.NewClientForm.DomainAccount = '';
+                            that.showNewClient = false;
+                        } else {
+                            that.$alert(data.Message);
+                        }
+                    });
+                },
+                Delete: function (Id) {
+                    var that = this;
+                    $.post("/Client/Delete/" + Id, {}, function (data) {
+                        that.$alert("操作成功！");
+                        that.GetData();
+                    });
+                }
+            },
+            mounted: function () {
+                this.menus = Menus;
+                this.GetData();
+                this.fullscreenLoading = false;
+            }
+        });
+
+
+    </script>
+}

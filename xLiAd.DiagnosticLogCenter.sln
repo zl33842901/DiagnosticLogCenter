@@ -19,7 +19,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xLiAd.DiagnosticLogCenter.U
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xLiAd.DiagnosticLogCenter.SampleFulluseAspNetCore", "xLiAd.DiagnosticLogCenter.SampleFulluseAspNetCore\xLiAd.DiagnosticLogCenter.SampleFulluseAspNetCore.csproj", "{51D7C0E2-E4D3-408D-9F0A-9C34F0AA3654}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xLiAd.DiagnosticLogCenter.SampleAspNet5", "xLiAd.DiagnosticLogCenter.SampleAspNet5\xLiAd.DiagnosticLogCenter.SampleAspNet5.csproj", "{B8B1E736-DA55-49BD-B3DB-20E60C805302}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xLiAd.DiagnosticLogCenter.SampleAspNet5", "xLiAd.DiagnosticLogCenter.SampleAspNet5\xLiAd.DiagnosticLogCenter.SampleAspNet5.csproj", "{B8B1E736-DA55-49BD-B3DB-20E60C805302}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xLiAd.DiagnosticLogCenter.CollectServerByEs", "xLiAd.DiagnosticLogCenter.CollectServerByEs\xLiAd.DiagnosticLogCenter.CollectServerByEs.csproj", "{0A642F13-DEDA-4E2C-8CF3-4AC188CD081D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xLiAd.DiagnosticLogCenter.UserInterfaceByEs", "xLiAd.DiagnosticLogCenter.UserInterfaceByEs\xLiAd.DiagnosticLogCenter.UserInterfaceByEs.csproj", "{40B8759D-66E0-41CC-A8F7-2D3C61ED000D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +63,14 @@ Global
 		{B8B1E736-DA55-49BD-B3DB-20E60C805302}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B8B1E736-DA55-49BD-B3DB-20E60C805302}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B8B1E736-DA55-49BD-B3DB-20E60C805302}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A642F13-DEDA-4E2C-8CF3-4AC188CD081D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A642F13-DEDA-4E2C-8CF3-4AC188CD081D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A642F13-DEDA-4E2C-8CF3-4AC188CD081D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A642F13-DEDA-4E2C-8CF3-4AC188CD081D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40B8759D-66E0-41CC-A8F7-2D3C61ED000D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40B8759D-66E0-41CC-A8F7-2D3C61ED000D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40B8759D-66E0-41CC-A8F7-2D3C61ED000D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40B8759D-66E0-41CC-A8F7-2D3C61ED000D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

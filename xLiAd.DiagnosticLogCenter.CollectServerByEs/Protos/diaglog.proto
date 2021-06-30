@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+option csharp_namespace = "xLiAd.DiagnosticLogCenter";
+
+package diaglog;
+
+// The greeting service definition.
+service Diagloger {
+  // Sends a greeting
+  rpc PostLog (LogDto) returns (LogReply);
+}
+
+// The request message containing the user's name.
+message LogDtoItem {
+  string EnvironmentName = 1;
+  string ClientName = 2;
+  int64 HappenTime = 3;
+  string Message = 4;
+  string StackTrace = 5;
+  int32 Level = 6;
+  string GroupGuid = 7;
+  int32 LogType = 8;
+  string ClassName = 9;
+  string MethodName = 10;
+  string Ip = 11;
+  int32 StatuCode = 12;
+  string DataSource = 13;
+  string Database = 14;
+  string CommandText = 15;
+  string Parameters = 16;
+}
+
+message LogDto{
+  repeated LogDtoItem Items = 1;
+}
+
+// The response message containing the greetings.
+message LogReply {
+  bool success = 1;
+  string message = 2;
+}

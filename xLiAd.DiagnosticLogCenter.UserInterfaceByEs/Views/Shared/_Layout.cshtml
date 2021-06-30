@@ -1,0 +1,92 @@
+﻿@inject xLiAd.DiagnosticLogCenter.UserInterfaceByEs.Models.ConfigEntity conf
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title 生死簿 －－ 异常日志系统</title>
+    <link rel="stylesheet" href="~/css/element-ui/theme-chalk/index.css">
+    <link rel="stylesheet" href="~/css/Common.css" />
+    <link href="~/css/Custom.css" rel="stylesheet" />
+
+    <script src="~/js/vue.js"></script>
+    <script src="~/js/jquery-1.10.2.js"></script>
+    <script src="~/css/element-ui/index.js"></script>
+    <script src="~/js/JsonFormat.js"></script>
+
+
+
+</head>
+<body>
+    <div id="app">
+        <div style="height: 100%;width: 100%;position:fixed;z-index: 9999999;background: #fff;opacity:0.5" v-show="fullscreenLoading">
+            <i class="el-icon-loading" style="position: fixed;top: 50%;left: 50%;font-size: 50px;color: #ccc"></i>
+        </div>
+
+        <el-container class="container" style="height:100%;width: 100%;position:fixed;min-height:100vh;" direction="vertical">
+            <el-header class="header">
+                <div style="width:207px;height:46px;background-image:url(/images/logo.png);display:inline;float:left;margin:5px;"></div>
+                <div class="title">
+                    <span>生死簿请求日志平台</span>
+                </div>
+                <div class="author">
+                    <i class="el-icon-edit author-github" style="margin:0 10px 0 0;">DLC系统 </i>
+                    <i class="el-icon-close" style="margin:0 10px 0 0;"><span style="padding-left:5px;cursor:pointer;">退出</span></i>
+                </div>
+            </el-header>
+
+            <el-container style="height:calc(100% - 60px);">
+                <el-aside class="left" style="background-color:#545c64;">
+                    <el-scrollbar :native="false" style="height:100%">
+                        <el-menu :default-active="activeIndex" class="totalUl" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
+                            <el-menu-item index="1" v-on:click="open('/')"><i class="el-icon-more"></i>首页</el-menu-item>
+                            <el-submenu :index="firstMenu.id" v-for="firstMenu in menus" :key="firstMenu.id">
+                                <template slot="title">
+                                    <i :class="firstMenu.iconClass"></i>{{ firstMenu.name }}
+                                </template>
+                                <el-menu-item-group v-for="secondMenu in firstMenu.children" :key="secondMenu.id">
+                                    <template slot="title">
+                                        {{ secondMenu.name }}
+                                    </template>
+                                    <el-menu-item v-for="thirdMenu in secondMenu.children" :index="thirdMenu.id"
+                                                  :key="thirdMenu.id" v-on:click="open(thirdMenu.url)">
+                                        {{ thirdMenu.name }}
+                                    </el-menu-item>
+                                </el-menu-item-group>
+                            </el-submenu>
+                        </el-menu>
+                    </el-scrollbar>
+                </el-aside>
+
+                <el-main class="right">
+                    <el-scrollbar :native="false" style="height:100%">
+                        @RenderBody()
+                    </el-scrollbar>
+                </el-main>
+
+            </el-container>
+        </el-container>
+
+        @RenderSection("Dialogs", required: false)
+    </div>
+    <script type="text/javascript">
+        var Menus = [
+            {
+                name: "客户端管理",
+                id: "Clients",
+                iconClass: "el-icon-time",
+                children: [
+                    {
+                        name: "客户端管理列表和编辑",
+                        id: "ClientsMgr",
+                        children: [
+                            { name: "客户端管理列表", id: "ClientsMgrList", url: "/Client/Index" }
+                        ]
+                    }
+                ]
+            }
+        ];
+    </script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

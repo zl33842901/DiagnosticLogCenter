@@ -1,0 +1,134 @@
+﻿
+.el-container, .el-header {
+    -webkit-box-sizing: border-box
+}
+
+.el-transfer-panel .el-transfer-panel__header .el-checkbox {
+    display: block;
+    line-height: 40px
+}
+
+    .el-transfer-panel .el-transfer-panel__header .el-checkbox .el-checkbox__label {
+        font-size: 16px;
+        color: #303133;
+        font-weight: 400
+    }
+
+        .el-transfer-panel .el-transfer-panel__header .el-checkbox .el-checkbox__label span {
+            position: absolute;
+            right: 15px;
+            color: #909399;
+            font-size: 12px;
+            font-weight: 400
+        }
+
+.el-transfer-panel .el-transfer-panel__footer {
+    height: 40px;
+    background: #fff;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid #ebeef5;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1
+}
+
+    .el-transfer-panel .el-transfer-panel__footer::after {
+        display: inline-block;
+        content: "";
+        height: 100%;
+        vertical-align: middle
+    }
+
+    .el-transfer-panel .el-transfer-panel__footer .el-checkbox {
+        padding-left: 20px;
+        color: #606266
+    }
+
+.el-transfer-panel .el-transfer-panel__empty {
+    margin: 0;
+    height: 30px;
+    line-height: 30px;
+    padding: 6px 15px 0;
+    color: #909399;
+    text-align: center
+}
+
+.el-transfer-panel .el-checkbox__label {
+    padding-left: 8px
+}
+
+.el-transfer-panel .el-checkbox__inner {
+    height: 14px;
+    width: 14px;
+    border-radius: 3px
+}
+
+    .el-transfer-panel .el-checkbox__inner::after {
+        height: 6px;
+        width: 3px;
+        left: 4px
+    }
+
+.el-container {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    -ms-flex-preferred-size: auto;
+    flex-basis: auto;
+    box-sizing: border-box;
+    min-width: 0
+}
+
+    .el-container.is-vertical {
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column
+    }
+
+.el-header {
+    padding: 0 20px;
+    box-sizing: border-box;
+    -ms-flex-negative: 0;
+    flex-shrink: 0
+}
+
+.el-aside, .el-main {
+    overflow: auto;
+    -webkit-box-sizing: border-box
+}
+
+.el-aside {
+    box-sizing: border-box;
+    -ms-flex-negative: 0;
+    flex-shrink: 0
+}
+
+.el-main {
+    display: block;
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    -ms-flex-preferred-size: auto;
+    flex-basis: auto;
+    box-sizing: border-box;
+    padding: 20px
+}
+
+.el-footer {
+    padding: 0 20px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    -ms-flex-negative: 0;
+    flex-shrink: 0
+}

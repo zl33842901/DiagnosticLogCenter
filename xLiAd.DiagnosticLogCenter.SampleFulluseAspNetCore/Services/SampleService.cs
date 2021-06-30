@@ -56,7 +56,7 @@ namespace xLiAd.DiagnosticLogCenter.SampleFulluseAspNetCore.Services
 
         public void Test2()
         {
-
+            System.Threading.Thread.Sleep(5000);
         }
     }
 
