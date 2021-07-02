@@ -34,6 +34,7 @@ namespace xLiAd.DiagnosticLogCenter.CollectServerByEs.Models
         /// 为上边字段的Content建立的索引，方便前台查询
         /// </summary>
         //[JsonIgnore]
+        [Nest.Wildcard]
         public string AddtionsString { get; set; }
         /// <summary>
         /// 最后一次写入Addtions 时，他的HappenTime 与本实体的CreateTime 的差。单位毫秒

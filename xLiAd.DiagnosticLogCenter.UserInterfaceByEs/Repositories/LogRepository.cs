@@ -33,18 +33,40 @@ namespace xLiAd.DiagnosticLogCenter.UserInterfaceByEs.Repositories
 
         private Func<QueryContainerDescriptor<Log>, QueryContainer> GetQueryContainer(LogLookQuery lookQuery)
         {
-            Func<QueryContainerDescriptor<Log>, QueryContainer> func;
-            if (!lookQuery.Key.NullOrEmpty())
+            Expression<Func<QueryContainerDescriptor<Log>, QueryContainer>> func = null;
+            if (!lookQuery.Key.NullOrEmpty() && !lookQuery.Key.Trim().NullOrEmpty())
             {
-                func = x => x.Match(y => y.Field(z => z.Message).Query(lookQuery.Key)) ||
-                x.Match(y => y.Field(z => z.StackTrace).Query(lookQuery.Key)) ||
-                x.Match(y => y.Field(z => z.Addtions).Query(lookQuery.Key));
+                var realKey = lookQuery.Key.Trim();
+                if (realKey.Contains(' '))
+                {
+                    var keys = lookQuery.Key.Trim().Split(' ');
+                    var i = 0;
+                    foreach (var k in keys)
+                    {
+                        var rk = $"*{k}*";
+                        if (i++ == 0)
+                            func = x => x.Wildcard(y => y.AddtionsString, rk, null, null, null);
+                        else
+                            func = func.And(x => x.Wildcard(y => y.AddtionsString, rk, null, null, null));
+                    }
+                }
+                else
+                {
+                    func = x => x.Wildcard(y => y.AddtionsString, $"*{realKey}*",null, null,null);
+                }
             }
-            else //if(lookQuery.HappenTimeRegion)
+            if(lookQuery.HappenTimeRegion.Length == 2)
             {
-                func = null;
+                var d0 = lookQuery.HappenTimeRegion[0];
+                var d1 = lookQuery.HappenTimeRegion[1];
+                if (d0.Hour > 0 || d0.Minute > 0 || d0.Second > 0 || d1.Hour < 23 || d1.Minute < 59 || d0.Second < 59)
+                {
+                    d0 = new DateTime(lookQuery.HappenTime.Year, lookQuery.HappenTime.Month, lookQuery.HappenTime.Day, d0.Hour, d0.Minute, d0.Second);
+                    d1 = new DateTime(lookQuery.HappenTime.Year, lookQuery.HappenTime.Month, lookQuery.HappenTime.Day, d1.Hour, d1.Minute, d1.Second);
+                    func = func.And(x => x.DateRange(y => y.Field(z => z.HappenTime).LessThan(d1.ToUniversalTime()).GreaterThan(d0.ToUniversalTime())));
+                }
             }
-            return func;
+            return func?.Compile();
         }
 
         //private Expression<Func<Log, bool>> GetExpression(LogLookQuery lookQuery)
