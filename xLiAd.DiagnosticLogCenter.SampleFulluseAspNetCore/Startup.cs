@@ -30,7 +30,7 @@ namespace xLiAd.DiagnosticLogCenter.SampleFulluseAspNetCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDiagnosticLog(x => x.CollectServerAddress = "localhost:5000");
+            services.AddDiagnosticLog(x => x.CollectServerAddress = "172.16.8.77:8822");
             services.AddScoped<IDbConnection>(x => new SqlConnection("server=127.0.0.1;user id=sa;password=zhanglei;database=zhanglei;"));
             services.AddHttpClient();
             services.AddControllers();
