@@ -7,8 +7,8 @@
 </el-row>
 
 <el-row style="width: 100%;margin: 5px 0 5px 0;background-color:#ddd;padding:4px 0 4px 0;" :gutter="10">
-    <el-col :span="4"><el-input placeholder="请输入关键字" v-model="Query.Key"></el-input></el-col>
-    <el-col :span="3">
+    <el-col :span="4"><el-input placeholder="请输入关键字" v-model="Query.Key" clearable></el-input></el-col>
+    <el-col :span="3" v-if="false">
         <el-select v-model="Query.Level" placeholder="请选择日志级别">
             <el-option v-for="item in statusSelect"
                        :key="item.value"
@@ -44,7 +44,10 @@
                         placeholder="选择时间范围">
         </el-time-picker>
     </el-col>
-    <el-col :span="2"></el-col>
+    <el-col :span="4">
+        <el-radio v-model="Query.QueryMode" :label="1">Wildcard</el-radio>
+        <el-radio v-model="Query.QueryMode" :label="2">Match</el-radio>
+    </el-col>
     <el-col :span="2"><el-button type="primary" v-on:click="QueryClick">查询</el-button></el-col>
 </el-row>
 
@@ -199,7 +202,8 @@
                     Level: '',
                     Success: '',
                     MSec:'',
-                    HappenTimeRegion:['2018-09-11 0:00:00','2018-09-11 23:59:59']
+                    HappenTimeRegion: ['2018-09-11 0:00:00', '2018-09-11 23:59:59'],
+                    QueryMode:2,//1 wildcard 模式    2 match 模式
                 },
                 tableData: [],
                 pager: {

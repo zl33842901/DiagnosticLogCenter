@@ -37,29 +37,49 @@ namespace xLiAd.DiagnosticLogCenter.UserInterfaceByEs.Repositories
             if (!lookQuery.Key.NullOrEmpty() && !lookQuery.Key.Trim().NullOrEmpty())
             {
                 var realKey = lookQuery.Key.Trim();
-                if (realKey.Contains(' '))
+                if(lookQuery.QueryMode == 1)
                 {
-                    var keys = lookQuery.Key.Trim().Split(' ');
-                    var i = 0;
-                    foreach (var k in keys)
+                    if (realKey.Contains(' '))
                     {
-                        var rk = $"*{k}*";
-                        if (i++ == 0)
-                            func = x => x.Wildcard(y => y.AddtionsString, rk, null, null, null);
-                        else
-                            func = func.And(x => x.Wildcard(y => y.AddtionsString, rk, null, null, null));
+                        var keys = lookQuery.Key.Trim().Split(' ');
+                        var i = 0;
+                        foreach (var k in keys)
+                        {
+                            var rk = $"{k}";
+                            if (i++ == 0)
+                                func = x => x.Wildcard(y => y.AddtionsString, rk, null, null, null);
+                            else
+                                func = func.And(x => x.Wildcard(y => y.AddtionsString, rk, null, null, null));
+                        }
+                    }
+                    else
+                    {
+                        func = x => x.Wildcard(y => y.AddtionsString, $"{realKey}", null, null, null);
                     }
                 }
                 else
                 {
-                    func = x => x.Wildcard(y => y.AddtionsString, $"*{realKey}*",null, null,null);
+                    //if (realKey.Contains(' '))
+                    //{
+                        var keys = lookQuery.Key.Trim().Split(' ');
+                        var fs = keys.Select(x =>
+                        {
+                            Func<QueryContainerDescriptor<Log>, QueryContainer> f = y => y.Match(z => z.Field(w => w.AddtionsString).Query(x));
+                            return f;
+                        });
+                        func = x => x.Bool(y => y.Must(fs));
+                    //}
+                    //else
+                    //{
+                    //    func = x => x.Match(y => y.Field(z => z.AddtionsString).Query(realKey));
+                    //}
                 }
             }
             if(lookQuery.HappenTimeRegion.Length == 2)
             {
                 var d0 = lookQuery.HappenTimeRegion[0];
                 var d1 = lookQuery.HappenTimeRegion[1];
-                if (d0.Hour > 0 || d0.Minute > 0 || d0.Second > 0 || d1.Hour < 23 || d1.Minute < 59 || d0.Second < 59)
+                if (d0.Hour > 0 || d0.Minute > 0 || d0.Second > 0 || d1.Hour < 23 || d1.Minute < 59 || d1.Second < 59)
                 {
                     d0 = new DateTime(lookQuery.HappenTime.Year, lookQuery.HappenTime.Month, lookQuery.HappenTime.Day, d0.Hour, d0.Minute, d0.Second);
                     d1 = new DateTime(lookQuery.HappenTime.Year, lookQuery.HappenTime.Month, lookQuery.HappenTime.Day, d1.Hour, d1.Minute, d1.Second);

@@ -27,5 +27,10 @@ namespace xLiAd.DiagnosticLogCenter.UserInterfaceByEs.Models
         public string MSec { get; set; }
 
         public DateTime[] HappenTimeRegion { get; set; }
+
+        /// <summary>
+        /// 查询模式  1 wildcard    2 match
+        /// </summary>
+        public int QueryMode { get; set; }
     }
 }
