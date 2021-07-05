@@ -94,7 +94,7 @@ namespace xLiAd.DiagnosticLogCenter.UserInterfaceByEs.Repositories
                 sort = x => x.Ascending(order);
             var result = await client.SearchAsync<T>(x => x.Index(indexName).Query(expression).Sort(sort)
             .From((pageIndex - 1) * pageSize)
-            .Size(pageSize));
+            .Size(pageSize).TrackTotalHits());
             return (result.Documents, result.Total);
         }
 
