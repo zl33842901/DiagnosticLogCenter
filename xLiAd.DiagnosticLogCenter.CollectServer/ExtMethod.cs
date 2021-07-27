@@ -36,7 +36,12 @@ namespace xLiAd.DiagnosticLogCenter.CollectServer
                 Ip = x.Ip,
                 DataSource = x.DataSource,
                 CommandText = x.CommandText,
-                Database = x.Database
+                Database = x.Database,
+                ParentHttpId = x.ParentHttpId,
+                HttpId = x.HttpId,
+                PageId = x.PageId,
+                ParentGuid = x.ParentGuid,
+                TraceId = x.TraceId
             }).ToArray();
         }
         public static void PrepareLogForRead(this Log log)

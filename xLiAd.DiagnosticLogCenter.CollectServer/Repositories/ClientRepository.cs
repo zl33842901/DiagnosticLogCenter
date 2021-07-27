@@ -14,10 +14,17 @@ namespace xLiAd.DiagnosticLogCenter.CollectServer.Repositories
         {
 
         }
+
+        public async Task<bool> AddEnvAsync(string name, Models.Environment environment)
+        {
+            var update = Builders<Clients>.Update.Push(x => x.Environments, environment);
+            var result = await UpdateAsync(x => x.Name == name, update);
+            return result.ModifiedCount > 0;
+        }
     }
 
     public interface IClientRepository : IRepository<Clients>
     {
-
+        Task<bool> AddEnvAsync(string name, Models.Environment environment);
     }
 }

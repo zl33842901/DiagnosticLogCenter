@@ -58,7 +58,12 @@ namespace xLiAd.DiagnosticLogCenter.CollectServerByEs.Services
                 Message = x.Message,
                 MethodName = x.MethodName,
                 Parameters = x.Parameters,
-                StatuCode = x.StatuCode
+                StatuCode = x.StatuCode,
+                PageId = x.PageId,
+                TraceId = x.TraceId,
+                ParentGuid = x.ParentGuid,
+                ParentHttpId = x.ParentHttpId,
+                HttpId = x.HttpId
             });
             if (!hasStart)
             {
@@ -97,7 +102,12 @@ namespace xLiAd.DiagnosticLogCenter.CollectServerByEs.Services
                     TotalMillionSeconds = end != null ? Convert.ToInt32((System.ExtMethods.ToTime(end.HappenTime.ToString()) - System.ExtMethods.ToTime(start.HappenTime.ToString())).TotalMilliseconds) : 0,
                     Addtions = addtions.OrderBy(x => x.HappenTime).ToArray(),
                     //AddtionsString = string.Join(";", item.Select(x => x.StackTrace)),
-                    Id = string.Empty
+                    Id = string.Empty,
+                    TraceId = addtions.FirstOrDefault()?.TraceId,
+                    PageId = addtions.FirstOrDefault()?.PageId,
+                    Guid = item.Key,
+                    ParentGuid = addtions.FirstOrDefault()?.ParentGuid,
+                    ParentHttpId = addtions.FirstOrDefault()?.ParentHttpId
                 };
                 return (item.Key, log);
             }

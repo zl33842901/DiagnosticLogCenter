@@ -28,6 +28,11 @@ message LogDtoItem {
   string Database = 14;
   string CommandText = 15;
   string Parameters = 16;
+  string PageId = 17;
+  string TraceId = 18;
+  string ParentGuid = 19;
+  string HttpId = 20;
+  string ParentHttpId = 21;
 }
 
 message LogDto{

@@ -30,7 +30,6 @@ namespace xLiAd.DiagnosticLogCenter.UserInterface
             var conf = Configuration.GetSection("Configs").Get<ConfigEntity>();
             services.AddSingleton(new MongoUrl(conf.ConfigDbUrl));
             services.AddScoped<IClientRepository, ClientRepository>();
-            services.AddScoped<IEnvironmentRepository, EnvironmentRepository>();
             services.AddScoped<ILogRepository, LogRepository>();
             services.AddSingleton(conf);
             services.AddScoped<IConfigService, ConfigService>();

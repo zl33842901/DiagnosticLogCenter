@@ -46,6 +46,15 @@ namespace xLiAd.DiagnosticLogCenter.UserInterface.Models
         /// </summary>
         public bool Success { get; set; }
         #endregion
+        public string TraceId { get; set; }
+
+        public string PageId { get; set; }
+
+        public string ParentGuid { get; set; }
+
+        public string Guid { get; set; }
+
+        public string ParentHttpId { get; set; }
     }
     /// <summary>
     /// 追加日志
@@ -73,6 +82,16 @@ namespace xLiAd.DiagnosticLogCenter.UserInterface.Models
         public string CommandText { get; set; }
         public string Parameters { get; set; }
         #endregion
+
+        public string TraceId { get; set; }
+
+        public string PageId { get; set; }
+
+        public string ParentGuid { get; set; }
+
+        public string HttpId { get; set; }
+
+        public string ParentHttpId { get; set; }
         #endregion
     }
     /// <summary>

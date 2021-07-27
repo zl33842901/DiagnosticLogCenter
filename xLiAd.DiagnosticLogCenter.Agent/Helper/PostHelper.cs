@@ -77,7 +77,12 @@ namespace xLiAd.DiagnosticLogCenter.Agent.Helper
                 MethodName = logEntity.MethodName ?? string.Empty,
                 Parameters = logEntity.Parameters ?? string.Empty,
                 StackTrace = logEntity.StackTrace ?? string.Empty,
-                StatuCode = logEntity.StatuCode
+                StatuCode = logEntity.StatuCode,
+                PageId = logEntity.PageId ?? string.Empty,
+                TraceId = logEntity.TraceId ?? string.Empty,
+                ParentGuid = logEntity.ParentGuid ?? string.Empty,
+                HttpId = logEntity.HttpId ?? string.Empty,
+                ParentHttpId = logEntity.ParentHttpId ?? string.Empty
             };
             LogContainer.Enqueue(logDtoItem);
         }

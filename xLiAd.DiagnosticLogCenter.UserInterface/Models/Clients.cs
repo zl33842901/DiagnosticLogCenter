@@ -6,5 +6,6 @@ namespace xLiAd.DiagnosticLogCenter.UserInterface.Models
     public class Clients : EntityModel
     {
         public string Name { get; set; }
+        public Environment[] Environments { get; set; }
     }
 }

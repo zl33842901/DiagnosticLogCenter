@@ -35,11 +35,10 @@ namespace xLiAd.DiagnosticLogCenter.UserInterface.Controllers
         public async Task<IActionResult> GetIndexData(IndexDataQuery query)
         {
             var lc = await configService.GetAllClients();
-            var le = await configService.GetAllEnvironments();
             List<CliEvnDate> lced = new List<CliEvnDate>();
             foreach(var c in lc)
             {
-                foreach(var e in le)
+                foreach(var e in c.Environments)
                 {
                     var rr = new CliEvnDate() { ClientName = c.Name, EnvironmentName = e.Name, HappenTime = query.Date };
                     bool b = logService.Exist(rr);

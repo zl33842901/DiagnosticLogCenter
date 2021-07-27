@@ -11,7 +11,7 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
         public string ListenerName => "DapperExDiagnosticListener";
 
         [DiagnosticName("xLiAd.DapperEx.CommandBefore")]
-        public void BeforeExecuteCommand([Property(Name = "SqlString")] string sqlCommand, [Property(Name = "Params")] object para)
+        public void BeforeExecuteCommand([Property(Name = "SqlString")] string sqlCommand, [Property(Name = "Params")] object para, [Property(Name = "OperationId")]Guid operationId)
         {
             if (GuidHolder.Holder.Value == Guid.Empty)
                 return;
@@ -22,7 +22,52 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
                 Parameters = (DiagnosticLogConfig.Config?.RecordSqlParameters ?? false) ? para.FormatDynamicString() : string.Empty,
                 LogType = LogTypeEnum.DapperExSqlBefore,
                 HappenTime = DateTime.Now,
-                GroupGuid = GuidHolder.Holder.Value.ToString()
+                GroupGuid = GuidHolder.Holder.Value.ToString(),
+                PageId = GuidHolder.PageIdHolder.Value,
+                TraceId = GuidHolder.TraceIdHolder.Value,
+                ParentGuid = GuidHolder.ParentHolder.Value,
+                ParentHttpId = GuidHolder.ParentHttpHolder.Value,
+                HttpId = operationId.ToString()
+            };
+            Helper.PostHelper.ProcessLog(log);
+        }
+
+        [DiagnosticName("xLiAd.DapperEx.CommandAfter")]
+        public void AfterExecuteCommand([Property(Name = "OperationId")] Guid operationId)
+        {
+            if (GuidHolder.Holder.Value == Guid.Empty)
+                return;
+            LogEntity log = new LogEntity()
+            {
+                LogType = LogTypeEnum.DapperExSqlAfter,
+                HappenTime = DateTime.Now,
+                GroupGuid = GuidHolder.Holder.Value.ToString(),
+                PageId = GuidHolder.PageIdHolder.Value,
+                TraceId = GuidHolder.TraceIdHolder.Value,
+                ParentGuid = GuidHolder.ParentHolder.Value,
+                ParentHttpId = GuidHolder.ParentHttpHolder.Value,
+                HttpId = operationId.ToString()
+            };
+            Helper.PostHelper.ProcessLog(log);
+        }
+
+        [DiagnosticName("xLiAd.DapperEx.CommandError")]
+        public void ErrorExecuteCommand([Property(Name = "OperationId")] Guid operationId, [Property(Name = "Exception")] Exception exception)
+        {
+            if (GuidHolder.Holder.Value == Guid.Empty)
+                return;
+            LogEntity log = new LogEntity()
+            {
+                LogType = LogTypeEnum.DapperExSqlException,
+                HappenTime = DateTime.Now,
+                GroupGuid = GuidHolder.Holder.Value.ToString(),
+                PageId = GuidHolder.PageIdHolder.Value,
+                TraceId = GuidHolder.TraceIdHolder.Value,
+                ParentGuid = GuidHolder.ParentHolder.Value,
+                ParentHttpId = GuidHolder.ParentHttpHolder.Value,
+                HttpId = operationId.ToString(),
+                Message = exception.Message,
+                StackTrace = exception.StackTrace
             };
             Helper.PostHelper.ProcessLog(log);
         }

@@ -21,7 +21,11 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
                 MethodName = methodName,
                 StackTrace = logContent,
                 GroupGuid = GuidHolder.Holder.Value.ToString(),
-                HappenTime = DateTime.Now
+                HappenTime = DateTime.Now,
+                PageId = GuidHolder.PageIdHolder.Value,
+                TraceId = GuidHolder.TraceIdHolder.Value,
+                ParentGuid = GuidHolder.ParentHolder.Value,
+                ParentHttpId = GuidHolder.ParentHttpHolder.Value
             };
             Helper.PostHelper.ProcessLog(log);
         }

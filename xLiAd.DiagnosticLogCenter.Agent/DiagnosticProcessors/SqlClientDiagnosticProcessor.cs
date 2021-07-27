@@ -12,7 +12,7 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
         public string ListenerName { get; } = "SqlClientDiagnosticListener";
 
         [DiagnosticName("System.Data.SqlClient.WriteCommandBefore")]
-        public void BeforeExecuteCommand([Property(Name = "Command")] SqlCommand sqlCommand)
+        public void BeforeExecuteCommand([Property(Name = "Command")] SqlCommand sqlCommand, [Property(Name = "OperationId")] Guid operationId)
         {
             if (GuidHolder.Holder.Value == Guid.Empty)
                 return;
@@ -29,19 +29,37 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
                 Parameters = (DiagnosticLogConfig.Config?.RecordSqlParameters ?? false) ? para.ConvertToString() : string.Empty,
                 LogType = LogTypeEnum.SqlBefore,
                 HappenTime = DateTime.Now,
-                GroupGuid = GuidHolder.Holder.Value.ToString()
+                GroupGuid = GuidHolder.Holder.Value.ToString(),
+                PageId = GuidHolder.PageIdHolder.Value,
+                TraceId = GuidHolder.TraceIdHolder.Value,
+                ParentGuid = GuidHolder.ParentHolder.Value,
+                ParentHttpId = GuidHolder.ParentHttpHolder.Value,
+                HttpId = operationId.ToString()
             };
             Helper.PostHelper.ProcessLog(log);
         }
 
         [DiagnosticName("System.Data.SqlClient.WriteCommandAfter")]
-        public void AfterExecuteCommand()
+        public void AfterExecuteCommand([Property(Name = "OperationId")] Guid operationId)
         {
-            
+            if (GuidHolder.Holder.Value == Guid.Empty)
+                return;
+            LogEntity log = new LogEntity()
+            {
+                LogType = LogTypeEnum.SqlAfter,
+                HappenTime = DateTime.Now,
+                GroupGuid = GuidHolder.Holder.Value.ToString(),
+                PageId = GuidHolder.PageIdHolder.Value,
+                TraceId = GuidHolder.TraceIdHolder.Value,
+                ParentGuid = GuidHolder.ParentHolder.Value,
+                ParentHttpId = GuidHolder.ParentHttpHolder.Value,
+                HttpId = operationId.ToString()
+            };
+            Helper.PostHelper.ProcessLog(log);
         }
 
         [DiagnosticName("System.Data.SqlClient.WriteCommandError")]
-        public void ErrorExecuteCommand([Property(Name = "Exception")] Exception ex)
+        public void ErrorExecuteCommand([Property(Name = "Exception")] Exception ex, [Property(Name = "OperationId")] Guid operationId)
         {
             if (GuidHolder.Holder.Value == Guid.Empty)
                 return;
@@ -51,7 +69,12 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
                 StackTrace = ex.StackTrace,
                 LogType = LogTypeEnum.SqlException,
                 HappenTime = DateTime.Now,
-                GroupGuid = GuidHolder.Holder.Value.ToString()
+                GroupGuid = GuidHolder.Holder.Value.ToString(),
+                PageId = GuidHolder.PageIdHolder.Value,
+                TraceId = GuidHolder.TraceIdHolder.Value,
+                ParentGuid = GuidHolder.ParentHolder.Value,
+                ParentHttpId = GuidHolder.ParentHttpHolder.Value,
+                HttpId = operationId.ToString()
             };
             Helper.PostHelper.ProcessLog(log);
         }

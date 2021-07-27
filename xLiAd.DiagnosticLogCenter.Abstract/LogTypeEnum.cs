@@ -36,6 +36,10 @@ namespace xLiAd.DiagnosticLogCenter.Abstract
         HttpClientException = 33,
 
         [Description("执行Sql")]
-        DapperExSqlBefore = 41
+        DapperExSqlBefore = 41,
+        [Description("执行Sql完成")]
+        DapperExSqlAfter = 42,
+        [Description("执行Sql报错")]
+        DapperExSqlException = 43
     }
 }

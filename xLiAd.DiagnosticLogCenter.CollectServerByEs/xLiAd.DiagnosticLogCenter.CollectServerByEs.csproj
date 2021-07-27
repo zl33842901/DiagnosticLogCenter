@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Protobuf Include="Protos\diaglog.proto" GrpcServices="Server" />
+    <Protobuf Link="Protos\diaglog.proto" Include="..\xLiAd.DiagnosticLogCenter.CollectServer\Protos\diaglog.proto" GrpcServices="Server" />
   </ItemGroup>
 
   <ItemGroup>

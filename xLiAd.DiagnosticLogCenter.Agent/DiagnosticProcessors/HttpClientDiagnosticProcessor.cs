@@ -10,16 +10,24 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
     {
         public string ListenerName { get; } = "HttpHandlerDiagnosticListener";
         [DiagnosticName("System.Net.Http.Request")]
-        public void HttpRequest([Property(Name = "Request")] HttpRequestMessage request)
+        public void HttpRequest([Property(Name = "Request")] HttpRequestMessage request, [Property(Name = "LoggingRequestId")] Guid requestId)
         {
             if (GuidHolder.Holder.Value == Guid.Empty)
                 return;
-            var log = ToLog(request);
+            if(!GuidHolder.PageIdHolder.Value.NullOrEmpty())
+                request.Headers.TryAddWithoutValidation(AspNetCoreDiagnosticProcessor.PageIdName, GuidHolder.PageIdHolder.Value);
+            if (!GuidHolder.TraceIdHolder.Value.NullOrEmpty())
+                request.Headers.TryAddWithoutValidation(AspNetCoreDiagnosticProcessor.TraceIdName, GuidHolder.TraceIdHolder.Value);
+
+            request.Headers.TryAddWithoutValidation(AspNetCoreDiagnosticProcessor.ParentGuidName, GuidHolder.Holder.Value.ToString());
+            request.Headers.TryAddWithoutValidation(AspNetCoreDiagnosticProcessor.ParentHttpIdName, requestId.ToString());
+
+            var log = ToLog(request, requestId);
             log.LogType = LogTypeEnum.HttpClientRequest;
             Helper.PostHelper.ProcessLog(log);
         }
 
-        private LogEntity ToLog(HttpRequestMessage request)
+        private LogEntity ToLog(HttpRequestMessage request, Guid requestId)
         {
             var uri = request.RequestUri.ToString();
             var host = request.RequestUri.Host;
@@ -32,13 +40,18 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
                 MethodName = method,
                 Ip = host,
                 GroupGuid = GuidHolder.Holder.Value.ToString(),
-                HappenTime = DateTime.Now
+                HappenTime = DateTime.Now,
+                PageId = GuidHolder.PageIdHolder.Value,
+                TraceId = GuidHolder.TraceIdHolder.Value,
+                ParentGuid = GuidHolder.ParentHolder.Value,
+                HttpId = requestId.ToString(),
+                ParentHttpId = GuidHolder.ParentHttpHolder.Value
             };
             return log;
         }
 
         [DiagnosticName("System.Net.Http.Response")]
-        public void HttpResponse([Property(Name = "Response")] HttpResponseMessage response)
+        public void HttpResponse([Property(Name = "Response")] HttpResponseMessage response, [Property(Name = "LoggingRequestId")] Guid requestId)
         {
             if (GuidHolder.Holder.Value == Guid.Empty)
                 return;
@@ -50,21 +63,30 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
                 StackTrace = content,
                 GroupGuid = GuidHolder.Holder.Value.ToString(),
                 LogType = LogTypeEnum.HttpClientResponse,
-                HappenTime = DateTime.Now
+                HappenTime = DateTime.Now,
+                PageId = GuidHolder.PageIdHolder.Value,
+                TraceId = GuidHolder.TraceIdHolder.Value,
+                ParentGuid = GuidHolder.ParentHolder.Value,
+                HttpId = requestId.ToString(),
+                ParentHttpId = GuidHolder.ParentHttpHolder.Value
             };
             Helper.PostHelper.ProcessLog(log);
         }
 
         [DiagnosticName("System.Net.Http.Exception")]
         public void HttpException([Property(Name = "Request")] HttpRequestMessage request,
-            [Property(Name = "Exception")] Exception exception)
+            [Property(Name = "Exception")] Exception exception, [Property(Name = "LoggingRequestId")] Guid requestId)
         {
             if (GuidHolder.Holder.Value == Guid.Empty)
                 return;
-            var log = ToLog(request);
+            var log = ToLog(request, requestId);
             log.LogType = LogTypeEnum.HttpClientException;
             log.StackTrace = exception.StackTrace;
             log.Message = exception.Message;
+            log.PageId = GuidHolder.PageIdHolder.Value;
+            log.TraceId = GuidHolder.TraceIdHolder.Value;
+            log.ParentGuid = GuidHolder.ParentHolder.Value;
+            log.ParentHttpId = GuidHolder.ParentHttpHolder.Value;
             Helper.PostHelper.ProcessLog(log);
         }
     }

@@ -10,7 +10,12 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
 {
     public class AspNetCoreDiagnosticProcessor : ITracingDiagnosticProcessor
     {
+        public const string TraceIdName = "Trace-Id";
+        public const string PageIdName = "Page-Id";
+        public const string ParentGuidName = "Guid";
+        public const string ParentHttpIdName = "Parent-Http-Id";
         public string ListenerName { get; } = "Microsoft.AspNetCore";
+
         [DiagnosticName("Microsoft.AspNetCore.Hosting.BeginRequest")]
         public void BeginRequest([Property] HttpContext httpContext)
         {
@@ -22,9 +27,36 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
             }
             var guid = Guid.NewGuid();
             GuidHolder.Holder.Value = guid;
+            SetTraceAndPageId(httpContext);
             var log = ToLog(httpContext);
             log.LogType = LogTypeEnum.RequestBegin;
             Helper.PostHelper.ProcessLog(log);
+        }
+
+        private void SetTraceAndPageId(HttpContext httpContext)
+        {
+            string traceId = null;
+            if (httpContext.Request.Headers.ContainsKey(TraceIdName))
+                traceId = httpContext.Request.Headers[TraceIdName];
+            if (traceId.NullOrEmpty())
+                traceId = DateTime.Now.ToString("yyyyMMdd-HHmmss-fff-") + DiagnosticLogConfig.Config.ClientName + "-" + DiagnosticLogConfig.Config.EnvName + "-" + Guid.NewGuid().ToString();
+            GuidHolder.TraceIdHolder.Value = traceId;
+            string pageId = null;
+            if (httpContext.Request.Headers.ContainsKey(PageIdName))
+                pageId = httpContext.Request.Headers[PageIdName];
+            if (pageId.NullOrEmpty())
+                pageId = traceId;
+            GuidHolder.PageIdHolder.Value = pageId;
+
+            string parentGuid = null;
+            if (httpContext.Request.Headers.ContainsKey(ParentGuidName))
+                parentGuid = httpContext.Request.Headers[ParentGuidName];
+            GuidHolder.ParentHolder.Value = parentGuid;
+
+            string parentHttp = null;
+            if (httpContext.Request.Headers.ContainsKey(ParentHttpIdName))
+                parentHttp = httpContext.Request.Headers[ParentHttpIdName];
+            GuidHolder.ParentHttpHolder.Value = parentHttp;
         }
 
         private LogEntity ToLog(HttpContext httpContext)
@@ -41,7 +73,11 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
                 GroupGuid = GuidHolder.Holder.Value.ToString(),
                 Ip = ip,
                 Level = LogLeveEnum.接口日志,
-                HappenTime = DateTime.Now
+                HappenTime = DateTime.Now,
+                PageId = GuidHolder.PageIdHolder.Value,
+                TraceId = GuidHolder.TraceIdHolder.Value,
+                ParentGuid = GuidHolder.ParentHolder.Value,
+                ParentHttpId = GuidHolder.ParentHttpHolder.Value
             };
             return log;
         }

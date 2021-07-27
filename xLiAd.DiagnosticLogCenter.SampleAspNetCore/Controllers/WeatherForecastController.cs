@@ -29,5 +29,12 @@ namespace xLiAd.DiagnosticLogCenter.SampleAspNetCore.Controllers
             //return new { dbresult, httpResult };
             return sampleService.Test();
         }
+
+        [HttpGet,Route("/api/abcdefg")]
+        public object GetGet()
+        {
+            var httpResult = sampleService.QueryDb(2);//.RequestWeb("http://localhost:5001/WeatherForecast");
+            return httpResult;
+        }
     }
 }

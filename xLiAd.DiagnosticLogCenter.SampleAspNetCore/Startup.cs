@@ -31,10 +31,10 @@ namespace xLiAd.DiagnosticLogCenter.SampleAspNetCore
             services.AddDiagnosticLog(x =>
             {
                 x.CollectServerAddress = "localhost:5000";
-                x.ClientName = "sample";
-                x.EnvName = "PRD";
+                x.ClientName = "pnm";
+                x.EnvName = "DEV";
                 x.RecordHttpClientBody = false;
-                x.RecordSqlParameters = false;
+                x.RecordSqlParameters = true;
             });
             services.AddScoped<IDbConnection>(x => new SqlConnection("server=127.0.0.1;user id=sa;password=zhanglei;database=zhanglei;"));
             services.AddScoped<ISampleService, SampleService>();

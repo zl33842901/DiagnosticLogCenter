@@ -18,11 +18,11 @@ namespace xLiAd.DiagnosticLogCenter.CollectServer
             this.logBatchService = logBatchService;
         }
 
-        public override Task<LogReply> PostLog(LogDto request, ServerCallContext context)
+        public override async Task<LogReply> PostLog(LogDto request, ServerCallContext context)
         {
-            logBatchService.Process(request);
+            await logBatchService.Process(request);
             var result = new LogReply() { Success = true };
-            return Task.FromResult(result);
+            return result;
         }
     }
 }

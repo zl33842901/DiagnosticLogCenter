@@ -33,5 +33,14 @@ namespace xLiAd.DiagnosticLogCenter.Abstract
         public string CommandText { get; set; }
         public string Parameters { get; set; }
         #endregion
+
+        public string TraceId { get; set; }
+        public string PageId { get; set; }
+        public string ParentGuid { get; set; }
+        /// <summary>
+        /// 最先用在 httpClient里，所以就叫这个名了。其实应该叫 SegmentId
+        /// </summary>
+        public string HttpId { get; set; }
+        public string ParentHttpId { get; set; }
     }
 }
