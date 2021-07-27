@@ -1,0 +1,53 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Protobuf Link="Protos\diaglog.proto" Include="..\xLiAd.DiagnosticLogCenter.CollectServer\Protos\diaglog.proto" GrpcServices="Server" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore" Version="2.27.0" />
+    <PackageReference Include="xLiAd.MongoEx.Repository" Version="1.0.2" />
+    <PackageReference Include="LinqKit.Core" Version="1.1.16" />
+    <PackageReference Include="NEST" Version="7.9.0" />
+    <PackageReference Include="xLiAd.ExtMethods" Version="1.1.8.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\xLiAd.DiagnosticLogCenter.Abstract\xLiAd.DiagnosticLogCenter.Abstract.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="../xLiAd.DiagnosticLogCenter.CollectServer/Program.cs" />
+    <Compile Include="../xLiAd.DiagnosticLogCenter.CollectServer/ExtMethod.cs" />
+    <Compile Include="../xLiAd.DiagnosticLogCenter.CollectServer/Models/Clients.cs" Link="Models/Clients.cs" />
+    <Compile Include="../xLiAd.DiagnosticLogCenter.CollectServer/Models/Environment.cs" Link="Models/Environment.cs" />
+    <Compile Include="../xLiAd.DiagnosticLogCenter.CollectServer/Models/ICliEnvDate.cs" Link="Models/ICliEnvDate.cs" />
+    <Compile Include="../xLiAd.DiagnosticLogCenter.CollectServer/Models/Log.cs" Link="Models/Log.cs" />
+    <Compile Include="../xLiAd.DiagnosticLogCenter.CollectServer/Repositories/ClientRepository.cs" Link="Repositories/ClientRepository.cs" />
+    <Compile Include="../xLiAd.DiagnosticLogCenter.CollectServer/Repositories/LogRepository.cs" Link="Repositories/LogRepository.cs" />
+    <Compile Include="../xLiAd.DiagnosticLogCenter.CollectServer/Services/CacheService.cs" Link="Services/CacheService.cs" />
+    <Compile Include="../xLiAd.DiagnosticLogCenter.CollectServer/Services/ClientCacheService.cs" Link="Services/ClientCacheService.cs" />
+    <Compile Include="../xLiAd.DiagnosticLogCenter.CollectServer/Services/LogBatchService.cs" Link="Services/LogBatchService.cs" />
+    <Compile Include="../xLiAd.DiagnosticLogCenter.CollectServerByEs/Models/Client.cs" Link="ModelsEs/Client.cs" />
+    <Compile Include="../xLiAd.DiagnosticLogCenter.CollectServerByEs/Models/Environment.cs" Link="ModelsEs/Environment.cs" />
+    <Compile Include="../xLiAd.DiagnosticLogCenter.CollectServerByEs/Models/ICliEnvDate.cs" Link="ModelsEs/ICliEnvDate.cs" />
+    <Compile Include="../xLiAd.DiagnosticLogCenter.CollectServerByEs/Models/Log.cs" Link="ModelsEs/Log.cs" />
+    <Compile Include="../xLiAd.DiagnosticLogCenter.CollectServerByEs/Models/EntityBase.cs" Link="ModelsEs/EntityBase.cs" />
+    <Compile Include="../xLiAd.DiagnosticLogCenter.CollectServerByEs/Repositories/ClientRepository.cs" Link="RepositoriesEs/ClientRepository.cs" />
+    <Compile Include="../xLiAd.DiagnosticLogCenter.CollectServerByEs/Repositories/LogRepository.cs" Link="RepositoriesEs/LogRepository.cs" />
+    <Compile Include="../xLiAd.DiagnosticLogCenter.CollectServerByEs/Repositories/RepositoryBase.cs" Link="RepositoriesEs/RepositoryBase.cs" />
+    <Compile Include="../xLiAd.DiagnosticLogCenter.CollectServerByEs/ExtMethod.cs" Link="ExtMethodEs.cs" />
+    <Compile Include="../xLiAd.DiagnosticLogCenter.CollectServerByEs/Services/CacheService.cs" Link="ServicesEs/CacheService.cs" />
+    <Compile Include="../xLiAd.DiagnosticLogCenter.CollectServerByEs/Services/ClientCacheService.cs" Link="ServicesEs/ClientCacheService.cs" />
+    <Compile Include="../xLiAd.DiagnosticLogCenter.CollectServerByEs/Services/LogBatchService.cs" Link="ServicesEs/LogBatchService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore" Version="2.27.0" />
+  </ItemGroup>
+
+</Project>

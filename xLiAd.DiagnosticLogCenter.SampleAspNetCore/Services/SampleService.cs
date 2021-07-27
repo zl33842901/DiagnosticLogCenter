@@ -20,7 +20,7 @@ namespace xLiAd.DiagnosticLogCenter.SampleAspNetCore.Services
 
         public int QueryDb(int inputParam)
         {
-            var result = dbConnection.Query<dynamic>("select * from Student where Id > @id", new { id = 2 });
+            var result = dbConnection.Query<dynamic>("select * from Studentaaa where Id > @id", new { id = 2 });
             return result.Count();
         }
 

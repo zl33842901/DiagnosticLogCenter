@@ -65,6 +65,7 @@ namespace xLiAd.DiagnosticLogCenter.CollectServerByEs.Services
                 ParentHttpId = x.ParentHttpId,
                 HttpId = x.HttpId
             });
+            bool anyMethodException = addtions.Any(x => x.LogType == LogTypeEnum.MethodException);//方法级别的错误，应该算是异常；因为可能被异常AOP处理掉了。
             if (!hasStart)
             {
                 var obj = cacheService.Get("GUID_" + item.Key);
@@ -85,6 +86,8 @@ namespace xLiAd.DiagnosticLogCenter.CollectServerByEs.Services
                     startLog.Success = end.LogType == (int)LogTypeEnum.RequestEndSuccess;
                     startLog.TotalMillionSeconds = Convert.ToInt32((System.ExtMethods.ToTime(end.HappenTime.ToString()) - startLog.HappenTime).TotalMilliseconds);
                 }
+                if (anyMethodException)
+                    startLog.Success = false;
                 return (item.Key, startLog);
             }
             else
@@ -96,7 +99,7 @@ namespace xLiAd.DiagnosticLogCenter.CollectServerByEs.Services
                     EnvironmentName = start.EnvironmentName,
                     Level = (LogLeveEnum)start.Level,
                     HappenTime = System.ExtMethods.ToTime(start.HappenTime.ToString()),
-                    Success = end?.LogType == (int)LogTypeEnum.RequestEndSuccess,
+                    Success = (end?.LogType == (int)LogTypeEnum.RequestEndSuccess) && !anyMethodException,
                     StackTrace = start.StackTrace,
                     Message = start.Message,
                     TotalMillionSeconds = end != null ? Convert.ToInt32((System.ExtMethods.ToTime(end.HappenTime.ToString()) - System.ExtMethods.ToTime(start.HappenTime.ToString())).TotalMilliseconds) : 0,
