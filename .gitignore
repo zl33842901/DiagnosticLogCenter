@@ -38,3 +38,6 @@
 /xLiAd.DiagnosticLogCenter.UserInterfaceByEs/obj
 /xLiAd.DiagnosticLogCenter.CollectServerBoth/bin/Debug/netcoreapp3.1
 /xLiAd.DiagnosticLogCenter.CollectServerBoth/obj
+/xLiAd.DiagnosticLogCenter.SampleAspNetCore/bin
+/xLiAd.DiagnosticLogCenter.UserInterfaceBoth/bin/Debug/netcoreapp3.1
+/xLiAd.DiagnosticLogCenter.UserInterfaceBoth/obj

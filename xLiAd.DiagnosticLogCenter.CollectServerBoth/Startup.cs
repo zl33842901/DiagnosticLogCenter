@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
 using Nest;
+using xLiAd.DiagnosticLogCenter.CollectServerBoth.TraceAndPage;
 
 namespace xLiAd.DiagnosticLogCenter.CollectServer
 {
@@ -44,6 +45,10 @@ namespace xLiAd.DiagnosticLogCenter.CollectServer
             services.AddScoped<CollectServerByEs.Services.IClientCacheService, CollectServerByEs.Services.ClientCacheService>();
             services.AddSingleton<CollectServerByEs.Services.ICacheService, CollectServerByEs.Services.CacheService>();
             services.AddScoped<CollectServerByEs.Services.ILogBatchService, CollectServerByEs.Services.LogBatchService>();
+
+            services.AddScoped<ITraceRepository, TraceRepository>();
+            services.AddScoped<IPageRepository, PageRepository>();
+            services.AddScoped<ITraceAndGroupService, TraceAndGroupService>();
 
             services.AddGrpc();
         }

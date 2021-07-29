@@ -31,7 +31,7 @@ namespace xLiAd.DiagnosticLogCenter.SampleAspNetCore
             services.AddDiagnosticLog(x =>
             {
                 x.CollectServerAddress = "localhost:5000";
-                x.ClientName = "pnm";
+                x.ClientName = "abs";
                 x.EnvName = "DEV";
                 x.RecordHttpClientBody = false;
                 x.RecordSqlParameters = true;

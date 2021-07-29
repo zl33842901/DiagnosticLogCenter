@@ -59,7 +59,7 @@ namespace xLiAd.DiagnosticLogCenter.UserInterface.Models
     /// <summary>
     /// 追加日志
     /// </summary>
-    public class LogAdditionItem
+    public partial class LogAdditionItem
     {
         public string Content { get; set; }
         public DateTime HappenTime { get; set; }

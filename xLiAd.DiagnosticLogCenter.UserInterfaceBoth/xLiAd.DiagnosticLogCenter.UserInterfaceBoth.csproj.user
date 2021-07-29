@@ -4,7 +4,6 @@
     <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup>
-    <ActiveDebugProfile>xLiAd.DiagnosticLogCenter.SampleAspNetCore</ActiveDebugProfile>
-    <NameOfLastUsedPublishProfile>D:\MyGithub\DiagnosticLogCenter\xLiAd.DiagnosticLogCenter.SampleAspNetCore\Properties\PublishProfiles\FolderProfile.pubxml</NameOfLastUsedPublishProfile>
+    <ActiveDebugProfile>xLiAd.DiagnosticLogCenter.UserInterfaceBoth</ActiveDebugProfile>
   </PropertyGroup>
 </Project>

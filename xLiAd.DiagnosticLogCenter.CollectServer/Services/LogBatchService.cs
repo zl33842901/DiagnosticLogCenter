@@ -19,12 +19,16 @@ namespace xLiAd.DiagnosticLogCenter.CollectServer.Services
             this.logRepository = logRepository;
             this.clientCacheService = clientCacheService;
         }
-        public async Task Process(LogDto logDto)
+        public (string, Log)[] ProcessConvert(LogDto logDto)
         {
             var listNonInterface = logDto.Items.Where(x => x.GroupGuid.NullOrEmpty()).ToArray();
             var listInterface = logDto.Items.Where(x => !x.GroupGuid.NullOrEmpty()).ToArray();
             var listInterGroup = listInterface.GroupBy(x => x.GroupGuid);
             var interRst = listInterGroup.Select(x => ConvertToLog(x)).Where(x => !x.Item1.NullOrEmpty()).ToArray();
+            return interRst;
+        }
+        public async Task ProcessWriteDown((string, Log)[] interRst)
+        {
             foreach ((var key, var log) in interRst)
             {
                 await clientCacheService.LoadClient(log);
@@ -39,6 +43,11 @@ namespace xLiAd.DiagnosticLogCenter.CollectServer.Services
                 }
                 cacheService.Set("GUID_" + key, log, TimeSpan.FromMinutes(6));
             }
+        }
+        public async Task Process(LogDto logDto)
+        {
+            var interRst = ProcessConvert(logDto);
+            await ProcessWriteDown(interRst);
         }
         private (string, Log) ConvertToLog(IGrouping<string, LogDtoItem> item)
         {
@@ -120,6 +129,8 @@ namespace xLiAd.DiagnosticLogCenter.CollectServer.Services
 
     public interface ILogBatchService
     {
+        (string, Log)[] ProcessConvert(LogDto logDto);
+        Task ProcessWriteDown((string, Log)[] interRst);
         Task Process(LogDto logDto);
     }
 }

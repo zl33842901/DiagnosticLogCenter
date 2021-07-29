@@ -1,0 +1,290 @@
+﻿
+<el-row style="padding:3px;margin:3px;">
+    <el-breadcrumb separator="/">
+        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item>日志查看</el-breadcrumb-item>
+    </el-breadcrumb>
+</el-row>
+
+<el-row style="width: 100%;margin: 5px 0 5px 0;background-color:#ddd;padding:4px 0 4px 0;" :gutter="10">
+    <el-col :span="4"><el-input placeholder="请输入关键字" v-model="Query.Key"></el-input></el-col>
+    <el-col :span="3">
+        <el-select v-model="Query.Level" placeholder="请选择日志级别">
+            <el-option v-for="item in statusSelect"
+                       :key="item.value"
+                       :label="item.label"
+                       :value="item.value">
+            </el-option>
+        </el-select>
+    </el-col>
+    <el-col :span="3">
+        <el-select v-model="Query.Success" placeholder="请选择接口结果" v-if="Query.Level=='10'">
+            <el-option label="全部执行结果" :value="''"></el-option>
+            <el-option label="执行成功" :value="'1'"></el-option>
+            <el-option label="执行失败" :value="'2'"></el-option>
+        </el-select>
+    </el-col>
+    <el-col :span="3">
+        <el-select v-model="Query.MSec" placeholder="请选择接口时长" v-if="Query.Level=='10'">
+            <el-option label="全部执行时长" :value="''"></el-option>
+            <el-option label="500毫秒以下" :value="'0-500'"></el-option>
+            <el-option label="500毫秒到1秒" :value="'500-1000'"></el-option>
+            <el-option label="1秒到3秒" :value="'1000-3000'"></el-option>
+            <el-option label="3秒到5秒" :value="'3000-5000'"></el-option>
+            <el-option label="5秒到10秒" :value="'5000-10000'"></el-option>
+            <el-option label="10秒以上" :value="'10000-0'"></el-option>
+        </el-select>
+    </el-col>
+    <el-col :span="7">
+        <el-time-picker is-range  value-format="yyyy-MM-dd HH:mm:ss"
+                        v-model="Query.HappenTimeRegion"
+                        range-separator="至"
+                        start-placeholder="开始时间"
+                        end-placeholder="结束时间"
+                        placeholder="选择时间范围">
+        </el-time-picker>
+    </el-col>
+    <el-col :span="2"></el-col>
+    <el-col :span="2"><el-button type="primary" v-on:click="QueryClick">查询</el-button></el-col>
+</el-row>
+
+<el-table :data="tableData" style="width: 100%" class="spHeight">
+    <el-table-column label="所属系统" width="80">
+        <template slot-scope="scope">
+            <span style="margin-left: 1px">{{ scope.row.ClientName }}</span>
+        </template>
+    </el-table-column>
+
+    <el-table-column label="所在环境" width="80">
+        <template slot-scope="scope">
+            <span style="margin-left: 1px">{{ scope.row.EnvironmentName }}</span>
+        </template>
+    </el-table-column>
+
+    <el-table-column label="发生时间" width="200">
+        <template slot-scope="scope">
+            <span style="margin-left: 1px">{{ scope.row.HappenTimeString }}</span>
+        </template>
+    </el-table-column>
+    <el-table-column label="日志级别" width="120">
+        <template slot-scope="scope">
+            <span style="margin-left: 1px">{{ scope.row.LevelString }}({{scope.row.Level}})</span>
+        </template>
+    </el-table-column>
+    <el-table-column label="消息" width="300">
+        <template slot-scope="scope">
+            <span style="margin-left: 1px">{{ scope.row.Message }}</span>
+        </template>
+    </el-table-column>
+
+    <el-table-column label="执行结果" width="120">
+        <template slot-scope="scope">
+            <span style="margin-left: 1px">{{ scope.row.Level==10?(scope.row.Success ? "成功" : "失败"):"" }}</span>
+        </template>
+    </el-table-column>
+    <el-table-column label="执行时长(毫秒)" width="120">
+        <template slot-scope="scope">
+            <span style="margin-left: 1px">{{ scope.row.TotalMillionSeconds>-1?scope.row.TotalMillionSeconds:"" }}</span>
+        </template>
+    </el-table-column>
+
+    <el-table-column label="查看" width="120">
+        <template slot-scope="scope">
+            <span style="margin-left: 1px"><el-button type="primary" v-on:click="LookAddtion(scope.row)">查看</el-button></span>
+        </template>
+    </el-table-column>
+    <el-table-column></el-table-column>
+
+</el-table>
+<el-row style="width: 100%;margin: 5px 0 5px 0;background-color:#fff;padding:4px 0 4px 0;" :gutter="10">
+    <el-pagination background v-on:size-change="handleSizeChange" v-on:current-change="handleCurrentChange" :current-page="Query.PageIndex"
+                   layout="total, prev, pager, next, sizes, jumper"
+                   :page-sizes="pager.pageSizes"
+                   :total="pager.total">
+    </el-pagination>
+</el-row>
+
+@section Dialogs{ 
+    <el-dialog title="查看日志追踪" :visible.sync="showLookAddtion" width="821px">
+        <el-row style="min-height:239px;">
+            <el-row class="bottomspace">
+                <el-col :span="9">
+                    动作：{{CurrentAddtion[CurrentAddtionIndex].LogTypeString}}
+                </el-col>
+                <el-col :span="15">
+                    <span>时间：{{CurrentAddtion[CurrentAddtionIndex].HappenTimeString}}</span>
+                </el-col>
+            </el-row>
+
+            <el-row class="bottomspace" v-if="CurrentAddtion[CurrentAddtionIndex].WithEnd">
+                <el-col :span="10">是否成功：{{CurrentAddtion[CurrentAddtionIndex].Sucess}}</el-col>
+                <el-col :span="10">持续时长：{{CurrentAddtion[CurrentAddtionIndex].TotalMillionSeconds}} 毫秒</el-col>
+            </el-row>
+
+            <el-row class="bottomspace" v-if="CurrentAddtion[CurrentAddtionIndex].LogType==21 || CurrentAddtion[CurrentAddtionIndex].LogType==31 || CurrentAddtion[CurrentAddtionIndex].LogType==33 || CurrentAddtion[CurrentAddtionIndex].LogType==23">
+                <span v-if="CurrentAddtion[CurrentAddtionIndex].LogType==21">路径</span>
+                <span v-if="CurrentAddtion[CurrentAddtionIndex].LogType==31">地址</span>
+                <span v-if="CurrentAddtion[CurrentAddtionIndex].LogType==33 || CurrentAddtion[CurrentAddtionIndex].LogType==23">消息</span>
+                ：{{CurrentAddtion[CurrentAddtionIndex].LogType==31?(CurrentAddtion[CurrentAddtionIndex].MethodName + " "):""}}{{CurrentAddtion[CurrentAddtionIndex].Message}}
+            </el-row>
+            <el-row class="bottomspace" v-if="CurrentAddtion[CurrentAddtionIndex].LogType==21">
+                请求：{{CurrentAddtion[CurrentAddtionIndex].StackTrace}}
+            </el-row>
+
+
+            <el-row class="bottomspace" v-if="CurrentAddtion[CurrentAddtionIndex].LogType<=10">
+                <el-col :span="12">
+                    类名：{{CurrentAddtion[CurrentAddtionIndex].ClassName}}
+                </el-col>
+                <el-col :span="12">
+                    方法：{{CurrentAddtion[CurrentAddtionIndex].MethodName}}
+                </el-col>
+            </el-row>
+            <el-row class="bottomspace" v-if="CurrentAddtion[CurrentAddtionIndex].LogType==11">
+                <el-col :span="12">
+                    数据源：{{CurrentAddtion[CurrentAddtionIndex].DataSource}}
+                </el-col>
+                <el-col :span="12">
+                    数据库：{{CurrentAddtion[CurrentAddtionIndex].Database}}
+                </el-col>
+            </el-row>
+
+            <el-row class="bottomspace" v-if="CurrentAddtion[CurrentAddtionIndex].LogType==11 || CurrentAddtion[CurrentAddtionIndex].LogType==41">
+                <el-row class="bottomspace">
+                    <el-col :span="2">SQL语句：</el-col>
+                    <el-col :span="22"><el-input type="textarea" :readonly="true" style="width:700px;" rows="2" :value="CurrentAddtion[CurrentAddtionIndex].CommandText"></el-input></el-col>
+                </el-row>
+                <el-row class="bottomspace">
+                    <el-col :span="2">参数：</el-col>
+                    <el-col :span="22"><el-input type="textarea" :readonly="true" style="width:700px;" rows="2" :value="CurrentAddtion[CurrentAddtionIndex].Parameters"></el-input></el-col>
+                </el-row>
+            </el-row>
+
+            <el-row class="bottomspace" v-if="CurrentAddtion[CurrentAddtionIndex].LogType==1 || CurrentAddtion[CurrentAddtionIndex].LogType==3 || CurrentAddtion[CurrentAddtionIndex].LogType==4 || CurrentAddtion[CurrentAddtionIndex].LogType==2 || CurrentAddtion[CurrentAddtionIndex].LogType==13 || CurrentAddtion[CurrentAddtionIndex].LogType==23 || CurrentAddtion[CurrentAddtionIndex].LogType==31 || CurrentAddtion[CurrentAddtionIndex].LogType==32 || CurrentAddtion[CurrentAddtionIndex].LogType==33">
+                <el-col :span="2">
+                    <span v-if="CurrentAddtion[CurrentAddtionIndex].LogType==1">参数：</span>
+                    <span v-if="CurrentAddtion[CurrentAddtionIndex].LogType==3">返回：</span>
+                    <span v-if="CurrentAddtion[CurrentAddtionIndex].LogType==31">参数：</span>
+                    <span v-if="CurrentAddtion[CurrentAddtionIndex].LogType==2">内容：</span>
+                    <span v-if="CurrentAddtion[CurrentAddtionIndex].LogType==4 || CurrentAddtion[CurrentAddtionIndex].LogType==33">跟踪：</span>
+                </el-col>
+                <el-col :span="22">
+                    <el-input type="textarea" :readonly="true" style="width:700px;" rows="6" :value="CurrentAddtion[CurrentAddtionIndex].Content"></el-input>
+                </el-col>
+            </el-row>
+        </el-row>
+        <el-pagination style="width:750px;float:left;" background
+                       v-on:current-change="CurrentAddtionIndexChange" :current-page="CurrentAddtionIndex+1"
+                       layout="total, prev, pager, next, jumper"
+                       :page-size="1"
+                       :total="CurrentAddtion.length">
+        </el-pagination>
+        <div slot="footer" class="dialog-footer">
+            <el-row>
+                <el-col :span="4">
+                    <el-button type="primary" v-if="CurrentHasTrace">查 看 链 路</el-button>
+                    &nbsp;
+                </el-col>
+                <el-col :span="14">
+                    &nbsp;
+                </el-col>
+                <el-col :span="6">
+                    <el-button v-on:click="showLookAddtion = false">取 消</el-button>
+                    <el-button type="primary" v-on:click="showLookAddtion = false">确 定</el-button>
+                </el-col>
+            </el-row>
+        </div>
+    </el-dialog>
+}
+
+@section Scripts{
+    <script type="text/javascript">
+        var app = new Vue({
+            el: '#app',
+            data: {
+                statusSelect: [{ value: '', label: '全部日志级别' }, { value: '0', label: 'Trace' }, { value: '1', label: 'Debug' }, { value: '2', label: 'Information' }, { value: '3', label: 'Warning' }, { value: '4', label: 'Error' }, { value: '5', label: 'Critical' }, { value: '10', label: '接口日志' }],
+                activeIndex: "BankDoc",
+                fullscreenLoading: true, //加载loading
+                menus: [],
+                Query: {
+                    ClientName: '@ViewBag.ClientName',
+                    EnvironmentName: '@ViewBag.EnvName',
+                    HappenTime: '@ViewBag.Date',
+                    PageSize: 10,
+                    PageIndex: 1,
+                    Key: '',
+                    Level: '',
+                    Success: '',
+                    MSec:'',
+                    HappenTimeRegion:['2018-09-11 0:00:00','2018-09-11 23:59:59']
+                },
+                tableData: [],
+                pager: {
+                    pageSizes: [10, 20, 30, 50, 100, 500],
+                    total: 0
+                },
+                showLookAddtion: false,//是否显示追加信息
+                CurrentAddtion: [{}],
+                CurrentAddtionIndex: 0,
+                CurrentHasTrace:false
+            },
+            methods: {
+                CurrentAddtionIndexChange: function (pi) {
+                    this.CurrentAddtionIndex = pi - 1;
+                },
+                GetData: function() {
+                    var that = this;
+                    this.fullscreenLoading = true;
+                    $.post("/Log/Look",
+                        this.Query,
+                        function(data) {
+                            that.tableData = data.Items;
+                            that.pager.total = data.Total;
+                            that.fullscreenLoading = false;
+                        });
+                },
+                QueryClick: function() {
+                    this.Query.PageIndex = 1;
+                    this.GetData();
+                },
+                handleSizeChange: function(size) {
+                    this.Query.PageSize = size;
+                    this.GetData();
+                },
+                handleCurrentChange: function(pageIndex) {
+                    this.Query.PageIndex = pageIndex;
+                    this.GetData();
+                },
+                open: function (url) { location = url; },
+                LookAddtion: function (model) {
+                    this.CurrentAddtion = [];
+                    this.CurrentAddtion.push($.extend({}, model, { LogTypeString: "请求开始", LogType: 21}));
+                    for (var i = 0; i < model.Addtions.length; i++) {
+                        this.CurrentAddtion.push(model.Addtions[i]);
+                    }
+                    this.CurrentAddtionIndex = 0;
+                    this.showLookAddtion = true;
+                    this.GetTraceExists(model);
+                },
+                GetTraceExists: function (model) {
+                    var that = this;
+                    $.post("/Log/GetTraceGroupExist",
+                        { traceId: model.TraceId, guid: model.Guid, happenTime: model.HappenTime },
+                        function (data) {
+                            if (data.data) {
+                                //model.HasTrace = true;
+                                that.CurrentHasTrace = true;
+                            }
+                        });
+                }
+            },
+            mounted: function() {
+                this.menus = Menus;
+                this.GetData();
+                this.fullscreenLoading = false;
+            }
+        });
+
+
+    </script>
+}

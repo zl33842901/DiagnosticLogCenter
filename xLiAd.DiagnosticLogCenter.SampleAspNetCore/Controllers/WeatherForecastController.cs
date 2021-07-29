@@ -33,7 +33,7 @@ namespace xLiAd.DiagnosticLogCenter.SampleAspNetCore.Controllers
         [HttpGet,Route("/api/abcdefg")]
         public object GetGet()
         {
-            var httpResult = sampleService.QueryDb(2);//.RequestWeb("http://localhost:5001/WeatherForecast");
+            var httpResult = sampleService.RequestWeb("http://localhost:5005/WeatherForecast");
             return httpResult;
         }
     }
