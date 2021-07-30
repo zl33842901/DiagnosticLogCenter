@@ -38,6 +38,42 @@ namespace xLiAd.DiagnosticLogCenter.UserInterface.Models
         public int StartPoint { get; set; }
 
         public int EndPoint => StartPoint + Length;
+
+        public string Color
+        {
+            get
+            {
+                switch (this.LogType)
+                {
+                    case Abstract.LogTypeEnum.SqlBefore:
+                        return Sucess ? "006400" : "FF3030";
+                    case Abstract.LogTypeEnum.DapperExSqlBefore:
+                        return Sucess ? "006400" : "FF3030";
+                    case Abstract.LogTypeEnum.HttpClientRequest:
+                        return Sucess ? "CD6600" : "FF3030";
+                    default:
+                        return null;
+                }
+            }
+        }
+
+        public string TypeString
+        {
+            get
+            {
+                switch (this.LogType)
+                {
+                    case Abstract.LogTypeEnum.SqlBefore:
+                        return "执行Sql";
+                    case Abstract.LogTypeEnum.DapperExSqlBefore:
+                        return "执行DapperEx";
+                    case Abstract.LogTypeEnum.HttpClientRequest:
+                        return "对外请求";
+                    default:
+                        return null;
+                }
+            }
+        }
     }
 
     /// <summary>

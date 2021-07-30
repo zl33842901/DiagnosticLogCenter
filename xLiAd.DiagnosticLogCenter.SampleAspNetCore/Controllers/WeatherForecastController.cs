@@ -27,12 +27,14 @@ namespace xLiAd.DiagnosticLogCenter.SampleAspNetCore.Controllers
             //var dbresult = sampleService.QueryDb(2);
             //var httpResult = sampleService.RequestWeb("https://www.baidu.com/");
             //return new { dbresult, httpResult };
-            return sampleService.Test();
+            var result =  sampleService.QueryDb(2);
+            return new { result };
         }
 
         [HttpGet,Route("/api/abcdefg")]
         public object GetGet()
         {
+            sampleService.QueryDb(3);
             var httpResult = sampleService.RequestWeb("http://localhost:5005/WeatherForecast");
             return httpResult;
         }
