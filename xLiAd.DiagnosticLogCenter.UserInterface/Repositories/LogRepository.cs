@@ -149,6 +149,13 @@ namespace xLiAd.DiagnosticLogCenter.UserInterface.Repositories
             var result = repo.Any();
             return result;
         }
+        public Log[] GetByCollectionNameAndId(string collectionName, IEnumerable<string> ids)
+        {
+            var repo = GetRepository(collectionName);
+            ids = ids.ToArray();
+            var result = repo.Where(x => ids.Contains(x.Guid)).ToArray();
+            return result;
+        }
     }
 
     public interface ILogRepository
@@ -156,5 +163,6 @@ namespace xLiAd.DiagnosticLogCenter.UserInterface.Repositories
         Log[] GetAllData(ICliEnvDate cli);
         bool Exist(ICliEnvDate cli);
         (List<Log>, long) GetLogData(LogLookQuery query, int pageIndex, int pageSize);
+        Log[] GetByCollectionNameAndId(string collectionName, IEnumerable<string> ids);
     }
 }

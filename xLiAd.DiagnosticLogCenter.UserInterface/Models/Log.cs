@@ -8,7 +8,7 @@ using xLiAd.MongoEx.Entities;
 
 namespace xLiAd.DiagnosticLogCenter.UserInterface.Models
 {
-    public class Log : EntityModel, ICliEnvDate
+    public partial class Log : EntityModel, ICliEnvDate
     {
         public string EnvironmentName { get; set; }
         public string ClientName { get; set; }

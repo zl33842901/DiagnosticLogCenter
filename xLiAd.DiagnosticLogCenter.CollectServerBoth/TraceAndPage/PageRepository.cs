@@ -66,10 +66,17 @@ namespace xLiAd.DiagnosticLogCenter.CollectServerBoth.TraceAndPage
                 return result.ModifiedCount > 0;
             }
         }
+        public async Task<PageGroup> FindByPageId(string pageId, DateTime happenTime)
+        {
+            var repo = GetRepository(happenTime);
+            var result = await repo.FindAsync(pageId);
+            return result;
+        }
     }
 
     public interface IPageRepository
     {
         Task<bool> AddOrUpdate(string pageId, DateTime happenTime, IEnumerable<PageItem> items);
+        Task<PageGroup> FindByPageId(string pageId, DateTime happenTime);
     }
 }

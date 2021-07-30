@@ -105,7 +105,7 @@
 </el-row>
 
 @section Dialogs{ 
-    <el-dialog title="查看日志追踪" :visible.sync="showLookAddtion" width="821px">
+    <el-dialog title="查看日志追踪" :visible.sync="showLookAddtion" width="821px" :before-close="dialogClosed">
         <el-row style="min-height:239px;">
             <el-row class="bottomspace">
                 <el-col :span="9">
@@ -182,15 +182,36 @@
         <div slot="footer" class="dialog-footer">
             <el-row>
                 <el-col :span="4">
-                    <el-button type="primary" v-if="CurrentHasTrace">查 看 链 路</el-button>
+                    <el-button type="primary" v-if="CurrentHasTrace" v-on:click="LookForTrace">查 看 链 路</el-button>
                     &nbsp;
                 </el-col>
                 <el-col :span="14">
                     &nbsp;
                 </el-col>
                 <el-col :span="6">
-                    <el-button v-on:click="showLookAddtion = false">取 消</el-button>
-                    <el-button type="primary" v-on:click="showLookAddtion = false">确 定</el-button>
+                    <el-button v-on:click="closeDialog">取 消</el-button>
+                    <el-button type="primary" v-on:click="closeDialog">确 定</el-button>
+                </el-col>
+            </el-row>
+        </div>
+    </el-dialog>
+
+    <el-dialog title="查看日志追踪" :visible.sync="showTrace" width="821px">
+        <el-row>
+            <el-row v-for="item in CurrentTraces" style="margin-bottom:2px;">
+                <el-col :span="2">{{item.ClientName}}</el-col>
+                <el-col :span="22">
+                    <div v-on:click="LookAddtion(item)" :style="'cursor:pointer;overflow:hidden;color:white;padding-left:5px;background-color:' + (item.Success ? '#1E90FF' : '#CD5555') + ';height:30px;line-height:30px;font-size:15px;margin-left:' + (item.StartPoint * 7) + 'px;width:' + (item.Length * 7) + 'px;' ">
+                        耗时： {{item.TotalMillionSeconds}}毫秒
+                    </div>
+                </el-col>
+            </el-row>
+        </el-row>
+        <div slot="footer" class="dialog-footer">
+            <el-row>
+                <el-col :span="24">
+                    <el-button v-on:click="showTrace=false">取 消</el-button>
+                    <el-button type="primary" v-on:click="showTrace=false">确 定</el-button>
                 </el-col>
             </el-row>
         </div>
@@ -226,7 +247,10 @@
                 showLookAddtion: false,//是否显示追加信息
                 CurrentAddtion: [{}],
                 CurrentAddtionIndex: 0,
-                CurrentHasTrace:false
+                CurrentHasTrace: false,
+                CurrentHasPage: false,
+                showTrace: false,
+                CurrentTraces: []
             },
             methods: {
                 CurrentAddtionIndexChange: function (pi) {
@@ -268,12 +292,34 @@
                 },
                 GetTraceExists: function (model) {
                     var that = this;
-                    $.post("/Log/GetTraceGroupExist",
-                        { traceId: model.TraceId, guid: model.Guid, happenTime: model.HappenTime },
+                    $.post("/Log/GetTracePageExist",
+                        { traceId: model.TraceId, guid: model.Guid, happenTime: model.HappenTime, pageId: model.PageId },
                         function (data) {
-                            if (data.data) {
-                                //model.HasTrace = true;
-                                that.CurrentHasTrace = true;
+                            that.CurrentHasTrace = data.trace;
+                            that.CurrentHasPage = data.page;
+                        });
+                },
+                dialogClosed: function (done) {
+                    this.CurrentHasTrace = false;
+                    this.CurrentHasPage = false;
+                    done();
+                },
+                closeDialog: function () {
+                    var that = this;
+                    this.dialogClosed(function () { that.showLookAddtion = false });
+                },
+                LookForTrace: function () {
+                    var that = this;
+                    var traceId = this.CurrentAddtion[0].TraceId;
+                    var happenTime = this.CurrentAddtion[0].HappenTime;
+                    $.post("/Log/GetTraceModel",
+                        { traceId: traceId, happenTime: happenTime },
+                        function (data) {
+                            if (data.result) {
+                                that.closeDialog();
+                                that.CurrentTraces = data.data;
+                                console.log(that.CurrentTraces)
+                                that.showTrace = true;
                             }
                         });
                 }
@@ -284,7 +330,5 @@
                 this.fullscreenLoading = false;
             }
         });
-
-
     </script>
 }

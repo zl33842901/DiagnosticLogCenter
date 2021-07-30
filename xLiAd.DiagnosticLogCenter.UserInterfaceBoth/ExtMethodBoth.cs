@@ -8,7 +8,7 @@ namespace xLiAd.DiagnosticLogCenter.UserInterfaceBoth
 {
     public static partial class ExtMethodBoth
     {
-        public static void ProcessEndAndException(this List<Log> logs)
+        public static void ProcessEndAndException(this IEnumerable<Log> logs)
         {
             List<Log> result = new List<Log>();
             foreach(var log in logs)
@@ -61,6 +61,21 @@ namespace xLiAd.DiagnosticLogCenter.UserInterfaceBoth
                             entryItem.WithEnd = true;
                         }
                         else
+                            items.Add(addtion);
+                    }
+                    else
+                        items.Add(addtion);
+                }
+                else if(addtion.LogType == Abstract.LogTypeEnum.MethodLeave || addtion.LogType == Abstract.LogTypeEnum.MethodException)
+                {
+                    var entryItem = log.Addtions.Where(x => x.MethodName == addtion.MethodName && x.ClassName == addtion.ClassName && x.LogType == Abstract.LogTypeEnum.MethodEntry && x.WithEnd == false).FirstOrDefault();
+                    if(entryItem != null)
+                    {
+                        entryItem.Sucess = addtion.LogType == Abstract.LogTypeEnum.MethodLeave;
+                        entryItem.TotalMillionSeconds = Convert.ToInt32((addtion.HappenTime - entryItem.HappenTime).TotalMilliseconds);
+                        entryItem.EndTime = addtion.HappenTime;
+                        entryItem.WithEnd = true;
+                        if (!addtion.Content.NullOrEmpty())
                             items.Add(addtion);
                     }
                     else

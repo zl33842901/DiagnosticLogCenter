@@ -47,10 +47,16 @@ namespace xLiAd.DiagnosticLogCenter.UserInterface.Controllers
             return Json(new { Succes = true, Items = l, Total = count });
         }
         [HttpPost]
-        public async Task<IActionResult> GetTraceGroupExist(string traceId, string guid, DateTime happenTime)
+        public async Task<IActionResult> GetTracePageExist(string traceId, string pageId, string guid, DateTime happenTime)
         {
-            var result = await traceAndPageService.GetTraceGroupExist(traceId, guid, happenTime);
-            return Json(new { data = result });
+            var result = await traceAndPageService.GetTracePageExist(traceId, pageId, guid, happenTime);
+            return Json(new { trace = result.Item1, page = result.Item2 });
+        }
+
+        public async Task<IActionResult> GetTraceModel(string traceId, DateTime happenTime)
+        {
+            var result = await traceAndPageService.GetTraceAll(traceId, happenTime);
+            return Json(new { result = true, data = result });
         }
     }
 
