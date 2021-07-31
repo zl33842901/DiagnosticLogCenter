@@ -10,13 +10,13 @@ namespace xLiAd.DiagnosticLogCenter.CollectServerBoth
     public class DiaglogService : Diagloger.DiaglogerBase
     {
         private readonly CollectServer.Services.ILogBatchService logBatchService;
-        private readonly CollectServerByEs.Services.ILogBatchService logBatchServiceEs;
+        //private readonly CollectServerByEs.Services.ILogBatchService logBatchServiceEs;
         private readonly ITraceAndGroupService traceAndGroupService;
-        public DiaglogService(CollectServer.Services.ILogBatchService logBatchService, CollectServerByEs.Services.ILogBatchService logBatchServiceEs,
+        public DiaglogService(CollectServer.Services.ILogBatchService logBatchService, //CollectServerByEs.Services.ILogBatchService logBatchServiceEs,
             ITraceAndGroupService traceAndGroupService)
         {
             this.logBatchService = logBatchService;
-            this.logBatchServiceEs = logBatchServiceEs;
+            //this.logBatchServiceEs = logBatchServiceEs;
             this.traceAndGroupService = traceAndGroupService;
         }
 
@@ -28,11 +28,11 @@ namespace xLiAd.DiagnosticLogCenter.CollectServerBoth
                 await logBatchService.ProcessWriteDown(datas);
             }
             catch { }
-            try
-            {
-                await logBatchServiceEs.Process(request);
-            }
-            catch { }
+            //try
+            //{
+            //    await logBatchServiceEs.Process(request);
+            //}
+            //catch { }
             try
             {
                 await traceAndGroupService.ProcessLogs(datas.Select(x => x.Item2));

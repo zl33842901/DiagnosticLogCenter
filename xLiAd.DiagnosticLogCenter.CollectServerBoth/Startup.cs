@@ -28,8 +28,8 @@ namespace xLiAd.DiagnosticLogCenter.CollectServer
         {
             var conf = Configuration.GetSection("Configs").Get<CollectServerBoth.ConfigEntity>();
             services.AddSingleton(new MongoUrl(conf.MongodbUrl));
-            services.AddSingleton(x => new ConnectionSettings(new Uri(conf.EsUrl)));
-            services.AddScoped(x => new ElasticClient(x.GetService<ConnectionSettings>()));
+            //services.AddSingleton(x => new ConnectionSettings(new Uri(conf.EsUrl)));
+            //services.AddScoped(x => new ElasticClient(x.GetService<ConnectionSettings>()));
             services.AddSingleton(conf);
 
 
@@ -40,11 +40,11 @@ namespace xLiAd.DiagnosticLogCenter.CollectServer
             services.AddScoped<CollectServer.Services.ILogBatchService, CollectServer.Services.LogBatchService>();
 
 
-            services.AddScoped<CollectServerByEs.Repositories.IClientRepository, CollectServerByEs.Repositories.ClientRepository>();
-            services.AddScoped<CollectServerByEs.Repositories.ILogRepository, CollectServerByEs.Repositories.LogRepository>();
-            services.AddScoped<CollectServerByEs.Services.IClientCacheService, CollectServerByEs.Services.ClientCacheService>();
-            services.AddSingleton<CollectServerByEs.Services.ICacheService, CollectServerByEs.Services.CacheService>();
-            services.AddScoped<CollectServerByEs.Services.ILogBatchService, CollectServerByEs.Services.LogBatchService>();
+            //services.AddScoped<CollectServerByEs.Repositories.IClientRepository, CollectServerByEs.Repositories.ClientRepository>();
+            //services.AddScoped<CollectServerByEs.Repositories.ILogRepository, CollectServerByEs.Repositories.LogRepository>();
+            //services.AddScoped<CollectServerByEs.Services.IClientCacheService, CollectServerByEs.Services.ClientCacheService>();
+            //services.AddSingleton<CollectServerByEs.Services.ICacheService, CollectServerByEs.Services.CacheService>();
+            //services.AddScoped<CollectServerByEs.Services.ILogBatchService, CollectServerByEs.Services.LogBatchService>();
 
             services.AddScoped<ITraceRepository, TraceRepository>();
             services.AddScoped<IPageRepository, PageRepository>();

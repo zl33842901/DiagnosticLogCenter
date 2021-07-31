@@ -41,3 +41,5 @@
 /xLiAd.DiagnosticLogCenter.SampleAspNetCore/bin
 /xLiAd.DiagnosticLogCenter.UserInterfaceBoth/bin/Debug/netcoreapp3.1
 /xLiAd.DiagnosticLogCenter.UserInterfaceBoth/obj
+/xLiAd.DiagnosticLogCenter.CollectServerBoth/bin/Release/netcoreapp3.1
+/xLiAd.DiagnosticLogCenter.UserInterfaceBoth/bin/Release/netcoreapp3.1
