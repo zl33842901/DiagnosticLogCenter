@@ -51,6 +51,8 @@ namespace xLiAd.DiagnosticLogCenter.UserInterface.Models
                         return Sucess ? "006400" : "FF3030";
                     case Abstract.LogTypeEnum.HttpClientRequest:
                         return Sucess ? "CD6600" : "FF3030";
+                    case Abstract.LogTypeEnum.MethodEntry:
+                        return Sucess ? "68228B" : "FF3030";
                     default:
                         return null;
                 }
@@ -69,6 +71,8 @@ namespace xLiAd.DiagnosticLogCenter.UserInterface.Models
                         return "执行DapperEx";
                     case Abstract.LogTypeEnum.HttpClientRequest:
                         return "对外请求";
+                    case Abstract.LogTypeEnum.MethodEntry:
+                        return "运行方法";
                     default:
                         return null;
                 }
