@@ -58,7 +58,8 @@ namespace xLiAd.DiagnosticLogCenter.UserInterfaceBoth
             var maxlength = logs.Max(x => x.TotalMillionSeconds);
             var earliest = logs.Min(x => x.HappenTime);
             var i = 0;
-            foreach(var x in logs.OrderBy(x => x.HappenTime))
+            logs = logs.OrderBy(x => x.ParentGuid != string.Empty).ThenBy(x => x.HappenTime).ToList();
+            foreach (var x in logs)
             {
                 x.Length = maxlength > 0 ? (x.TotalMillionSeconds * 100 / maxlength) : 100;
                 x.StartPoint = Convert.ToInt32((x.HappenTime - earliest).TotalMilliseconds * 100) / maxlength;
