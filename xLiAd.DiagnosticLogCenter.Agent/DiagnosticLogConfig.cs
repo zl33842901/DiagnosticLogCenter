@@ -15,6 +15,7 @@ namespace xLiAd.DiagnosticLogCenter.Agent
         public bool EnableHttpClient { get; set; } = true;
         public bool EnableSqlClient { get; set; } = true;
         public bool EnableMethod { get; set; } = true;
+        public bool EnableSystemLog { get; set; } = true;
         /// <summary>
         /// 是否记录SQL的参数
         /// </summary>

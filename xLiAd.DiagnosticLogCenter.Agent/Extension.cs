@@ -1,10 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors;
 using xLiAd.DiagnosticLogCenter.Agent.Helper;
+using xLiAd.DiagnosticLogCenter.Agent.Logger;
 
 namespace xLiAd.DiagnosticLogCenter.Agent
 {
@@ -26,6 +28,8 @@ namespace xLiAd.DiagnosticLogCenter.Agent
                 services.AddSingleton<ITracingDiagnosticProcessor, MethodDiagnosticProcessor>();
             if (config.EnableSqlClient)
                 services.AddSingleton<ITracingDiagnosticProcessor, SqlClientDiagnosticProcessor>();
+            if (config.EnableSystemLog)
+                services.AddSingleton<ILoggerProvider, DiagnosticLogCenterLoggerProvider>();
 
             services.AddSingleton<TracingDiagnosticProcessorObserver>();
             services.AddSingleton<IHostedService, InstrumentationHostedService>();

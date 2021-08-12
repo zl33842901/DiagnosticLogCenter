@@ -28,6 +28,7 @@ namespace xLiAd.DiagnosticLogCenter.SampleAspNetCore.Controllers
             //var httpResult = sampleService.RequestWeb("https://www.baidu.com/");
             //return new { dbresult, httpResult };
             var result =  sampleService.QueryDb(2);
+            _logger.LogWarning("这是一条测试日志。");
             return new { result };
         }
 
