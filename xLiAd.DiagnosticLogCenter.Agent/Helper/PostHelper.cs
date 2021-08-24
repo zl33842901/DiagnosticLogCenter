@@ -16,7 +16,8 @@ namespace xLiAd.DiagnosticLogCenter.Agent.Helper
         private static int timeoutBySeconds;
         private static ConcurrentQueue<LogDtoItem> LogContainer = new ConcurrentQueue<LogDtoItem>();
         private static System.Timers.Timer Timer = new System.Timers.Timer();
-
+        private static readonly LocalCacheHelper localCacheHelper = new LocalCacheHelper();
+        private static object forClearLock = new object();
         private static void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             LogDto dto = new LogDto();
@@ -24,22 +25,51 @@ namespace xLiAd.DiagnosticLogCenter.Agent.Helper
             {
                 dto.Items.Add(log);
             }
+            var shouldClearCacheLogs = false;//在没有新日志、成功上传的情况下可以清本地日志缓存
             if (!dto.Items.AnyX())
-                return;
-            try
+                shouldClearCacheLogs = true;
+            else
             {
-                var channel = new Channel(address, ChannelCredentials.Insecure);
-                var grpcClient = new Diagloger.DiaglogerClient(channel);
-                grpcClient.PostLog(dto, new CallOptions(null, DateTime.Now.ToUniversalTime().AddSeconds(timeoutBySeconds)));
+                try
+                {
+                    var channel = new Channel(address, ChannelCredentials.Insecure);
+                    var grpcClient = new Diagloger.DiaglogerClient(channel);
+                    grpcClient.PostLog(dto, new CallOptions(null, DateTime.Now.ToUniversalTime().AddSeconds(timeoutBySeconds)));
+                    shouldClearCacheLogs = true;
+                }
+                catch (Exception ex)
+                {
+                    if (!localCacheHelper.WriteLog(dto))
+                    {
+                        var color = Console.ForegroundColor;
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("DiagnosticLogCenter 组件调用 Grpc 写入过程时出现错误，报错信息如下：");
+                        Console.ForegroundColor = color;
+                        Console.WriteLine(ex.Message);
+                        Console.WriteLine(ex.StackTrace);
+                    }
+                    else
+                        Console.WriteLine("DiagnosticLogCenter 组件已将日志缓存到本地。");
+                }
             }
-            catch(Exception ex) 
+            if (shouldClearCacheLogs)
             {
-                var color = Console.ForegroundColor;
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("DiagnosticLogCenter 组件调用 Grpc 写入过程时出现错误，报错信息如下：");
-                Console.ForegroundColor = color;
-                Console.WriteLine(ex.Message);
-                Console.WriteLine(ex.StackTrace);
+                lock (forClearLock)
+                {
+                    try
+                    {
+                        (var logs, var action) = localCacheHelper.PeekClearLog();
+                        if (logs.AnyX())
+                        {
+                            var channel = new Channel(address, ChannelCredentials.Insecure);
+                            var grpcClient = new Diagloger.DiaglogerClient(channel);
+                            foreach (var log in logs)
+                                grpcClient.PostLog(log, new CallOptions(null, DateTime.Now.ToUniversalTime().AddSeconds(timeoutBySeconds)));
+                            action.Invoke();
+                        }
+                    }
+                    catch { }
+                }
             }
         }
 
