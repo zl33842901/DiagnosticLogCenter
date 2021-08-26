@@ -37,6 +37,7 @@ namespace xLiAd.DiagnosticLogCenter.UserInterfaceBoth
             services.AddScoped<ILogReadService, LogReadService>();
             services.AddScoped<CollectServerBoth.TraceAndPage.IPageRepository, CollectServerBoth.TraceAndPage.PageRepository>();
             services.AddScoped<CollectServerBoth.TraceAndPage.ITraceRepository, CollectServerBoth.TraceAndPage.TraceRepository>();
+            services.AddSingleton<CollectServerBoth.TraceAndPage.ICacheProvider, CollectServerBoth.TraceAndPage.CacheProvider>();
             services.AddScoped<ITraceAndPageService, TraceAndPageService>();
             services.AddHttpContextAccessor();
             services.AddHttpClient();

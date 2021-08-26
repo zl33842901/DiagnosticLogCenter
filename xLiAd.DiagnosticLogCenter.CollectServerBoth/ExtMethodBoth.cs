@@ -8,18 +8,22 @@ namespace xLiAd.DiagnosticLogCenter.CollectServerBoth
 {
     public static partial class ExtMethodBoth
     {
-        public static string GetIndexName(this TraceGroup traceGroup)
+        private static string ThirdPart(DateTime happenTime)
         {
-            return $"TraceId-{traceGroup.Year}-{traceGroup.Month.ToString().PadLeft(2, '0')}";
+            string result;
+            if (happenTime > new DateTime(2021, 8, 26, 13, 59, 00))
+                result = "-" + (happenTime.Day < 11 ? "0" : (happenTime.Day < 21 ? "1" : "2"));
+            else
+                result = string.Empty;
+            return result;
         }
-
         public static string GetTraceIdTableName(this DateTime happenTime)
         {
-            return $"TraceId-{happenTime.Year}-{happenTime.Month.ToString().PadLeft(2, '0')}";
+            return $"TraceId-{happenTime.Year}-{happenTime.Month.ToString().PadLeft(2, '0')}{ThirdPart(happenTime)}";
         }
         public static string GetPageIdTableName(this DateTime happenTime)
         {
-            return $"PageId-{happenTime.Year}-{happenTime.Month.ToString().PadLeft(2, '0')}";
+            return $"PageId-{happenTime.Year}-{happenTime.Month.ToString().PadLeft(2, '0')}{ThirdPart(happenTime)}";
         }
     }
 }

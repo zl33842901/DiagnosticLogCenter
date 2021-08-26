@@ -49,6 +49,7 @@ namespace xLiAd.DiagnosticLogCenter.CollectServer
             services.AddScoped<ITraceRepository, TraceRepository>();
             services.AddScoped<IPageRepository, PageRepository>();
             services.AddScoped<ITraceAndGroupService, TraceAndGroupService>();
+            services.AddSingleton<ICacheProvider, CacheProvider>();
 
             services.AddGrpc();
         }

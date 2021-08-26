@@ -30,6 +30,7 @@
     <Compile Include="../xLiAd.DiagnosticLogCenter.CollectServerBoth/TraceAndPage/PageRepository.cs" Link="TraceAndPage/PageRepository.cs" />
     <Compile Include="../xLiAd.DiagnosticLogCenter.CollectServerBoth/TraceAndPage/TraceGroup.cs" Link="TraceAndPage/TraceGroup.cs" />
     <Compile Include="../xLiAd.DiagnosticLogCenter.CollectServerBoth/TraceAndPage/TraceRepository.cs" Link="TraceAndPage/TraceRepository.cs" />
+    <Compile Include="../xLiAd.DiagnosticLogCenter.CollectServerBoth/TraceAndPage/CacheProvider.cs" Link="TraceAndPage/CacheProvider.cs" />
     <Compile Include="../xLiAd.DiagnosticLogCenter.CollectServerBoth/ExtMethodBoth.cs" Link="ExtMethodBoth2.cs" />
   </ItemGroup>
 

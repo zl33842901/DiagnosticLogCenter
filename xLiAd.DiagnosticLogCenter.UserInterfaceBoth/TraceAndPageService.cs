@@ -30,9 +30,9 @@ namespace xLiAd.DiagnosticLogCenter.UserInterfaceBoth
         {
             bool traceExists, pageExists;
             var trace = await traceRepository.FindByTraceId(traceId, happenTime);
-            traceExists = trace.Items.Any(x => x.Guid != guid);
+            traceExists = trace?.Items.Any(x => x.Guid != guid) ?? false;//trace 为空可能是没来得及写入
             var page = await pageRepository.FindByPageId(pageId, happenTime);
-            pageExists = page.Items.Any(x => x.TraceId != traceId);
+            pageExists = page?.Items.Any(x => x.TraceId != traceId) ?? false;//page 为空可能是没来得及写入
             return (traceExists, pageExists);
         }
 

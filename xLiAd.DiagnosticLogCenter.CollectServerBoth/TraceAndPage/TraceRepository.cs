@@ -13,9 +13,11 @@ namespace xLiAd.DiagnosticLogCenter.CollectServerBoth.TraceAndPage
     {
         private ConcurrentDictionary<string, MongoRepository<TraceGroup>> Repositories = new ConcurrentDictionary<string, MongoRepository<TraceGroup>>();
         private MongoUrl mongoUrl;
-        public TraceRepository(MongoUrl mongoUrl)
+        private readonly ICacheProvider cacheProvider;
+        public TraceRepository(MongoUrl mongoUrl, ICacheProvider cacheProvider)
         {
             this.mongoUrl = mongoUrl;
+            this.cacheProvider = cacheProvider;
         }
         private MongoRepository<TraceGroup> GetRepository(string logTable)
         {
@@ -24,10 +26,6 @@ namespace xLiAd.DiagnosticLogCenter.CollectServerBoth.TraceAndPage
             MongoRepository<TraceGroup> repo = new MongoRepository<TraceGroup>(this.mongoUrl, logTable);
             Repositories.TryAdd(logTable, repo);
             return repo;
-        }
-        private MongoRepository<TraceGroup> GetRepository(TraceGroup log)
-        {
-            return GetRepository(log.GetIndexName());
         }
 
         private MongoRepository<TraceGroup> GetRepository(DateTime date)
@@ -43,9 +41,20 @@ namespace xLiAd.DiagnosticLogCenter.CollectServerBoth.TraceAndPage
             if (traceId.NullOrEmpty())
                 return false;
             var repo = GetRepository(happenTime);
+            bool traceHasBeenInDb;
+            string ck = "TraceId-" + traceId;
+            var tcache = cacheProvider.Get<string>(ck);
+            if (tcache != null)
+                traceHasBeenInDb = true;
+            else
+            {
+                var model = await repo.FindAsync(x => x.TraceId == traceId);
+                traceHasBeenInDb = model != null;
+                if(model != null)
+                    cacheProvider.Set(ck, "a", TimeSpan.FromMinutes(5));
+            }
             //Monitor.Enter(objForLock);
-            var model = await repo.FindAsync(x => x.TraceId == traceId);
-            if(model == null)
+            if(!traceHasBeenInDb)
             {
                 var result = await repo.AddAsync(new TraceGroup()
                 {
@@ -58,6 +67,7 @@ namespace xLiAd.DiagnosticLogCenter.CollectServerBoth.TraceAndPage
                     TraceId = traceId
                 });
                 //Monitor.Exit(objForLock);
+                cacheProvider.Set(ck, "a", TimeSpan.FromMinutes(5));
                 return true;
             }
             else

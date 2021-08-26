@@ -14,9 +14,11 @@ namespace xLiAd.DiagnosticLogCenter.CollectServerBoth.TraceAndPage
         private ConcurrentDictionary<string, MongoRepository<PageGroup>> Repositories = new ConcurrentDictionary<string, MongoRepository<PageGroup>>();
         private MongoUrl mongoUrl;
         private static object objForLock = new object();
-        public PageRepository(MongoUrl mongoUrl)
+        private readonly ICacheProvider cacheProvider;
+        public PageRepository(MongoUrl mongoUrl, ICacheProvider cacheProvider)
         {
             this.mongoUrl = mongoUrl;
+            this.cacheProvider = cacheProvider;
         }
         private MongoRepository<PageGroup> GetRepository(string logTable)
         {
@@ -40,9 +42,20 @@ namespace xLiAd.DiagnosticLogCenter.CollectServerBoth.TraceAndPage
             if (pageId.NullOrEmpty())
                 return false;
             var repo = GetRepository(happenTime);
+            bool pageHasBeenInDb;
+            string ck = "PageId-" + pageId;
+            var tcache = cacheProvider.Get<string>(ck);
+            if (tcache != null)
+                pageHasBeenInDb = true;
+            else
+            {
+                var model = await repo.FindAsync(x => x.PageId == pageId);
+                pageHasBeenInDb = model != null;
+                if (model != null)
+                    cacheProvider.Set(ck, "a", TimeSpan.FromMinutes(5));
+            }
             //Monitor.Enter(objForLock);
-            var model = await repo.FindAsync(x => x.PageId == pageId);
-            if (model == null)
+            if (!pageHasBeenInDb)
             {
                 var result = await repo.AddAsync(new PageGroup()
                 {
