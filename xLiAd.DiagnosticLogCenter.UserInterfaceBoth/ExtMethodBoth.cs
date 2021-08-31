@@ -31,6 +31,11 @@ namespace xLiAd.DiagnosticLogCenter.UserInterfaceBoth
                         entryItem.TotalMillionSeconds = Convert.ToInt32((addtion.HappenTime - entryItem.HappenTime).TotalMilliseconds);
                         entryItem.EndTime = addtion.HappenTime;
                         entryItem.WithEnd = true;
+                        if(addtion.LogType == Abstract.LogTypeEnum.SqlException)
+                        {
+                            entryItem.Message = addtion.Message;
+                            entryItem.Content = addtion.Content;
+                        }
                     }
                     else
                         items.Add(addtion);
@@ -44,6 +49,11 @@ namespace xLiAd.DiagnosticLogCenter.UserInterfaceBoth
                         entryItem.TotalMillionSeconds = Convert.ToInt32((addtion.HappenTime - entryItem.HappenTime).TotalMilliseconds);
                         entryItem.EndTime = addtion.HappenTime;
                         entryItem.WithEnd = true;
+                        if (addtion.LogType == Abstract.LogTypeEnum.DapperExSqlException)
+                        {
+                            entryItem.Message = addtion.Message;
+                            entryItem.Content = addtion.Content;
+                        }
                     }
                     else
                         items.Add(addtion);
@@ -59,6 +69,11 @@ namespace xLiAd.DiagnosticLogCenter.UserInterfaceBoth
                             entryItem.TotalMillionSeconds = Convert.ToInt32((addtion.HappenTime - entryItem.HappenTime).TotalMilliseconds);
                             entryItem.EndTime = addtion.HappenTime;
                             entryItem.WithEnd = true;
+                            if (addtion.LogType == Abstract.LogTypeEnum.HttpClientException)
+                            {
+                                entryItem.Message = entryItem.Message + addtion.Message;
+                                entryItem.Content = entryItem.Content + addtion.Content;
+                            }
                         }
                         else
                             items.Add(addtion);
