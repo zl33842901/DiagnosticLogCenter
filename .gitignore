@@ -43,3 +43,7 @@
 /xLiAd.DiagnosticLogCenter.UserInterfaceBoth/obj
 /xLiAd.DiagnosticLogCenter.CollectServerBoth/bin/Release/netcoreapp3.1
 /xLiAd.DiagnosticLogCenter.UserInterfaceBoth/bin/Release/netcoreapp3.1
+/xLiAd.DiagnosticeLogCenter.DbExportCore.Test/bin/Debug/netcoreapp3.1
+/xLiAd.DiagnosticeLogCenter.DbExportCore.Test/obj
+/xLiAd.DiagnosticLogCenter.DbExportCore/bin/Debug/netcoreapp3.1
+/xLiAd.DiagnosticLogCenter.DbExportCore/obj
