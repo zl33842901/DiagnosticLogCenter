@@ -23,7 +23,7 @@ namespace xLiAd.DiagnosticLogCenter.DbExportCore.Settings
         /// 要处理的最大日期 null 代表今天
         /// </summary>
         public DateTime? MaxDate { get; set; }
-        private DateTime RealMaxDate => MaxDate ?? DateTime.Today;
+        internal DateTime RealMaxDate => MaxDate ?? DateTime.Today;
         /// <summary>
         /// 备份完成是否删除Collection
         /// </summary>
@@ -63,6 +63,10 @@ namespace xLiAd.DiagnosticLogCenter.DbExportCore.Settings
             else
                 return ProcessEnum.None;
         }
+        /// <summary>
+        /// 文档存放的文件夹
+        /// </summary>
+        public string OutputFolder { get; set; } = "downfiles\\";
     }
 
     public enum ProcessEnum : int

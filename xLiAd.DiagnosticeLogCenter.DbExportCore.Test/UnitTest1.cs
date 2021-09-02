@@ -21,7 +21,8 @@ namespace xLiAd.DiagnosticeLogCenter.DbExportCore.Test
             ICollectionExporter exporter = new CollectionExporter(cm);
             await exporter.Export(new DiagnosticLogCenter.DbExportCore.Settings.ExportSetting()
             {
-                
+                ClientNames = new string[] { "acc" },
+                MaxDate = new DateTime(2021, 4, 28)
             });
         }
     }

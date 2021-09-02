@@ -8,11 +8,11 @@ namespace xLiAd.DiagnosticLogCenter.DbExportCore
     public class CollectionManager : ICollectionManager
     {
         private readonly MongoClient mongoClient;
-        private readonly MongoUrl mongoUrl;
+        public MongoUrl MongoUrl { get; }
         private readonly IMongoDatabase mongoDatabaseBase;
         public CollectionManager(MongoUrl mongoUrl)
         {
-            this.mongoUrl = mongoUrl;
+            this.MongoUrl = mongoUrl;
             mongoClient = new MongoClient(mongoUrl);
             mongoDatabaseBase = mongoClient.GetDatabase(mongoUrl.DatabaseName);
         }
@@ -37,6 +37,7 @@ namespace xLiAd.DiagnosticLogCenter.DbExportCore
 
     public interface ICollectionManager
     {
+        MongoUrl MongoUrl { get; }
         Task<List<string>> GetCollections();
         Task DropCollection(string name);
     }
