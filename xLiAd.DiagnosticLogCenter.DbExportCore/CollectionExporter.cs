@@ -21,7 +21,7 @@ namespace xLiAd.DiagnosticLogCenter.DbExportCore
         private string mongobin => Path.Combine(Directory.GetCurrentDirectory(), "mongodbbin");
         private string exe => Path.Combine(mongobin, "mongoexport.exe");
 
-        public async Task<(List<ProcessItem> completed, List<ProcessItem> errors, string zipfile)> Export(ExportSetting setting)
+        public async Task<(List<ProcessItem> completed, List<ProcessItem> errors, List<string> zipfiles)> Export(ExportSetting setting)
         {
             exportLog?.Info("进入 Export 方法，开始导出");
             exportLog?.Info(setting);
@@ -38,7 +38,11 @@ namespace xLiAd.DiagnosticLogCenter.DbExportCore
             exportLog?.Info($"保存路径：{savefolder}");
             List<Tuple<ProcessItem, string>> Completed = new List<Tuple<ProcessItem, string>>();
             List<ProcessItem> Errored = new List<ProcessItem>();
-            foreach(var nameModel in nameModels)
+            List<Tuple<ProcessItem, string>> toCompress = new List<Tuple<ProcessItem, string>>();
+            long tempBytes = 0;
+            int tm = 1;
+            List<string> resultZips = new List<string>();
+            foreach (var nameModel in nameModels)
             {
                 exportLog?.Info($"开始处理表{nameModel.NameModel}");
                 var file = await DoDownload(nameModel.NameModel.ToString(), savefolder);
@@ -49,6 +53,10 @@ namespace xLiAd.DiagnosticLogCenter.DbExportCore
                     Errored.Add(nameModel);
                     continue;
                 }
+                else
+                {
+                    tempBytes += new FileInfo(file).Length;
+                }
                 if (nameModel.ProcessEnum == ProcessEnum.BakAndRemove)
                 {
                     exportLog?.Info($"将要删除表：{nameModel.NameModel}");
@@ -56,20 +64,35 @@ namespace xLiAd.DiagnosticLogCenter.DbExportCore
                     exportLog?.Info($"表：{nameModel.NameModel}删除完成");
                 }
                 exportLog?.Info($"表：{nameModel.NameModel}处理完毕");
-                Completed.Add(new Tuple<ProcessItem, string>(nameModel, file));
+                var nnm = new Tuple<ProcessItem, string>(nameModel, file);
+                Completed.Add(nnm);
+                toCompress.Add(nnm);
+                if(tempBytes > 20L * 1024 * 1024 * 1024)
+                {
+                    resultZips.Add(Compress(toCompress, savefolder, setting.RealMaxDate, tm++));
+                    toCompress = new List<Tuple<ProcessItem, string>>();
+                    tempBytes = 0;
+                }
             }
             //压缩
+            resultZips.Add(Compress(toCompress, savefolder, setting.RealMaxDate, tm));
+            exportLog?.Info($"处理完毕，程序将返回");
+            return (Completed.Select(x => x.Item1).ToList(), Errored, resultZips);
+        }
+
+        private string Compress(List<Tuple<ProcessItem, string>> completed, string savefolder, DateTime maxDate, int index)
+        {
             string result = null;
-            if (Completed.Any())
+            if (completed.Any())
             {
-                exportLog?.Info($"压缩开始，需要压缩的文件数量：{Completed.Count}");
-                result = Completed.Where(x => x.Item1.NameModel is LogCollectionNameModel).Select(x => ((LogCollectionNameModel)x.Item1.NameModel).ClientName).Distinct().ToStringBy("-") + "_" + setting.RealMaxDate.ToString("yyyy-MM-dd") + ".zip";
+                exportLog?.Info($"压缩开始，需要压缩的文件数量：{completed.Count}");
+                result = completed.Where(x => x.Item1.NameModel is LogCollectionNameModel).Select(x => ((LogCollectionNameModel)x.Item1.NameModel).ClientName).Distinct().ToStringBy("-") + "_" + maxDate.ToString("yyyy-MM-dd") + "_" + index + ".zip";
                 result = Path.Combine(savefolder, result);
                 using (FileStream zipToOpen = new FileStream(result, FileMode.Create))
                 {
                     using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Create))
                     {
-                        foreach (var data in Completed)
+                        foreach (var data in completed)
                         {
                             var fn = Path.GetFileName(data.Item2);
                             archive.CreateEntryFromFile(data.Item2, fn);
@@ -78,11 +101,10 @@ namespace xLiAd.DiagnosticLogCenter.DbExportCore
                 }
                 exportLog?.Info($"压缩完毕，将删除JSON文件");
                 //删除 json
-                foreach (var data in Completed)
+                foreach (var data in completed)
                     File.Delete(data.Item2);
             }
-            exportLog?.Info($"处理完毕，程序将返回");
-            return (Completed.Select(x => x.Item1).ToList(), Errored, result);
+            return result;
         }
 
         private Task<string> DoDownload(string collection, string savefolder)
@@ -105,6 +127,6 @@ namespace xLiAd.DiagnosticLogCenter.DbExportCore
 
     public interface ICollectionExporter
     {
-        Task<(List<ProcessItem> completed, List<ProcessItem> errors, string zipfile)> Export(ExportSetting setting);
+        Task<(List<ProcessItem> completed, List<ProcessItem> errors, List<string> zipfiles)> Export(ExportSetting setting);
     }
 }
