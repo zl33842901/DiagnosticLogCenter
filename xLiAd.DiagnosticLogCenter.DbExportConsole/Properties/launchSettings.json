@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "xLiAd.DiagnosticLogCenter.DbExportConsole": {
+      "commandName": "Project",
+      "commandLineArgs": " --clients acc --url \"mongodb://zhanglei20:ab1b0455lgZwL@172.16.101.28:27017/LogCenterTest?authSource=admin&authMechanism=SCRAM-SHA-1\" --dropafterbak 0"
+    }
+  }
+}

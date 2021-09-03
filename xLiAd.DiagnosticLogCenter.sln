@@ -31,9 +31,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xLiAd.DiagnosticLogCenter.U
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExportService", "ExportService", "{43B27A14-B1BC-4F4A-8E1F-8C34C3AF8C57}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xLiAd.DiagnosticLogCenter.DbExportCore", "xLiAd.DiagnosticLogCenter.DbExportCore\xLiAd.DiagnosticLogCenter.DbExportCore.csproj", "{0BF8944C-69FA-4E39-A689-39657D83DD95}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xLiAd.DiagnosticLogCenter.DbExportCore", "xLiAd.DiagnosticLogCenter.DbExportCore\xLiAd.DiagnosticLogCenter.DbExportCore.csproj", "{0BF8944C-69FA-4E39-A689-39657D83DD95}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xLiAd.DiagnosticeLogCenter.DbExportCore.Test", "xLiAd.DiagnosticeLogCenter.DbExportCore.Test\xLiAd.DiagnosticeLogCenter.DbExportCore.Test.csproj", "{2D8F98F7-3FC8-4ED5-A60F-4CECFBECF436}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xLiAd.DiagnosticeLogCenter.DbExportCore.Test", "xLiAd.DiagnosticeLogCenter.DbExportCore.Test\xLiAd.DiagnosticeLogCenter.DbExportCore.Test.csproj", "{2D8F98F7-3FC8-4ED5-A60F-4CECFBECF436}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xLiAd.DiagnosticLogCenter.DbExportConsole", "xLiAd.DiagnosticLogCenter.DbExportConsole\xLiAd.DiagnosticLogCenter.DbExportConsole.csproj", "{64E1F402-D658-46EB-B542-091CA6D94502}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -97,6 +99,10 @@ Global
 		{2D8F98F7-3FC8-4ED5-A60F-4CECFBECF436}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2D8F98F7-3FC8-4ED5-A60F-4CECFBECF436}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2D8F98F7-3FC8-4ED5-A60F-4CECFBECF436}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64E1F402-D658-46EB-B542-091CA6D94502}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64E1F402-D658-46EB-B542-091CA6D94502}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64E1F402-D658-46EB-B542-091CA6D94502}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64E1F402-D658-46EB-B542-091CA6D94502}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -107,6 +113,7 @@ Global
 		{B8B1E736-DA55-49BD-B3DB-20E60C805302} = {92141009-739B-4CD1-B5F4-2ACF5A761E5E}
 		{0BF8944C-69FA-4E39-A689-39657D83DD95} = {43B27A14-B1BC-4F4A-8E1F-8C34C3AF8C57}
 		{2D8F98F7-3FC8-4ED5-A60F-4CECFBECF436} = {43B27A14-B1BC-4F4A-8E1F-8C34C3AF8C57}
+		{64E1F402-D658-46EB-B542-091CA6D94502} = {43B27A14-B1BC-4F4A-8E1F-8C34C3AF8C57}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {17077534-6DF0-4A39-B0D6-8E429BC7CC4E}

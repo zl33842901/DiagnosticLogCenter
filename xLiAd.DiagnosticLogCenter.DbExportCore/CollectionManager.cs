@@ -29,9 +29,16 @@ namespace xLiAd.DiagnosticLogCenter.DbExportCore
             return result;
         }
 
-        public async Task DropCollection(string name)
+        public Task DropCollection(string name)
         {
-            await mongoDatabaseBase.DropCollectionAsync(name);
+            //这么处理是因为有一次停在这一步，报了超时72分钟
+            var retryTimes = 0;
+            Task t = mongoDatabaseBase.DropCollectionAsync(name);
+            while (!t.Wait(TimeSpan.FromSeconds(25)) && retryTimes++ < 5)
+            {
+                t = mongoDatabaseBase.DropCollectionAsync(name);
+            }
+            return Task.CompletedTask;
         }
     }
 

@@ -47,3 +47,5 @@
 /xLiAd.DiagnosticeLogCenter.DbExportCore.Test/obj
 /xLiAd.DiagnosticLogCenter.DbExportCore/bin/Debug/netcoreapp3.1
 /xLiAd.DiagnosticLogCenter.DbExportCore/obj
+/xLiAd.DiagnosticLogCenter.DbExportConsole/bin/Debug/netcoreapp3.1
+/xLiAd.DiagnosticLogCenter.DbExportConsole/obj
