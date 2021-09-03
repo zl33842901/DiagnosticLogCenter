@@ -8,7 +8,7 @@ namespace xLiAd.DiagnosticLogCenter.DbExportConsole
     class Program
     {
         /// <summary>
-        /// xLiAd.DiagnosticLogCenter.DbExportConsole.exe --clients acc --url "mongodb://zhanglei20:ab1b0455lgZwL@172.16.101.28:27017/LogCenterTest?authSource=admin&authMechanism=SCRAM-SHA-1" --dropafterbak 0
+        /// xLiAd.DiagnosticLogCenter.DbExportConsole.exe --clients acc --url "mongodb://zhanglei20:ab1b0455lgZwL@172.16.101.28:27017/LogCenterTest?authSource=admin&authMechanism=SCRAM-SHA-1" --dropafterbak 0 --maxdate 150d
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
@@ -36,9 +36,9 @@ namespace xLiAd.DiagnosticLogCenter.DbExportConsole
             var defaultResult = DateTime.Today.AddMonths(-3);
             if (date.NullOrEmpty())
                 return defaultResult;
-            if (Regex.IsMatch(date, "^-([\\d]{1,3})[d|m]$"))
+            if (Regex.IsMatch(date, "^([\\d]{1,3})[d|m]$"))
             {
-                var d = date.Substring(1, date.Length - 2).ToInt();
+                var d = date.Substring(0, date.Length - 1).ToInt();
                 if (d < 1)
                     return defaultResult;
                 if (date.EndsWith("d", StringComparison.OrdinalIgnoreCase))
