@@ -117,11 +117,11 @@ namespace xLiAd.DiagnosticLogCenter.CollectServer.Services
                     Addtions = addtions.OrderBy(x => x.HappenTime).ToArray(),
                     //AddtionsString = string.Join(";", item.Select(x => x.StackTrace)),
                     Id = string.Empty,
-                    TraceId = addtions.FirstOrDefault()?.TraceId,
-                    PageId = addtions.FirstOrDefault()?.PageId,
+                    TraceId = start.TraceId ?? addtions.FirstOrDefault()?.TraceId,
+                    PageId = start.PageId ?? addtions.FirstOrDefault()?.PageId,
                     Guid = item.Key,
-                    ParentGuid = addtions.FirstOrDefault()?.ParentGuid,
-                    ParentHttpId = addtions.FirstOrDefault()?.ParentHttpId
+                    ParentGuid = start.ParentGuid ?? addtions.FirstOrDefault()?.ParentGuid,
+                    ParentHttpId = start.ParentHttpId ?? addtions.FirstOrDefault()?.ParentHttpId
                 };
                 return (item.Key, log);
             }

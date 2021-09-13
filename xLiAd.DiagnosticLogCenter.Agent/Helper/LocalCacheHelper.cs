@@ -41,6 +41,7 @@ namespace xLiAd.DiagnosticLogCenter.Agent.Helper
                     sw.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
                     sw.Close();
                     realSavePath = path;
+                    File.Delete(filePath);
                     return true;
                 }
                 catch { return false; }

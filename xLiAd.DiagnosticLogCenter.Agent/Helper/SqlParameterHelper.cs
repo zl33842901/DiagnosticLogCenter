@@ -38,7 +38,16 @@ namespace xLiAd.DiagnosticLogCenter.Agent.Helper
                     if (parameters.GetType().IsValueType)
                         return parameters.ToString();
                     else
-                        return null;//实体类暂不记录 只有 QueryBySql 等的时候会用到。
+                    {
+                        try
+                        {
+                            return Newtonsoft.Json.JsonConvert.SerializeObject(parameters);
+                        }
+                        catch
+                        {
+                            return null;
+                        }
+                    }
                 }
                 StringBuilder sbP = new StringBuilder();
                 sbP.Append("{ \r\n");
@@ -76,7 +85,10 @@ namespace xLiAd.DiagnosticLogCenter.Agent.Helper
         {
             try
             {
-                var p = parameters.GetType().GetField("parameters", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                var tp = parameters.GetType();
+                var p = tp.GetField("parameters", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                if(p == null)
+                    p = tp.BaseType.GetField("parameters", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
                 if (p == null)
                     return null;
                 var di = p.GetValue(parameters) as IDictionary;// Dictionary<string, Dapper.DynamicParameters.ParamInfo>;
