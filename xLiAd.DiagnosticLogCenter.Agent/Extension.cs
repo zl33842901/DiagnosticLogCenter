@@ -30,6 +30,7 @@ namespace xLiAd.DiagnosticLogCenter.Agent
                 services.AddSingleton<ITracingDiagnosticProcessor, SqlClientDiagnosticProcessor>();
             if (config.EnableSystemLog)
                 services.AddSingleton<ILoggerProvider, DiagnosticLogCenterLoggerProvider>();
+            services.AddSingleton<ConsoleDiagnosticProcessor>();
 
             services.AddSingleton<TracingDiagnosticProcessorObserver>();
             services.AddSingleton<IHostedService, InstrumentationHostedService>();

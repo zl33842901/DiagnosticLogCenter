@@ -54,3 +54,5 @@
 /xLiAd.DiagnosticeLogCenter.DbExportCore.Test/bin/Release/netcoreapp3.1
 /xLiAd.DiagnosticLogCenter.DbExportConsole/Properties/PublishProfiles
 /xLiAd.DiagnosticLogCenter.DbExportConsole/xLiAd.DiagnosticLogCenter.DbExportConsole.csproj.user
+/xLiAd.DiagnosticLogCenter.SampleConsole/bin/Debug/netcoreapp3.1
+/xLiAd.DiagnosticLogCenter.SampleConsole/obj
