@@ -9,6 +9,9 @@ using xLiAd.DiagnosticLogCenter.Abstract;
 
 namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
 {
+    /// <summary>
+    /// 这两个类其实用不到，因为 Grpc 本身的客户端请求也是基于 HttpClient 服务端也基于 AspNetCore，不用这两个类也能形成链路。
+    /// </summary>
     public class GrpcServerInterceptor : Interceptor
     {
         public override async Task<TResponse> UnaryServerHandler<TRequest, TResponse>(TRequest request, ServerCallContext context, UnaryServerMethod<TRequest, TResponse> continuation)

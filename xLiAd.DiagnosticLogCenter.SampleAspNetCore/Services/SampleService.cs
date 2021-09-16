@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Data;
 using System.Net.Http;
 using Dapper;
+using Grpc.Net.Client;
 
 namespace xLiAd.DiagnosticLogCenter.SampleAspNetCore.Services
 {
@@ -20,8 +21,19 @@ namespace xLiAd.DiagnosticLogCenter.SampleAspNetCore.Services
 
         public int QueryDb(int inputParam)
         {
+            AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+            AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2Support", true);
             var result = dbConnection.Query<dynamic>("select * from Student where Id > @id", new { id = inputParam });
+            var rst = TestGrpc("哈哈").ConfigureAwait(false).GetAwaiter().GetResult();
             return result.Count();
+        }
+
+        public async Task<string> TestGrpc(string name)
+        {
+            using var channel = GrpcChannel.ForAddress("http://localhost:5003", new GrpcChannelOptions() { MaxReceiveMessageSize = 32 * 1024 * 1024 });
+            var client = new xLiAd.DiagnosticLogCenter.SampleGrpcServer.Greeter.GreeterClient(channel);
+            var result = await client.SayHelloAsync(new SampleGrpcServer.HelloRequest() { Name = name });
+            return result.Message;
         }
 
         public string RequestWeb(string url)

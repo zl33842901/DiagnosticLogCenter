@@ -6,10 +6,20 @@
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.35" />
+    <PackageReference Include="Google.Protobuf" Version="3.17.0" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.36.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.36.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\xLiAd.DiagnosticLogCenter.Agent\xLiAd.DiagnosticLogCenter.Agent.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="..\xLiAd.DiagnosticLogCenter.SampleGrpcServer\Protos\greet.proto" GrpcServices="Client" Link="Protos\greet.proto" />
   </ItemGroup>
 
 

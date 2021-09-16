@@ -37,7 +37,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xLiAd.DiagnosticeLogCenter.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xLiAd.DiagnosticLogCenter.DbExportConsole", "xLiAd.DiagnosticLogCenter.DbExportConsole\xLiAd.DiagnosticLogCenter.DbExportConsole.csproj", "{64E1F402-D658-46EB-B542-091CA6D94502}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xLiAd.DiagnosticLogCenter.SampleConsole", "xLiAd.DiagnosticLogCenter.SampleConsole\xLiAd.DiagnosticLogCenter.SampleConsole.csproj", "{5D6F8AE2-D05C-485D-A3B7-A3853BB472A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xLiAd.DiagnosticLogCenter.SampleConsole", "xLiAd.DiagnosticLogCenter.SampleConsole\xLiAd.DiagnosticLogCenter.SampleConsole.csproj", "{5D6F8AE2-D05C-485D-A3B7-A3853BB472A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xLiAd.DiagnosticLogCenter.SampleGrpcServer", "xLiAd.DiagnosticLogCenter.SampleGrpcServer\xLiAd.DiagnosticLogCenter.SampleGrpcServer.csproj", "{9368AC83-32C9-4983-B6B3-3A8829A07783}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -109,6 +111,10 @@ Global
 		{5D6F8AE2-D05C-485D-A3B7-A3853BB472A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D6F8AE2-D05C-485D-A3B7-A3853BB472A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D6F8AE2-D05C-485D-A3B7-A3853BB472A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9368AC83-32C9-4983-B6B3-3A8829A07783}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9368AC83-32C9-4983-B6B3-3A8829A07783}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9368AC83-32C9-4983-B6B3-3A8829A07783}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9368AC83-32C9-4983-B6B3-3A8829A07783}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -121,6 +127,7 @@ Global
 		{2D8F98F7-3FC8-4ED5-A60F-4CECFBECF436} = {43B27A14-B1BC-4F4A-8E1F-8C34C3AF8C57}
 		{64E1F402-D658-46EB-B542-091CA6D94502} = {43B27A14-B1BC-4F4A-8E1F-8C34C3AF8C57}
 		{5D6F8AE2-D05C-485D-A3B7-A3853BB472A8} = {92141009-739B-4CD1-B5F4-2ACF5A761E5E}
+		{9368AC83-32C9-4983-B6B3-3A8829A07783} = {92141009-739B-4CD1-B5F4-2ACF5A761E5E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {17077534-6DF0-4A39-B0D6-8E429BC7CC4E}
