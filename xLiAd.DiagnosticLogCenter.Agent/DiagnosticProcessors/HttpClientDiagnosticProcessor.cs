@@ -55,11 +55,11 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
         {
             if (GuidHolder.Holder.Value == Guid.Empty)
                 return;
-            var statuCode = response.StatusCode;
+            int statuCode = (int?)response?.StatusCode ?? 0;
             var content = (DiagnosticLogConfig.Config?.RecordHttpClientBody ?? false) ? response.Content?.ReadAsStringAsync()?.Result : string.Empty;
             LogEntity log = new LogEntity()
             {
-                StatuCode = (int)statuCode,
+                StatuCode = statuCode,
                 StackTrace = content,
                 GroupGuid = GuidHolder.Holder.Value.ToString(),
                 LogType = LogTypeEnum.HttpClientResponse,

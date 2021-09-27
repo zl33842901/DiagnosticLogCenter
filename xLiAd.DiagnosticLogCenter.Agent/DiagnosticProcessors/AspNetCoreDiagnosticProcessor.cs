@@ -39,7 +39,7 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
             if (httpContext.Request.Headers.ContainsKey(TraceIdName))
                 traceId = httpContext.Request.Headers[TraceIdName];
             if (traceId.NullOrEmpty())
-                traceId = DateTime.Now.ToString("yyyyMMdd-HHmmss-fff-") + DiagnosticLogConfig.Config.ClientName + "-" + DiagnosticLogConfig.Config.EnvName + "-" + Guid.NewGuid().ToString();
+                traceId = new TracePageIdValue(DateTime.Now, DiagnosticLogConfig.Config.ClientName, DiagnosticLogConfig.Config.EnvName).ToString();
             GuidHolder.TraceIdHolder.Value = traceId;
             string pageId = null;
             if (httpContext.Request.Headers.ContainsKey(PageIdName))

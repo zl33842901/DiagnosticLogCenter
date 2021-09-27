@@ -30,7 +30,7 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
 
         private void SetTraceAndPageId()
         {
-            string traceId = DateTime.Now.ToString("yyyyMMdd-HHmmss-fff-") + DiagnosticLogConfig.Config.ClientName + "-" + DiagnosticLogConfig.Config.EnvName + "-" + Guid.NewGuid().ToString();
+            string traceId = new TracePageIdValue(DateTime.Now, DiagnosticLogConfig.Config.ClientName, DiagnosticLogConfig.Config.EnvName).ToString();
             GuidHolder.TraceIdHolder.Value = traceId;
             string pageId = traceId;
             GuidHolder.PageIdHolder.Value = pageId;

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using xLiAd.DiagnosticLogCenter.Abstract;
 using xLiAd.DiagnosticLogCenter.CollectServerBoth.TraceAndPage;
+using xLiAd.DiagnosticLogCenter.UserInterface;
 using xLiAd.DiagnosticLogCenter.UserInterface.Repositories;
 
 namespace xLiAd.DiagnosticLogCenter.UserInterfaceBoth
@@ -30,24 +32,36 @@ namespace xLiAd.DiagnosticLogCenter.UserInterfaceBoth
         {
             bool traceExists, pageExists;
             var trace = await traceRepository.FindByTraceId(traceId, happenTime);
-            traceExists = trace?.Items.Any(x => x.Guid != guid) ?? false;//trace 为空可能是没来得及写入
+            //traceExists = trace?.Items.Any(x => x.Guid != guid) ?? false;//trace 为空可能是没来得及写入
+            traceExists = trace != null;
             var page = await pageRepository.FindByPageId(pageId, happenTime);
-            pageExists = page?.Items.Any(x => x.TraceId != traceId) ?? false;//page 为空可能是没来得及写入
+            //pageExists = page?.Items.Any(x => x.TraceId != traceId) ?? false;//page 为空可能是没来得及写入
+            pageExists = page != null;
             return (traceExists, pageExists);
         }
 
         public async Task<List<UserInterface.Models.Log>> GetTraceAll(string traceId, DateTime happenTime)
         {
             var trace = await traceRepository.FindByTraceId(traceId, happenTime);
+            var traceValue = TracePageIdValue.FromString(traceId);
             var guids = trace.Items.Distinct().ToArray();
             var groups = guids.GroupBy(x => x.CollectionName);
             List<UserInterface.Models.Log> result = new List<UserInterface.Models.Log>();
-            foreach(var group in groups)
+            var first = logRepository.GetByCollectionNameAndTraceId(new UserInterface.Models.CliEvnDate() {
+                    ClientName = traceValue.ClientName,
+                    EnvironmentName = traceValue.EnvName,
+                    HappenTime = traceValue.HappenTime
+                }.GetIndexName(), traceId);
+            first.ProcessEndAndException();
+            result.AddRange(first);
+            foreach (var group in groups)
             {
                 var l = logRepository.GetByCollectionNameAndId(group.Key, group.Select(x => x.Guid));
                 l.ProcessEndAndException();
                 result.AddRange(l);
             }
+            foreach (var item in result)
+                item.PrepareLogForRead();
             //还要处理子日志的情况。
             result = await ProcessShowLine(result);
             return result;

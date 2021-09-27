@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using xLiAd.DiagnosticLogCenter.Abstract;
 using xLiAd.DiagnosticLogCenter.CollectServer;
 
 namespace xLiAd.DiagnosticLogCenter.CollectServerBoth.TraceAndPage
@@ -32,13 +33,33 @@ namespace xLiAd.DiagnosticLogCenter.CollectServerBoth.TraceAndPage
             var grps = logs.GroupBy(x => x.TraceId);
             foreach (var grp in grps)
             {
-                TraceQueue.Enqueue(new Items<TraceItem>() { Key = grp.Key, HappenTime = grp.First().HappenTime, Datas = grp.Select(x => new TraceItem() { CollectionName = x.GetIndexName(), Guid = x.Guid }).Distinct().ToArray() });
+                var traceId = TracePageIdValue.FromString(grp.Key);
+                var datas = grp.Where(x => !traceId.IsFirst(x)).ToArray();
+                if (!datas.AnyX())
+                    continue;
+                var qe = new Items<TraceItem>()
+                {
+                    Key = grp.Key,
+                    HappenTime = grp.First().HappenTime,
+                    Datas = datas.Select(x => new TraceItem() { CollectionName = x.GetIndexName(), Guid = x.Guid }).Distinct().ToArray()
+                };
+                TraceQueue.Enqueue(qe);
                 //await traceRepository.AddOrUpdate(grp.Key, grp.First().HappenTime, grp.Select(x => new TraceItem() { CollectionName = x.GetIndexName(), Guid = x.Guid }).Distinct());
             }
             var ggs = logs.GroupBy(x => x.PageId);
             foreach(var gg in ggs)
             {
-                PageQueue.Enqueue(new Items<PageItem>() { Key = gg.Key, HappenTime = gg.First().HappenTime, Datas = gg.Select(x => new PageItem() { TraceId = x.TraceId }).Distinct().ToArray() });
+                var pageId = TracePageIdValue.FromString(gg.Key);
+                var datas = gg.Where(x => !pageId.IsFirst(TracePageIdValue.FromString(x.TraceId))).ToArray();
+                if (!datas.AnyX())
+                    continue;
+                var qe = new Items<PageItem>()
+                {
+                    Key = gg.Key,
+                    HappenTime = gg.First().HappenTime,
+                    Datas = datas.Select(x => new PageItem() { TraceId = x.TraceId }).Distinct().ToArray()
+                };
+                PageQueue.Enqueue(qe);
                 //await pageRepository.AddOrUpdate(gg.Key, gg.First().HappenTime, gg.Select(x => new PageItem() { TraceId = x.TraceId }).Distinct());
             }
             await WriteDown();
