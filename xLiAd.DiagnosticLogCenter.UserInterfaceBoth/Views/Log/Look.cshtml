@@ -210,7 +210,7 @@
                 <el-col :span="2">{{item.ClientName}}</el-col>
                 <el-col :span="22">
                     <el-card class="box-card">
-                        <div v-on:click="LookAddtion(item)" :style="'cursor:pointer;overflow:hidden;color:white;padding-left:5px;background-color:' + (item.Success ? '#1E90FF' : '#CD5555') + ';height:30px;line-height:30px;font-size:15px;margin-left:' + (item.StartPoint * 7) + 'px;width:' + (item.Length * 7) + 'px;margin-bottom:2px;' ">
+                        <div v-on:click="LookAddtion(item, true)" :style="'cursor:pointer;overflow:hidden;color:white;padding-left:5px;background-color:' + (item.Success ? '#1E90FF' : '#CD5555') + ';height:30px;line-height:30px;font-size:15px;margin-left:' + (item.StartPoint * 7) + 'px;width:' + (item.Length * 7) + 'px;margin-bottom:2px;' ">
                             耗时： {{item.TotalMillionSeconds}}毫秒
                         </div>
                         <template v-for="itm in item.Addtions">
@@ -295,7 +295,7 @@
                     this.GetData();
                 },
                 open: function (url) { location = url; },
-                LookAddtion: function (model) {
+                LookAddtion: function (model, hideTraceButton) {
                     this.CurrentAddtion = [];
                     this.CurrentAddtion.push($.extend({}, model, { LogTypeString: "请求开始", LogType: 21}));
                     for (var i = 0; i < model.Addtions.length; i++) {
@@ -303,7 +303,8 @@
                     }
                     this.CurrentAddtionIndex = 0;
                     this.showLookAddtion = true;
-                    this.GetTraceExists(model);
+                    if (!hideTraceButton)
+                        this.GetTraceExists(model);
                 },
                 LookAddtionWithEnd: function (model) {
                     this.CurrentAddtion = [model];

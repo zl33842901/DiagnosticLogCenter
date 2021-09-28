@@ -69,19 +69,32 @@ namespace xLiAd.DiagnosticLogCenter.UserInterfaceBoth
 
         private Task<List<UserInterface.Models.Log>> ProcessShowLine(List<UserInterface.Models.Log> logs)
         {
-            var maxlength = logs.Max(x => x.TotalMillionSeconds);
+            var addtions = logs.SelectMany(x => x.Addtions).ToArray();
             var earliest = logs.Min(x => x.HappenTime);
+            var latest = addtions.Max(x => x.HappenTime.AddMilliseconds(x.TotalMillionSeconds));
+            var latest1 = logs.Max(x => x.HappenTime.AddMilliseconds(x.TotalMillionSeconds));
+            latest = new DateTime[] { latest, latest1 }.Max();
+            int maxlength = Convert.ToInt32((latest - earliest).TotalMilliseconds);
             var i = 0;
             logs = logs.OrderBy(x => x.ParentGuid != string.Empty).ThenBy(x => x.HappenTime).ToList();
             foreach (var x in logs)
             {
                 x.Length = maxlength > 0 ? (x.TotalMillionSeconds * 100 / maxlength) : 100;
-                x.StartPoint = Convert.ToInt32((x.HappenTime - earliest).TotalMilliseconds * 100) / maxlength;
+                int? startPoint = null;
+                if (!x.ParentHttpId.NullOrEmpty())
+                {
+                    var parent = addtions.Where(y => y.HttpId == x.ParentHttpId).FirstOrDefault();
+                    if (parent != null)
+                        startPoint = parent.StartPoint + 1;
+                }
+                if (startPoint == null)
+                    startPoint = Convert.ToInt32((x.HappenTime - earliest).TotalMilliseconds * 100) / maxlength;
+                x.StartPoint = startPoint.Value;
                 x.Line = i++;
                 foreach(var y in x.Addtions.Where(y => y.WithEnd))
                 {
                     y.Length = maxlength > 0 ? (y.TotalMillionSeconds * 100 / maxlength) : 100;
-                    y.StartPoint = Convert.ToInt32((y.HappenTime - earliest).TotalMilliseconds * 100) / maxlength;
+                    y.StartPoint = startPoint.Value + Convert.ToInt32((y.HappenTime - x.HappenTime).TotalMilliseconds * 100) / maxlength;
                 }
             }
             return Task.FromResult(logs);
