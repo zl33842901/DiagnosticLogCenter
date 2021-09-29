@@ -63,7 +63,7 @@ namespace xLiAd.DiagnosticLogCenter.UserInterface.Models
     {
         public string Content { get; set; }
         public DateTime HappenTime { get; set; }
-        public string HappenTimeString => HappenTime.ToString("yyyy-MM-dd HH:mm:ss");
+        public string HappenTimeString => HappenTime.ToString("yyyy-MM-dd HH:mm:ss/fff");
         #region 新字段
         public string Message { get; set; }
 
