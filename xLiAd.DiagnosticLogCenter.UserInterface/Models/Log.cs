@@ -16,7 +16,7 @@ namespace xLiAd.DiagnosticLogCenter.UserInterface.Models
         /// 远程时间
         /// </summary>
         public DateTime HappenTime { get; set; }
-        public string HappenTimeString => HappenTime.ToString("yyyy-MM-dd HH:mm:ss");
+        public string HappenTimeString => HappenTime.ToString("yyyy-MM-dd HH:mm:ss/fff");
         public string Message { get; set; }
         public string StackTrace { get; set; }
         /// <summary>
