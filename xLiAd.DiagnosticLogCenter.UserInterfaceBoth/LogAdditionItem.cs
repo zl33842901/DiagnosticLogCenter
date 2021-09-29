@@ -46,13 +46,13 @@ namespace xLiAd.DiagnosticLogCenter.UserInterface.Models
                 switch (this.LogType)
                 {
                     case Abstract.LogTypeEnum.SqlBefore:
-                        return Sucess ? "006400" : "FF3030";
+                        return Sucess ? "46B19D" : "DF494A";
                     case Abstract.LogTypeEnum.DapperExSqlBefore:
-                        return Sucess ? "006400" : "FF3030";
+                        return Sucess ? "46B19D" : "DF494A";
                     case Abstract.LogTypeEnum.HttpClientRequest:
-                        return Sucess ? "CD6600" : "FF3030";
+                        return Sucess ? "E3793F" : "DF494A";
                     case Abstract.LogTypeEnum.MethodEntry:
-                        return Sucess ? "68228B" : "FF3030";
+                        return Sucess ? "EFC94C" : "DF494A";
                     default:
                         return null;
                 }

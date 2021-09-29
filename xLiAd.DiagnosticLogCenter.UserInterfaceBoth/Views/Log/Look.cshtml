@@ -9,23 +9,14 @@
 <el-row style="width: 100%;margin: 5px 0 5px 0;background-color:#ddd;padding:4px 0 4px 0;" :gutter="10">
     <el-col :span="4"><el-input placeholder="请输入关键字" v-model="Query.Key"></el-input></el-col>
     <el-col :span="3">
-        <el-select v-model="Query.Level" placeholder="请选择日志级别">
-            <el-option v-for="item in statusSelect"
-                       :key="item.value"
-                       :label="item.label"
-                       :value="item.value">
-            </el-option>
-        </el-select>
-    </el-col>
-    <el-col :span="3">
-        <el-select v-model="Query.Success" placeholder="请选择接口结果" v-if="Query.Level=='10'">
+        <el-select v-model="Query.Success" placeholder="请选择接口结果">
             <el-option label="全部执行结果" :value="''"></el-option>
             <el-option label="执行成功" :value="'1'"></el-option>
             <el-option label="执行失败" :value="'2'"></el-option>
         </el-select>
     </el-col>
     <el-col :span="3">
-        <el-select v-model="Query.MSec" placeholder="请选择接口时长" v-if="Query.Level=='10'">
+        <el-select v-model="Query.MSec" placeholder="请选择接口时长">
             <el-option label="全部执行时长" :value="''"></el-option>
             <el-option label="500毫秒以下" :value="'0-500'"></el-option>
             <el-option label="500毫秒到1秒" :value="'500-1000'"></el-option>
@@ -61,17 +52,12 @@
         </template>
     </el-table-column>
 
-    <el-table-column label="发生时间" width="200">
+    <el-table-column label="发生时间" width="220">
         <template slot-scope="scope">
             <span style="margin-left: 1px">{{ scope.row.HappenTimeString }}</span>
         </template>
     </el-table-column>
-    <el-table-column label="日志级别" width="120">
-        <template slot-scope="scope">
-            <span style="margin-left: 1px">{{ scope.row.LevelString }}({{scope.row.Level}})</span>
-        </template>
-    </el-table-column>
-    <el-table-column label="消息" width="300">
+    <el-table-column label="消息" width="500">
         <template slot-scope="scope">
             <span style="margin-left: 1px">{{ scope.row.Message }}</span>
         </template>
@@ -210,11 +196,11 @@
                 <el-col :span="2">{{item.ClientName}}</el-col>
                 <el-col :span="22">
                     <el-card class="box-card">
-                        <div v-on:click="LookAddtion(item, true)" :style="'cursor:pointer;overflow:hidden;color:white;padding-left:5px;background-color:' + (item.Success ? '#1E90FF' : '#CD5555') + ';height:30px;line-height:30px;font-size:15px;margin-left:' + (item.StartPoint * 7) + 'px;width:' + (item.Length * 7) + 'px;margin-bottom:2px;' ">
+                        <div v-on:click="LookAddtion(item, true)" :style="'cursor:pointer;overflow:hidden;color:white;padding-left:5px;background-color:' + (item.Success ? '#324C5D' : '#DF494A') + ';height:30px;line-height:30px;font-size:15px;margin-left:' + (item.StartPoint * 7) + 'px;width:' + (item.Length * 7) + 'px;margin-bottom:2px;border-radius:5px;' ">
                             耗时： {{item.TotalMillionSeconds}}毫秒
                         </div>
                         <template v-for="itm in item.Addtions">
-                            <div v-if="itm.WithEnd" v-on:click="LookAddtionWithEnd(itm)" :style="'cursor:pointer;overflow:hidden;color:white;padding-left:5px;background-color:#' + (itm.Color) + ';height:30px;line-height:30px;font-size:15px;margin-left:' + (itm.StartPoint * 7) + 'px;width:' + (itm.Length * 7) + 'px;margin-bottom:2px;' ">
+                            <div v-if="itm.WithEnd" v-on:click="LookAddtionWithEnd(itm)" :style="'cursor:pointer;overflow:hidden;color:white;padding-left:5px;background-color:#' + (itm.Color) + ';height:30px;line-height:30px;font-size:15px;margin-left:' + (itm.StartPoint * 7) + 'px;width:' + (itm.Length * 7) + 'px;margin-bottom:2px;border-radius:5px;' ">
                                 {{itm.TypeString}}： {{itm.TotalMillionSeconds}}毫秒
                             </div>
                         </template>
@@ -238,7 +224,6 @@
         var app = new Vue({
             el: '#app',
             data: {
-                statusSelect: [{ value: '', label: '全部日志级别' }, { value: '0', label: 'Trace' }, { value: '1', label: 'Debug' }, { value: '2', label: 'Information' }, { value: '3', label: 'Warning' }, { value: '4', label: 'Error' }, { value: '5', label: 'Critical' }, { value: '10', label: '接口日志' }],
                 activeIndex: "BankDoc",
                 fullscreenLoading: true, //加载loading
                 menus: [],
@@ -249,7 +234,7 @@
                     PageSize: 10,
                     PageIndex: 1,
                     Key: '',
-                    Level: '',
+                    Level: '10',
                     Success: '',
                     MSec:'',
                     HappenTimeRegion:['2018-09-11 0:00:00','2018-09-11 23:59:59']
