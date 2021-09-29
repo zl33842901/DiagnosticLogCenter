@@ -69,32 +69,52 @@ namespace xLiAd.DiagnosticLogCenter.UserInterfaceBoth
 
         private Task<List<UserInterface.Models.Log>> ProcessShowLine(List<UserInterface.Models.Log> logs)
         {
+            //因为系统间会有时间差，所以得把时间差算出来，才显示得准
+            logs = logs.OrderBy(x => x.ParentGuid != string.Empty).ThenBy(x => x.HappenTime).ToList();
+            var root = logs.Where(x => x.ParentGuid.NullOrEmpty()).OrderByDescending(x => x.TotalMillionSeconds).FirstOrDefault();
+            if (root == null)
+                root = logs.OrderByDescending(x => x.TotalMillionSeconds).FirstOrDefault();
+            root.Corrected = true;
+            while(logs.Any(x => !x.Corrected))
+            {
+                var afct = 0;
+                foreach(var x in logs.Where(x => !x.Corrected))
+                {
+                    if (!x.ParentHttpId.NullOrEmpty())
+                    {
+                        var adts = logs.Where(x => x.Corrected).SelectMany(x => x.Addtions).ToArray();
+                        var parent = adts.Where(y => y.HttpId == x.ParentHttpId).FirstOrDefault();
+                        if (parent != null)
+                        {
+                            x.Corrected = true;
+                            x.MillSecondDiffToParent = Convert.ToInt32((x.HappenTime - parent.HappenTime).TotalMilliseconds);
+                            x.MillSecondDiffToRoot = x.MillSecondDiffToParent + parent.MillSecondDiffToRoot;
+                        }
+                        foreach (var adt in x.Addtions)
+                            adt.MillSecondDiffToRoot = x.MillSecondDiffToRoot;
+                        afct++;
+                    }
+                }
+                if (afct == 0)
+                    break;
+            }
             var addtions = logs.SelectMany(x => x.Addtions).ToArray();
-            var earliest = logs.Min(x => x.HappenTime);
-            var latest = addtions.Max(x => x.HappenTime.AddMilliseconds(x.TotalMillionSeconds));
-            var latest1 = logs.Max(x => x.HappenTime.AddMilliseconds(x.TotalMillionSeconds));
+            var earliest = root.HappenTime;
+            var latest = addtions.Max(x => x.HappenTime.AddMilliseconds(x.TotalMillionSeconds - x.MillSecondDiffToRoot));
+            var latest1 = logs.Max(x => x.HappenTime.AddMilliseconds(x.TotalMillionSeconds - x.MillSecondDiffToRoot));
             latest = new DateTime[] { latest, latest1 }.Max();
             int maxlength = Convert.ToInt32((latest - earliest).TotalMilliseconds);
             var i = 0;
-            logs = logs.OrderBy(x => x.ParentGuid != string.Empty).ThenBy(x => x.HappenTime).ToList();
             foreach (var x in logs)
             {
                 x.Length = maxlength > 0 ? (x.TotalMillionSeconds * 100 / maxlength) : 100;
-                int? startPoint = null;
-                if (!x.ParentHttpId.NullOrEmpty())
-                {
-                    var parent = addtions.Where(y => y.HttpId == x.ParentHttpId).FirstOrDefault();
-                    if (parent != null)
-                        startPoint = parent.StartPoint + 1;
-                }
-                if (startPoint == null)
-                    startPoint = Convert.ToInt32((x.HappenTime - earliest).TotalMilliseconds * 100) / maxlength;
-                x.StartPoint = startPoint.Value;
+                var startPoint = Convert.ToInt32((x.HappenTime.AddMilliseconds(-x.MillSecondDiffToRoot) - earliest).TotalMilliseconds * 100) / maxlength;
+                x.StartPoint = startPoint;
                 x.Line = i++;
                 foreach(var y in x.Addtions.Where(y => y.WithEnd))
                 {
                     y.Length = maxlength > 0 ? (y.TotalMillionSeconds * 100 / maxlength) : 100;
-                    y.StartPoint = startPoint.Value + Convert.ToInt32((y.HappenTime - x.HappenTime).TotalMilliseconds * 100) / maxlength;
+                    y.StartPoint = startPoint + Convert.ToInt32((y.HappenTime - x.HappenTime).TotalMilliseconds * 100) / maxlength;
                 }
             }
             return Task.FromResult(logs);

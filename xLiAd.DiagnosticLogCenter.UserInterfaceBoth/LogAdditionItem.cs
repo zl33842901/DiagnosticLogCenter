@@ -78,6 +78,10 @@ namespace xLiAd.DiagnosticLogCenter.UserInterface.Models
                 }
             }
         }
+        /// <summary>
+        /// Log 的 同名字段的副本
+        /// </summary>
+        public int MillSecondDiffToRoot { get; set; }
     }
 
     /// <summary>
@@ -99,5 +103,18 @@ namespace xLiAd.DiagnosticLogCenter.UserInterface.Models
         public int StartPoint { get; set; }
 
         public int EndPoint => StartPoint + Length;
+
+        /// <summary>
+        /// 是否同 root 或上一层节点比较过时间
+        /// </summary>
+        public bool Corrected { get; set; }
+        /// <summary>
+        /// 同 root 节点的时间差（需计算同上一层节点的差，再加上上一层节点的差）
+        /// </summary>
+        public int MillSecondDiffToRoot { get; set; }
+        /// <summary>
+        /// 同上一层节点的时间差
+        /// </summary>
+        public int MillSecondDiffToParent { get; set; }
     }
 }
