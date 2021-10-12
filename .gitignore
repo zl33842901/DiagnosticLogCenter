@@ -58,3 +58,5 @@
 /xLiAd.DiagnosticLogCenter.SampleConsole/obj
 /xLiAd.DiagnosticLogCenter.SampleGrpcServer/bin/Debug/netcoreapp3.1
 /xLiAd.DiagnosticLogCenter.SampleGrpcServer/obj
+/xLiAd.DiagnosticLogCenter.Analyzer/bin/Debug/netcoreapp3.1
+/xLiAd.DiagnosticLogCenter.Analyzer/obj

@@ -39,7 +39,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xLiAd.DiagnosticLogCenter.D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xLiAd.DiagnosticLogCenter.SampleConsole", "xLiAd.DiagnosticLogCenter.SampleConsole\xLiAd.DiagnosticLogCenter.SampleConsole.csproj", "{5D6F8AE2-D05C-485D-A3B7-A3853BB472A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xLiAd.DiagnosticLogCenter.SampleGrpcServer", "xLiAd.DiagnosticLogCenter.SampleGrpcServer\xLiAd.DiagnosticLogCenter.SampleGrpcServer.csproj", "{9368AC83-32C9-4983-B6B3-3A8829A07783}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xLiAd.DiagnosticLogCenter.SampleGrpcServer", "xLiAd.DiagnosticLogCenter.SampleGrpcServer\xLiAd.DiagnosticLogCenter.SampleGrpcServer.csproj", "{9368AC83-32C9-4983-B6B3-3A8829A07783}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xLiAd.DiagnosticLogCenter.Analyzer", "xLiAd.DiagnosticLogCenter.Analyzer\xLiAd.DiagnosticLogCenter.Analyzer.csproj", "{02386101-D3B0-4C0F-ABB1-C471D49E1C13}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -115,6 +117,10 @@ Global
 		{9368AC83-32C9-4983-B6B3-3A8829A07783}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9368AC83-32C9-4983-B6B3-3A8829A07783}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9368AC83-32C9-4983-B6B3-3A8829A07783}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02386101-D3B0-4C0F-ABB1-C471D49E1C13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02386101-D3B0-4C0F-ABB1-C471D49E1C13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02386101-D3B0-4C0F-ABB1-C471D49E1C13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02386101-D3B0-4C0F-ABB1-C471D49E1C13}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
