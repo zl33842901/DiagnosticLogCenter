@@ -7,9 +7,9 @@ namespace xLiAd.DiagnosticLogCenter.Analyzer
 {
     public static class Extensions
     {
-        public static IServiceCollection AddDiagnosticeLogAnalyzer<T>(this IServiceCollection services, Action<IServiceProvider, AnalyzerConfig> options) where T : class,IAlertServicecs
+        public static IServiceCollection AddDiagnosticeLogAnalyzer<T>(this IServiceCollection services, Action<IServiceProvider, AnalyzerConfig> options = null) where T : class,IAlertServicecs
         {
-            services.AddScoped(x =>
+            services.AddSingleton(x =>
             {
                 var config = new AnalyzerConfig();
                 options?.Invoke(x, config);
