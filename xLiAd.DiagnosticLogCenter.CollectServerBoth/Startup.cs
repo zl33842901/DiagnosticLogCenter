@@ -10,6 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
 using Nest;
+using RabbitMQ.Client;
+using xLiAd.DiagnosticLogCenter.CollectServerBoth;
 using xLiAd.DiagnosticLogCenter.CollectServerBoth.TraceAndPage;
 
 namespace xLiAd.DiagnosticLogCenter.CollectServer
@@ -50,6 +52,29 @@ namespace xLiAd.DiagnosticLogCenter.CollectServer
             services.AddScoped<IPageRepository, PageRepository>();
             services.AddScoped<ITraceAndGroupService, TraceAndGroupService>();
             services.AddSingleton<ICacheProvider, CacheProvider>();
+
+            services.AddSingleton(x =>
+            {
+                var factory = new ConnectionFactory();
+                var config = x.GetService<CollectServerBoth.ConfigEntity>();
+                factory.HostName = config.RabbitMqHost;
+                factory.UserName = config.RabbitMqUserName;
+                factory.Password = config.RabbitMqPassword;
+                factory.AutomaticRecoveryEnabled = true;
+                return factory;
+            });
+            services.AddScoped(x =>
+            {
+                var config = x.GetService<CollectServerBoth.ConfigEntity>();
+                var factory = x.GetService<ConnectionFactory>();
+                var conn = factory.CreateConnection();
+                var channel = conn.CreateModel();
+                channel.ExchangeDeclare(config.RabbitMqExchangeName, "direct", durable: true, autoDelete: false, arguments: null);
+                channel.QueueDeclare(config.RabbitMqQueueName, durable: true, autoDelete: false, exclusive: false, arguments: null);
+                channel.QueueBind(config.RabbitMqQueueName, config.RabbitMqExchangeName, routingKey: config.RabbitMqRoutingKeyName);
+                return channel;
+            });
+            services.AddScoped<IRabbitMqService, RabbitMqService>();
 
             services.AddGrpc();
         }

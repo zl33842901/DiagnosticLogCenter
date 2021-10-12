@@ -10,6 +10,7 @@
   
   <ItemGroup>
     <PackageReference Include="Grpc.AspNetCore" Version="2.27.0" />
+    <PackageReference Include="RabbitMQ.Client" Version="6.2.2" />
     <PackageReference Include="xLiAd.MongoEx.Repository" Version="1.0.2" />
     <PackageReference Include="LinqKit.Core" Version="1.1.16" />
     <PackageReference Include="NEST" Version="7.9.0" />
