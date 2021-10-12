@@ -49,7 +49,7 @@ namespace xLiAd.DiagnosticLogCenter.Analyzer
                 DataHolder[key].Add(dto);
             else
                 DataHolder.TryAdd(key, new ConcurrentBag<LogModel>() { dto });
-            DataHolder[key] = new ConcurrentBag<LogModel>(DataHolder[key].Where(x => x.HappenTime > DateTime.Now.AddMinutes(10)));//只留10分钟内的
+            DataHolder[key] = new ConcurrentBag<LogModel>(DataHolder[key].Where(x => x.HappenTime > DateTime.Now.AddMinutes(-10)));//只留10分钟内的
             if (!dto.Success && dto.HappenTime > DateTime.Now.AddMinutes(-5))//只有未成功时需要处理，再过滤掉可能是缓存的；假设服务器间时间差不大于5分钟。
             {
                 var baseTime = dto.HappenTime.AddMinutes(-1);
