@@ -76,7 +76,7 @@ namespace xLiAd.DiagnosticLogCenter.CollectServer
             });
             services.AddSingleton<IRabbitMqService, RabbitMqService>();
 
-            services.AddGrpc(x => x.MaxSendMessageSize = 128 * 1024 * 1024);
+            services.AddGrpc(x => x.MaxReceiveMessageSize = 128 * 1024 * 1024);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
