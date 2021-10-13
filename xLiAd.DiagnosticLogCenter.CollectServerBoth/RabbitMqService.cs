@@ -11,17 +11,18 @@ namespace xLiAd.DiagnosticLogCenter.CollectServerBoth
     {
         private readonly IModel channel;
         private readonly ConfigEntity config;
+        private readonly IBasicProperties props;
         public RabbitMqService(IModel channel, ConfigEntity config)
         {
             this.channel = channel;
             this.config = config;
+            this.props = channel.CreateBasicProperties();
+            props.Persistent = true;
         }
 
         public void Publish(string message)
         {
             var body = Encoding.UTF8.GetBytes(message);
-            var props = channel.CreateBasicProperties();
-            props.Persistent = true;
             channel.BasicPublish(config.RabbitMqExchangeName, config.RabbitMqRoutingKeyName, props, body);
         }
     }

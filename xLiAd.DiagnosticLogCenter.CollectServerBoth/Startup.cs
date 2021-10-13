@@ -63,7 +63,7 @@ namespace xLiAd.DiagnosticLogCenter.CollectServer
                 factory.AutomaticRecoveryEnabled = true;
                 return factory;
             });
-            services.AddScoped(x =>
+            services.AddSingleton(x =>
             {
                 var config = x.GetService<CollectServerBoth.ConfigEntity>();
                 var factory = x.GetService<ConnectionFactory>();
@@ -74,9 +74,9 @@ namespace xLiAd.DiagnosticLogCenter.CollectServer
                 channel.QueueBind(config.RabbitMqQueueName, config.RabbitMqExchangeName, routingKey: config.RabbitMqRoutingKeyName);
                 return channel;
             });
-            services.AddScoped<IRabbitMqService, RabbitMqService>();
+            services.AddSingleton<IRabbitMqService, RabbitMqService>();
 
-            services.AddGrpc();
+            services.AddGrpc(x => x.MaxSendMessageSize = 128 * 1024 * 1024);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

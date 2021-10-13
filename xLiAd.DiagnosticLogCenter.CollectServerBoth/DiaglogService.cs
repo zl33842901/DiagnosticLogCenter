@@ -36,16 +36,10 @@ namespace xLiAd.DiagnosticLogCenter.CollectServerBoth
             //    await logBatchServiceEs.Process(request);
             //}
             //catch { }
-            //计算 TraceId  PageId
-            try
-            {
-                await traceAndGroupService.ProcessLogs(datas.Select(x => x.Item2));
-            }
-            catch { }
             //最后发送到分析队列
-            var anglist = datas.Where(x => x.Item2.Addtions.Any(y => y.LogType == Abstract.LogTypeEnum.RequestEndSuccess || y.LogType == Abstract.LogTypeEnum.RequestEndException));
             try
             {
+                var anglist = datas.Where(x => x.Item2.Addtions.Any(y => y.LogType == Abstract.LogTypeEnum.RequestEndSuccess || y.LogType == Abstract.LogTypeEnum.RequestEndException));
                 foreach (var ang in anglist)
                     rabbitMqService.Publish(Newtonsoft.Json.JsonConvert.SerializeObject(new
                     {
@@ -58,7 +52,13 @@ namespace xLiAd.DiagnosticLogCenter.CollectServerBoth
                         ang.Item2.TotalMillionSeconds
                     }));
             }
-            catch { }
+            catch(Exception ex) { Console.WriteLine(ex.Message);Console.WriteLine(ex.StackTrace); }
+            //计算 TraceId  PageId
+            try
+            {
+                await traceAndGroupService.ProcessLogs(datas.Select(x => x.Item2));
+            }
+            catch (Exception ex) { Console.WriteLine(ex.Message); Console.WriteLine(ex.StackTrace); }
 
             var result = new LogReply() { Success = true };
             return result;
