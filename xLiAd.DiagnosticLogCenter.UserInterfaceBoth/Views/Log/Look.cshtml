@@ -104,7 +104,7 @@
 
             <el-row class="bottomspace" v-if="CurrentAddtion[CurrentAddtionIndex].WithEnd">
                 <el-col :span="10">是否成功：{{CurrentAddtion[CurrentAddtionIndex].Sucess}}</el-col>
-                <el-col :span="10">持续时长：{{CurrentAddtion[CurrentAddtionIndex].TotalMillionSeconds}} 毫秒</el-col>
+                <el-col :span="10">持续时长：{{CurrentAddtion[CurrentAddtionIndex].TotalMillionSeconds}} 毫秒{{CurrentAddtion[CurrentAddtionIndex].LogType==31 && CurrentAddtion[CurrentAddtionIndex].WithEnd ? (" 状态码：" + CurrentAddtion[CurrentAddtionIndex].StatuCode):""}}</el-col>
             </el-row>
 
             <el-row class="bottomspace" v-if="CurrentAddtion[CurrentAddtionIndex].LogType==21 || CurrentAddtion[CurrentAddtionIndex].LogType==31 || CurrentAddtion[CurrentAddtionIndex].LogType==33 || CurrentAddtion[CurrentAddtionIndex].LogType==23">
@@ -176,7 +176,7 @@
         <div slot="footer" class="dialog-footer">
             <el-row>
                 <el-col :span="4">
-                    <el-button type="primary" v-if="CurrentHasTrace" v-on:click="LookForTrace">查 看 链 路</el-button>
+                    <el-button :type="CurrentHasTrace ? 'primary' : ''" v-on:click="LookForTrace">查 看 链 路</el-button>
                     &nbsp;
                 </el-col>
                 <el-col :span="14">

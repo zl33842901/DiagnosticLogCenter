@@ -40,11 +40,13 @@ namespace xLiAd.DiagnosticLogCenter.Agent.Helper
                     StreamWriter sw = new StreamWriter(filePath, false, Encoding.UTF8);
                     sw.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
                     sw.Close();
+                    File.Delete(filePath); //必须能删掉，才可以使用。
+                    if (File.Exists(filePath))
+                        return false;
                     realSavePath = path;
-                    File.Delete(filePath);
                     return true;
                 }
-                catch { return false; }
+                catch(Exception ex) { Console.WriteLine($"Dlc在检查 {path} 位置是否可用时发生异常：" + ex.Message); return false; }
             }
         }
 

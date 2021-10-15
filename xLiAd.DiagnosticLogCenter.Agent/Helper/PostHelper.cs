@@ -68,7 +68,7 @@ namespace xLiAd.DiagnosticLogCenter.Agent.Helper
                             action.Invoke();
                         }
                     }
-                    catch { }
+                    catch(Exception ex) { Console.WriteLine(ex.Message); }
                 }
             }
         }

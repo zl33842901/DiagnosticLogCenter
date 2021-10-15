@@ -44,8 +44,8 @@ namespace xLiAd.DiagnosticLogCenter.UserInterfaceBoth
         {
             var trace = await traceRepository.FindByTraceId(traceId, happenTime);
             var traceValue = TracePageIdValue.FromString(traceId);
-            var guids = trace.Items.Distinct().ToArray();
-            var groups = guids.GroupBy(x => x.CollectionName);
+            var guids = trace?.Items.Distinct().ToArray();
+            var groups = guids?.GroupBy(x => x.CollectionName);
             List<UserInterface.Models.Log> result = new List<UserInterface.Models.Log>();
             var first = logRepository.GetByCollectionNameAndTraceId(new UserInterface.Models.CliEvnDate() {
                     ClientName = traceValue.ClientName,
@@ -54,12 +54,13 @@ namespace xLiAd.DiagnosticLogCenter.UserInterfaceBoth
                 }.GetIndexName(), traceId);
             first.ProcessEndAndException();
             result.AddRange(first);
-            foreach (var group in groups)
-            {
-                var l = logRepository.GetByCollectionNameAndId(group.Key, group.Select(x => x.Guid));
-                l.ProcessEndAndException();
-                result.AddRange(l);
-            }
+            if(groups.AnyX())
+                foreach (var group in groups)
+                {
+                    var l = logRepository.GetByCollectionNameAndId(group.Key, group.Select(x => x.Guid));
+                    l.ProcessEndAndException();
+                    result.AddRange(l);
+                }
             foreach (var item in result)
                 item.PrepareLogForRead();
             //还要处理子日志的情况。

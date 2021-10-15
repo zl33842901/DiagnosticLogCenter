@@ -69,6 +69,7 @@ namespace xLiAd.DiagnosticLogCenter.UserInterfaceBoth
                             entryItem.TotalMillionSeconds = Convert.ToInt32((addtion.HappenTime - entryItem.HappenTime).TotalMilliseconds);
                             entryItem.EndTime = addtion.HappenTime;
                             entryItem.WithEnd = true;
+                            entryItem.StatuCode = addtion.StatuCode;
                             if (addtion.LogType == Abstract.LogTypeEnum.HttpClientException)
                             {
                                 entryItem.Message = entryItem.Message + addtion.Message;

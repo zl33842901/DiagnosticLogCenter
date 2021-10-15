@@ -24,7 +24,16 @@ namespace xLiAd.DiagnosticLogCenter.SampleAspNetCore.Services
             AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
             AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2Support", true);
             var result = dbConnection.Query<dynamic>("select * from Student where Id > @id", new { id = inputParam });
-            var rst = TestGrpc("哈哈").ConfigureAwait(false).GetAwaiter().GetResult();
+            //var rst = TestGrpc("哈哈").ConfigureAwait(false).GetAwaiter().GetResult();
+            var client = httpClientFactory.CreateClient();
+            client.Timeout = TimeSpan.FromSeconds(19);
+            var content = new StringContent("{\"employeeCode\":\"20720\",\"objectiveType\":\"my\",\"cycleId\":\"\"}");
+            content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+            var task = client.PostAsync("http://okr.cig.com.cn/AppInterface/GetList", content);
+            var back = task.Result;
+            var text = back.Content.ReadAsStringAsync().Result;
+            var httpback = client.GetAsync("http://okr.cig.com.cn/").Result;
+            var s = httpback.Content.ReadAsStringAsync().Result;
             return result.Count();
         }
 

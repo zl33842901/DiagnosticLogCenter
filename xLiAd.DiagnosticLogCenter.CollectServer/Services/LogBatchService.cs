@@ -21,7 +21,7 @@ namespace xLiAd.DiagnosticLogCenter.CollectServer.Services
         }
         public (string, Log)[] ProcessConvert(LogDto logDto)
         {
-            var listNonInterface = logDto.Items.Where(x => x.GroupGuid.NullOrEmpty()).ToArray();
+            //var listNonInterface = logDto.Items.Where(x => x.GroupGuid.NullOrEmpty()).ToArray();
             var listInterface = logDto.Items.Where(x => !x.GroupGuid.NullOrEmpty()).ToArray();
             var listInterGroup = listInterface.GroupBy(x => x.GroupGuid);
             var interRst = listInterGroup.Select(x => ConvertToLog(x)).Where(x => !x.Item1.NullOrEmpty()).ToArray();

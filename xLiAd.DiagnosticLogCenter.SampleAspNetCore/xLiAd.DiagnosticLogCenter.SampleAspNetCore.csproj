@@ -22,5 +22,9 @@
     <Protobuf Include="..\xLiAd.DiagnosticLogCenter.SampleGrpcServer\Protos\greet.proto" GrpcServices="Client" Link="Protos\greet.proto" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DlcCache\" />
+  </ItemGroup>
+
 
 </Project>
