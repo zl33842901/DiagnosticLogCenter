@@ -60,24 +60,20 @@ namespace xLiAd.DiagnosticLogCenter.UserInterfaceBoth
                 }
                 else if(addtion.LogType == Abstract.LogTypeEnum.HttpClientResponse || addtion.LogType == Abstract.LogTypeEnum.HttpClientException)
                 {
-                    if (addtion.Content.NullOrEmpty())
+                    var entryItem = log.Addtions.Where(x => x.HttpId == addtion.HttpId && x.LogType == Abstract.LogTypeEnum.HttpClientRequest).FirstOrDefault();
+                    if (entryItem != null)
                     {
-                        var entryItem = log.Addtions.Where(x => x.HttpId == addtion.HttpId && x.LogType == Abstract.LogTypeEnum.HttpClientRequest).FirstOrDefault();
-                        if (entryItem != null)
+                        entryItem.Sucess = addtion.LogType == Abstract.LogTypeEnum.HttpClientResponse;
+                        entryItem.TotalMillionSeconds = Convert.ToInt32((addtion.HappenTime - entryItem.HappenTime).TotalMilliseconds);
+                        entryItem.EndTime = addtion.HappenTime;
+                        entryItem.WithEnd = true;
+                        entryItem.StatuCode = addtion.StatuCode;
+                        entryItem.Content = $"参数：\r\n{entryItem.Content}\r\n返回：\r\n{addtion.Content}";
+                        if (addtion.LogType == Abstract.LogTypeEnum.HttpClientException)
                         {
-                            entryItem.Sucess = addtion.LogType == Abstract.LogTypeEnum.HttpClientResponse;
-                            entryItem.TotalMillionSeconds = Convert.ToInt32((addtion.HappenTime - entryItem.HappenTime).TotalMilliseconds);
-                            entryItem.EndTime = addtion.HappenTime;
-                            entryItem.WithEnd = true;
-                            entryItem.StatuCode = addtion.StatuCode;
-                            if (addtion.LogType == Abstract.LogTypeEnum.HttpClientException)
-                            {
-                                entryItem.Message = entryItem.Message + addtion.Message;
-                                entryItem.Content = entryItem.Content + addtion.Content;
-                            }
+                            entryItem.Message = entryItem.Message + addtion.Message;
+                            //entryItem.Content = entryItem.Content + addtion.Content;
                         }
-                        else
-                            items.Add(addtion);
                     }
                     else
                         items.Add(addtion);

@@ -52,17 +52,18 @@ namespace xLiAd.DiagnosticLogCenter.UserInterfaceBoth
                     EnvironmentName = traceValue.EnvName,
                     HappenTime = traceValue.HappenTime
                 }.GetIndexName(), traceId);
+            first[0].PrepareLogForRead();
             first.ProcessEndAndException();
             result.AddRange(first);
             if(groups.AnyX())
                 foreach (var group in groups)
                 {
                     var l = logRepository.GetByCollectionNameAndId(group.Key, group.Select(x => x.Guid));
+                    foreach (var item in l)
+                        item.PrepareLogForRead();
                     l.ProcessEndAndException();
                     result.AddRange(l);
                 }
-            foreach (var item in result)
-                item.PrepareLogForRead();
             //还要处理子日志的情况。
             result = await ProcessShowLine(result);
             return result;
