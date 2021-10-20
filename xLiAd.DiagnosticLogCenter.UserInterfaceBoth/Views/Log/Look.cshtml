@@ -114,7 +114,12 @@
                 ：{{CurrentAddtion[CurrentAddtionIndex].LogType==31?(CurrentAddtion[CurrentAddtionIndex].MethodName + " "):""}}{{CurrentAddtion[CurrentAddtionIndex].Message}}
             </el-row>
             <el-row class="bottomspace" v-if="CurrentAddtion[CurrentAddtionIndex].LogType==21">
-                请求：{{CurrentAddtion[CurrentAddtionIndex].StackTrace}}
+                <el-col :span="2">
+                    <span>请求：</span>
+                </el-col>
+                <el-col :span="22">
+                    <el-input type="textarea" :readonly="true" style="width:700px;" rows="6" :value="CurrentAddtion[CurrentAddtionIndex].StackTrace"></el-input>
+                </el-col>
             </el-row>
 
 
@@ -154,7 +159,7 @@
                 </el-row>
             </el-row>
 
-            <el-row class="bottomspace" v-if="CurrentAddtion[CurrentAddtionIndex].LogType==1 || CurrentAddtion[CurrentAddtionIndex].LogType==3 || CurrentAddtion[CurrentAddtionIndex].LogType==4 || CurrentAddtion[CurrentAddtionIndex].LogType==2 || CurrentAddtion[CurrentAddtionIndex].LogType==13 || CurrentAddtion[CurrentAddtionIndex].LogType==23 || CurrentAddtion[CurrentAddtionIndex].LogType==31 || CurrentAddtion[CurrentAddtionIndex].LogType==32 || CurrentAddtion[CurrentAddtionIndex].LogType==33">
+            <el-row class="bottomspace" v-if="CurrentAddtion[CurrentAddtionIndex].LogType==1 || CurrentAddtion[CurrentAddtionIndex].LogType==3 || CurrentAddtion[CurrentAddtionIndex].LogType==4 || CurrentAddtion[CurrentAddtionIndex].LogType==2 || CurrentAddtion[CurrentAddtionIndex].LogType==13 || CurrentAddtion[CurrentAddtionIndex].LogType==22 || CurrentAddtion[CurrentAddtionIndex].LogType==23 || CurrentAddtion[CurrentAddtionIndex].LogType==31 || CurrentAddtion[CurrentAddtionIndex].LogType==32 || CurrentAddtion[CurrentAddtionIndex].LogType==33">
                 <el-col :span="2">
                     <span v-if="CurrentAddtion[CurrentAddtionIndex].LogType==1">参数：</span>
                     <span v-if="CurrentAddtion[CurrentAddtionIndex].LogType==3">返回：</span>

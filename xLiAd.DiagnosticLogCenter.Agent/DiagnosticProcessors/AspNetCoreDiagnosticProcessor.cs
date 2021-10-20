@@ -30,7 +30,7 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
             var guid = Guid.NewGuid();
             GuidHolder.Holder.Value = guid;
             SetTraceAndPageId(httpContext);
-            var log = ToLog(httpContext);
+            var log = ToLog(httpContext, true);
             log.LogType = LogTypeEnum.RequestBegin;
             Helper.PostHelper.ProcessLog(log);
         }
@@ -61,13 +61,17 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
             GuidHolder.ParentHttpHolder.Value = parentHttp;
         }
 
-        private LogEntity ToLog(HttpContext httpContext)
+        private LogEntity ToLog(HttpContext httpContext, bool isStart = false)
         {
             var path = httpContext.Request.Path;
             var ip = httpContext.Connection.RemoteIpAddress.ToString();
             var url = httpContext.Request.GetDisplayUrl();
             var method = httpContext.Request.Method;
-            var stackTrace = $"地址：{url}\r\nIP：{httpContext.Connection.RemoteIpAddress.MapToIPv4().ToString()}:{httpContext.Connection.RemotePort}\r\n本地IP：{httpContext.Connection.LocalIpAddress.MapToIPv4().ToString()}:{httpContext.Connection.LocalPort}\r\nUserAgent：{(httpContext.Request.Headers.ContainsKey("User-Agent") ? httpContext.Request.Headers["User-Agent"].ToString() : null)}\r\n{GetUser(httpContext)}";
+            string stackTrace;
+            if (isStart)
+                stackTrace = $"地址：{url}\r\nIP：{httpContext.Connection.RemoteIpAddress.MapToIPv4().ToString()}:{httpContext.Connection.RemotePort}\r\n本地IP：{httpContext.Connection.LocalIpAddress.MapToIPv4().ToString()}:{httpContext.Connection.LocalPort}\r\nUserAgent：{(httpContext.Request.Headers.ContainsKey("User-Agent") ? httpContext.Request.Headers["User-Agent"].ToString() : null)}";
+            else
+                stackTrace = GetUser(httpContext);
             LogEntity log = new LogEntity()
             {
                 Message = path,
@@ -105,7 +109,7 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
                     domainAccount = claimUserName.Value;
             }
             if (id == null && cname == null && domainAccount == null)
-                return null;
+                return string.Empty;
             else
                 return $"用户Id：{id}\r\n用户姓名：{cname}\r\n用户域帐号：{domainAccount}\r\n";
         }
