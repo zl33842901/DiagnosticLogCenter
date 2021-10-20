@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using xLiAd.DiagnosticLogCenter.Abstract;
 
@@ -65,10 +67,11 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
             var ip = httpContext.Connection.RemoteIpAddress.ToString();
             var url = httpContext.Request.GetDisplayUrl();
             var method = httpContext.Request.Method;
+            var stackTrace = $"地址：{url}\r\nIP：{httpContext.Connection.RemoteIpAddress.MapToIPv4().ToString()}:{httpContext.Connection.RemotePort}\r\n本地IP：{httpContext.Connection.LocalIpAddress.MapToIPv4().ToString()}:{httpContext.Connection.LocalPort}\r\nUserAgent：{(httpContext.Request.Headers.ContainsKey("User-Agent") ? httpContext.Request.Headers["User-Agent"].ToString() : null)}\r\n{GetUser(httpContext)}";
             LogEntity log = new LogEntity()
             {
                 Message = path,
-                StackTrace = url,
+                StackTrace = stackTrace,
                 MethodName = method,
                 GroupGuid = GuidHolder.Holder.Value.ToString(),
                 Ip = ip,
@@ -80,6 +83,31 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
                 ParentHttpId = GuidHolder.ParentHttpHolder.Value
             };
             return log;
+        }
+
+        private string GetUser(HttpContext httpContext)
+        {
+            string id = null, cname = null, domainAccount = null;
+            var u = httpContext.User;
+            if (u != null && u.Identity.IsAuthenticated)
+            {
+                IEnumerable<Claim> claimList = u.Claims;
+                var claimUserId = claimList.FirstOrDefault(y => y.Type == "Id");
+                if (claimUserId != null && !string.IsNullOrEmpty(claimUserId.Value))
+                    id = claimUserId.Value;
+
+                var claimUserCode = claimList.FirstOrDefault(y => y.Type == "CName");
+                if (claimUserCode != null && !string.IsNullOrEmpty(claimUserCode.Value))
+                    cname = claimUserCode.Value;
+
+                var claimUserName = claimList.FirstOrDefault(y => y.Type == "DomainAccount");
+                if (claimUserName != null && !string.IsNullOrEmpty(claimUserName.Value))
+                    domainAccount = claimUserName.Value;
+            }
+            if (id == null && cname == null && domainAccount == null)
+                return null;
+            else
+                return $"用户Id：{id}\r\n用户姓名：{cname}\r\n用户域帐号：{domainAccount}\r\n";
         }
 
         [DiagnosticName("Microsoft.AspNetCore.Hosting.EndRequest")]
