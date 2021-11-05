@@ -8,6 +8,7 @@ using RabbitMQ.Client.Events;
 using System.Collections.Concurrent;
 using System.Text;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace xLiAd.DiagnosticLogCenter.Analyzer
 {
@@ -49,7 +50,7 @@ namespace xLiAd.DiagnosticLogCenter.Analyzer
                 DataHolder[key].Add(dto);
             else
                 DataHolder.TryAdd(key, new ConcurrentBag<LogModel>() { dto });
-            DataHolder[key] = new ConcurrentBag<LogModel>(DataHolder[key].Where(x => x.HappenTime > DateTime.Now.AddMinutes(-10)));//只留10分钟内的
+            DataHolder[key] = new ConcurrentBag<LogModel>(DataHolder[key].Where(x => x.HappenTime > DateTime.Now.AddMinutes(-80)));//只留80分钟内的
             if (!dto.Success && dto.HappenTime > DateTime.Now.AddMinutes(-5))//只有未成功时需要处理，再过滤掉可能是缓存的；假设服务器间时间差不大于5分钟。
             {
                 var baseTime = dto.HappenTime.AddMinutes(-1);
@@ -74,6 +75,48 @@ namespace xLiAd.DiagnosticLogCenter.Analyzer
                 }
             }
             rabbit.Channel.BasicAck(eventArgs.DeliveryTag, false);
+        }
+
+        public List<StatisticsResultModel> Statistics(DateTime start, DateTime end)
+        {
+            List<StatisticsResultModel> result = new List<StatisticsResultModel>();
+            foreach(var system in DataHolder)
+            {
+                var client = system.Key.Split('|')[0];
+                var env = system.Key.Split('|')[1];
+                var list = system.Value.Where(x => x.HappenTime >= start && x.HappenTime < end);
+                if (!list.Any())
+                    continue;
+                result.Add(StatisticsOne(list, "*", start, end, client, env));
+                foreach (var group in list.GroupBy(x => x.Message).OrderByDescending(x => x.Count()))
+                    result.Add(StatisticsOne(group, group.Key, start, end, client, env));
+            }
+            return result;
+        }
+
+        private StatisticsResultModel StatisticsOne(IEnumerable<LogModel> list, string interfaceName, DateTime start, DateTime end, string client, string env)
+        {
+            if (list == null || !list.Any())
+                throw new ArgumentNullException("list", "被分析的列表不能为空！");
+            var total = list.Count();
+            var failCount = list.Count(x => !x.Success);
+            var maxTime = list.Max(x => x.TotalMillionSeconds);
+            var minTime = list.Min(x => x.TotalMillionSeconds);
+            var avgTime = list.Average(x => x.TotalMillionSeconds);
+            StatisticsResultModel srst = new StatisticsResultModel()
+            {
+                ClientName = client,
+                EnvironmentName = env,
+                Start = start,
+                End = end,
+                Total = total,
+                FailCount = failCount,
+                MaxTotalMillionSeconds = maxTime,
+                MinTotalMillionSeconds = minTime,
+                AvgTotalMillionSeconds = avgTime,
+                Interface = interfaceName
+            };
+            return srst;
         }
     }
 }

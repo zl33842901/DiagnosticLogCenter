@@ -16,7 +16,8 @@ namespace xLiAd.DiagnosticLogCenter.Analyzer
                 return config;
             });
             services.AddScoped<IAlertServicecs, T>();
-            services.AddHostedService<AnalyzerService>();
+            services.AddSingleton<AnalyzerService>();
+            services.AddHostedService(x => x.GetRequiredService<AnalyzerService>());
             return services;
         }
     }
