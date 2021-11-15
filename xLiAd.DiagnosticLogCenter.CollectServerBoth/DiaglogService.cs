@@ -13,13 +13,15 @@ namespace xLiAd.DiagnosticLogCenter.CollectServerBoth
         //private readonly CollectServerByEs.Services.ILogBatchService logBatchServiceEs;
         private readonly ITraceAndGroupService traceAndGroupService;
         private readonly IRabbitMqService rabbitMqService;
+        private readonly IRabbitMqBehaviorService rabbitMqBehaviorService;
         public DiaglogService(CollectServer.Services.ILogBatchService logBatchService, //CollectServerByEs.Services.ILogBatchService logBatchServiceEs,
-            ITraceAndGroupService traceAndGroupService, IRabbitMqService rabbitMqService)
+            ITraceAndGroupService traceAndGroupService, IRabbitMqService rabbitMqService, IRabbitMqBehaviorService rabbitMqBehaviorService)
         {
             this.logBatchService = logBatchService;
             //this.logBatchServiceEs = logBatchServiceEs;
             this.traceAndGroupService = traceAndGroupService;
             this.rabbitMqService = rabbitMqService;
+            this.rabbitMqBehaviorService = rabbitMqBehaviorService;
         }
 
         public override async Task<LogReply> PostLog(LogDto request, ServerCallContext context)
@@ -41,6 +43,11 @@ namespace xLiAd.DiagnosticLogCenter.CollectServerBoth
             {
                 var anglist = datas.Where(x => x.Item2.Addtions.Any(y => y.LogType == Abstract.LogTypeEnum.RequestEndSuccess || y.LogType == Abstract.LogTypeEnum.RequestEndException));
                 foreach (var ang in anglist)
+                {
+                    try
+                    {
+                        rabbitMqBehaviorService.Publish(Newtonsoft.Json.JsonConvert.SerializeObject(ang));
+                    }catch(Exception ex) { Console.WriteLine(ex.Message); Console.WriteLine(ex.StackTrace); }
                     rabbitMqService.Publish(Newtonsoft.Json.JsonConvert.SerializeObject(new
                     {
                         ang.Item2.ClientName,
@@ -51,6 +58,7 @@ namespace xLiAd.DiagnosticLogCenter.CollectServerBoth
                         ang.Item2.Success,
                         ang.Item2.TotalMillionSeconds
                     }));
+                }
             }
             catch(Exception ex) { Console.WriteLine(ex.Message);Console.WriteLine(ex.StackTrace); }
             //计算 TraceId  PageId

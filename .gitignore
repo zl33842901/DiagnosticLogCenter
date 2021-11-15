@@ -63,3 +63,5 @@
 /xLiAd.DiagnosticLogCenter.Analyzer/bin/Release/netcoreapp3.1
 /xLiAd.DiagnosticLogCenter.Agent/xLiAd.DiagnosticLogCenter.Agent.csproj.user
 *.user
+/.vs/xLiAd.DiagnosticLogCenter/v17
+/.vs/xLiAd.DiagnosticLogCenter

@@ -75,6 +75,7 @@ namespace xLiAd.DiagnosticLogCenter.CollectServer
                 return channel;
             });
             services.AddSingleton<IRabbitMqService, RabbitMqService>();
+            services.AddSingleton<IRabbitMqBehaviorService, RabbitMqBehaviorService>();
 
             services.AddGrpc(x => x.MaxReceiveMessageSize = 128 * 1024 * 1024);
         }
