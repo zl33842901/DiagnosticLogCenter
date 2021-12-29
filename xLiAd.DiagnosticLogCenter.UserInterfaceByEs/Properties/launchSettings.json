@@ -1,10 +1,10 @@
-﻿{
+{
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:42131",
-      "sslPort": 0
+      "applicationUrl": "http://localhost:49991/",
+      "sslPort": 44324
     }
   },
   "profiles": {
@@ -19,11 +19,11 @@
     "xLiAd.DiagnosticLogCenter.UserInterfaceByEs": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"
-      }
+      },
+      "applicationUrl": "http://localhost:5000"
     }
   }
 }
