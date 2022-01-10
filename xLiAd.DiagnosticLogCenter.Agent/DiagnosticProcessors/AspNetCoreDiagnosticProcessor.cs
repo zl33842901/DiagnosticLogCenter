@@ -39,26 +39,37 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
         {
             string traceId = null;
             if (httpContext.Request.Headers.ContainsKey(TraceIdName))
-                traceId = httpContext.Request.Headers[TraceIdName].FirstOrDefault();
+                traceId = SubstringToDot(httpContext.Request.Headers[TraceIdName]);
             if (traceId.NullOrEmpty())
                 traceId = new TracePageIdValue(DateTime.Now, DiagnosticLogConfig.Config.ClientName, DiagnosticLogConfig.Config.EnvName).ToString();
             GuidHolder.TraceIdHolder.Value = traceId;
             string pageId = null;
             if (httpContext.Request.Headers.ContainsKey(PageIdName))
-                pageId = httpContext.Request.Headers[PageIdName].FirstOrDefault();
+                pageId = SubstringToDot(httpContext.Request.Headers[PageIdName]);
             if (pageId.NullOrEmpty())
                 pageId = traceId;
             GuidHolder.PageIdHolder.Value = pageId;
 
             string parentGuid = null;
             if (httpContext.Request.Headers.ContainsKey(ParentGuidName))
-                parentGuid = httpContext.Request.Headers[ParentGuidName].FirstOrDefault();
+                parentGuid = SubstringToDot(httpContext.Request.Headers[ParentGuidName]);
             GuidHolder.ParentHolder.Value = parentGuid;
 
             string parentHttp = null;
             if (httpContext.Request.Headers.ContainsKey(ParentHttpIdName))
-                parentHttp = httpContext.Request.Headers[ParentHttpIdName].FirstOrDefault();
+                parentHttp = SubstringToDot(httpContext.Request.Headers[ParentHttpIdName]);
             GuidHolder.ParentHttpHolder.Value = parentHttp;
+        }
+
+        private string SubstringToDot(IEnumerable<string> header)
+        {
+            var result = header.FirstOrDefault();
+            if (result == null)
+                return null;
+            if (result.Contains(','))
+                return result.Substring(0, result.IndexOf(','));
+            else
+                return result;
         }
 
         private LogEntity ToLog(HttpContext httpContext, bool isStart = false)
