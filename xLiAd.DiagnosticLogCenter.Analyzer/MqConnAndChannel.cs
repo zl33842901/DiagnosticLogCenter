@@ -19,7 +19,7 @@ namespace xLiAd.DiagnosticLogCenter.Analyzer
             Factory.Password = rabbitSetting.RabbitMqPassword;
             Factory.AutomaticRecoveryEnabled = true;
             Connection = Factory.CreateConnection();
-            Connection.ConnectionShutdown += ReConnect;
+            //Connection.ConnectionShutdown += ReConnect;
             Channel = Connection.CreateModel();
             Channel.ExchangeDeclare(rabbitSetting.RabbitMqExchangeName, "direct", durable: true, autoDelete: false, arguments: null);
 

@@ -14,13 +14,14 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
         {
             if (GuidHolder.Holder.Value == Guid.Empty)
                 return;
-            if(!GuidHolder.PageIdHolder.Value.NullOrEmpty())
+            if(!GuidHolder.PageIdHolder.Value.NullOrEmpty() && !request.Headers.Contains(AspNetCoreDiagnosticProcessor.PageIdName))
                 request.Headers.TryAddWithoutValidation(AspNetCoreDiagnosticProcessor.PageIdName, GuidHolder.PageIdHolder.Value);
-            if (!GuidHolder.TraceIdHolder.Value.NullOrEmpty())
+            if (!GuidHolder.TraceIdHolder.Value.NullOrEmpty() && !request.Headers.Contains(AspNetCoreDiagnosticProcessor.TraceIdName))
                 request.Headers.TryAddWithoutValidation(AspNetCoreDiagnosticProcessor.TraceIdName, GuidHolder.TraceIdHolder.Value);
-
-            request.Headers.TryAddWithoutValidation(AspNetCoreDiagnosticProcessor.ParentGuidName, GuidHolder.Holder.Value.ToString());
-            request.Headers.TryAddWithoutValidation(AspNetCoreDiagnosticProcessor.ParentHttpIdName, requestId.ToString());
+            if (!request.Headers.Contains(AspNetCoreDiagnosticProcessor.ParentGuidName))
+                request.Headers.TryAddWithoutValidation(AspNetCoreDiagnosticProcessor.ParentGuidName, GuidHolder.Holder.Value.ToString());
+            if (!request.Headers.Contains(AspNetCoreDiagnosticProcessor.ParentHttpIdName))
+                request.Headers.TryAddWithoutValidation(AspNetCoreDiagnosticProcessor.ParentHttpIdName, requestId.ToString());
 
             var log = ToLog(request, requestId);
             log.LogType = LogTypeEnum.HttpClientRequest;

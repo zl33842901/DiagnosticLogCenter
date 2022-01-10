@@ -39,25 +39,25 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
         {
             string traceId = null;
             if (httpContext.Request.Headers.ContainsKey(TraceIdName))
-                traceId = httpContext.Request.Headers[TraceIdName];
+                traceId = httpContext.Request.Headers[TraceIdName].FirstOrDefault();
             if (traceId.NullOrEmpty())
                 traceId = new TracePageIdValue(DateTime.Now, DiagnosticLogConfig.Config.ClientName, DiagnosticLogConfig.Config.EnvName).ToString();
             GuidHolder.TraceIdHolder.Value = traceId;
             string pageId = null;
             if (httpContext.Request.Headers.ContainsKey(PageIdName))
-                pageId = httpContext.Request.Headers[PageIdName];
+                pageId = httpContext.Request.Headers[PageIdName].FirstOrDefault();
             if (pageId.NullOrEmpty())
                 pageId = traceId;
             GuidHolder.PageIdHolder.Value = pageId;
 
             string parentGuid = null;
             if (httpContext.Request.Headers.ContainsKey(ParentGuidName))
-                parentGuid = httpContext.Request.Headers[ParentGuidName];
+                parentGuid = httpContext.Request.Headers[ParentGuidName].FirstOrDefault();
             GuidHolder.ParentHolder.Value = parentGuid;
 
             string parentHttp = null;
             if (httpContext.Request.Headers.ContainsKey(ParentHttpIdName))
-                parentHttp = httpContext.Request.Headers[ParentHttpIdName];
+                parentHttp = httpContext.Request.Headers[ParentHttpIdName].FirstOrDefault();
             GuidHolder.ParentHttpHolder.Value = parentHttp;
         }
 
