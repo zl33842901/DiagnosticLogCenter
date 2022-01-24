@@ -53,23 +53,31 @@ namespace xLiAd.DiagnosticLogCenter.Analyzer
             DataHolder[key] = new ConcurrentBag<LogModel>(DataHolder[key].Where(x => x.HappenTime > DateTime.Now.AddMinutes(-80)));//只留80分钟内的
             if (!dto.Success && dto.HappenTime > DateTime.Now.AddMinutes(-5))//只有未成功时需要处理，再过滤掉可能是缓存的；假设服务器间时间差不大于5分钟。
             {
-                var baseTime = dto.HappenTime.AddMinutes(-1);
+                var svc = sp.GetService<IAlertServicecs>();
+                var config = svc.GetAlertConfig(dto.ClientName);
+                var baseTime = dto.HappenTime.AddMinutes(-config.MinutesCatchedForProcess);
                 var callCount = DataHolder[key].Count(x => x.HappenTime > baseTime);
                 var failCount = DataHolder[key].Count(x => x.HappenTime > baseTime && !x.Success);
                 var messageCallCount = DataHolder[key].Count(x => x.HappenTime > baseTime && x.Message == dto.Message);
                 var messageFailCount = DataHolder[key].Count(x => x.HappenTime > baseTime && x.Message == dto.Message && !x.Success);
-                var messageNeedAlert = (messageFailCount * 100 / messageCallCount) > 20 && messageFailCount >= 3;//暂时的规则：错误率 20%以上 且采样数至少3个
+                var thisMessageConfig = config.AlterSettings.Where(x => x.Message == dto.Message).FirstOrDefault();
+                if(thisMessageConfig == null)
+                    thisMessageConfig = config.AlterSettings.Where(x => x.Message == "*").FirstOrDefault();
+                if (thisMessageConfig == null)
+                    thisMessageConfig = new MessageAlertDetailConfig() { LowestFailRate = 20, LowestFailCount = 3 };
+                var messageNeedAlert = (messageFailCount * 100 / messageCallCount) >= thisMessageConfig.LowestFailRate && messageFailCount >= thisMessageConfig.LowestFailCount;//暂时的规则：错误率 20%以上 且采样数至少3个
                 if (messageNeedAlert)
                 {
-                    var svc = sp.GetService<IAlertServicecs>();
                     svc.Alert(dto.ClientName, dto.EnvironmentName, dto.Message, 1, messageCallCount, messageFailCount);
                 }
                 else
                 {
-                    var needAlert = (failCount * 100 / callCount) > 5 && failCount >= 5;
+                    var zongtiConfig = config.AlterSettings.Where(x => x.Message == "**").FirstOrDefault();
+                    if (zongtiConfig == null)
+                        zongtiConfig = new MessageAlertDetailConfig() { LowestFailRate = 5, LowestFailCount = 5 };
+                    var needAlert = (failCount * 100 / callCount) > zongtiConfig.LowestFailRate && failCount >= zongtiConfig.LowestFailCount;
                     if(needAlert)
                     {
-                        var svc = sp.GetService<IAlertServicecs>();
                         svc.Alert(dto.ClientName, dto.EnvironmentName, "", 1, callCount, failCount);
                     }
                 }
