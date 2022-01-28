@@ -1,4 +1,5 @@
 ﻿using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,11 +8,20 @@ namespace xLiAd.DiagnosticLogCenter.Analyzer
 {
     public class MqConnAndChannel : IDisposable
     {
-        private readonly ConnectionFactory Factory;
-        IConnection Connection { get; set; }
+        private readonly AnalyzerConfig rabbitSetting;
+        private readonly Action<object, BasicDeliverEventArgs> consumeAction;
+        private ConnectionFactory Factory;
+        private IConnection Connection;
         public IModel Channel { get; private set; }
         private IBasicProperties props;
-        public MqConnAndChannel(AnalyzerConfig rabbitSetting)
+        public MqConnAndChannel(AnalyzerConfig rabbitSetting, Action<object, BasicDeliverEventArgs> consumeAction)
+        {
+            this.rabbitSetting = rabbitSetting;
+            this.consumeAction = consumeAction;
+            LoadRbt();
+        }
+
+        private void LoadRbt()
         {
             Factory = new ConnectionFactory();
             Factory.HostName = rabbitSetting.RabbitMqHost;
@@ -19,7 +29,7 @@ namespace xLiAd.DiagnosticLogCenter.Analyzer
             Factory.Password = rabbitSetting.RabbitMqPassword;
             Factory.AutomaticRecoveryEnabled = true;
             Connection = Factory.CreateConnection();
-            //Connection.ConnectionShutdown += ReConnect;
+            Connection.ConnectionShutdown += ReConnect;
             Channel = Connection.CreateModel();
             Channel.ExchangeDeclare(rabbitSetting.RabbitMqExchangeName, "direct", durable: true, autoDelete: false, arguments: null);
 
@@ -28,27 +38,23 @@ namespace xLiAd.DiagnosticLogCenter.Analyzer
 
             props = Channel.CreateBasicProperties();
             props.Persistent = true;
+            var consumer = new EventingBasicConsumer(Channel);
+            consumer.Received += new EventHandler<BasicDeliverEventArgs>(consumeAction);
+            Channel.BasicConsume(rabbitSetting.RabbitMqQueueName, false, consumerTag: "我是日志实时分析系统", noLocal: false, exclusive: false, arguments: null, consumer);
+
         }
 
         private void ReConnect(object sender, ShutdownEventArgs e)
         {
-            if (!Channel.IsOpen)
+            while (!Connection.IsOpen)
             {
-                if (!Connection.IsOpen)
-                {
-                    try
-                    {
-                        Connection.Dispose();
-                    }
-                    catch { }
-                    Connection = Factory.CreateConnection();
-                }
                 try
                 {
                     Channel.Dispose();
+                    Connection.Dispose();
+                    LoadRbt();
                 }
-                catch { }
-                Channel = Connection.CreateModel();
+                catch(Exception ex) { Console.WriteLine("重新连接rabbitmq时发生错误：" + ex.Message); System.Threading.Thread.Sleep(3000); }
             }
         }
 
