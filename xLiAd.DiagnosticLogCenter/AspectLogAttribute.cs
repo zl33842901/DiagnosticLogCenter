@@ -16,12 +16,23 @@ namespace xLiAd.DiagnosticLogCenter
                 return context.Invoke(next);
             string className = context.Implementation.GetType().Name;
             string methodName = context.ImplementationMethod.Name;
-            string cnt = Newtonsoft.Json.JsonConvert.SerializeObject(context.Parameters);
+            string cnt;
+            try
+            {
+                cnt = Newtonsoft.Json.JsonConvert.SerializeObject(context.Parameters);
+            }
+            catch { cnt = "没有获取到方法参数值。"; }
             Listener.Write(LogTypeEnum.MethodEntry, className, methodName, cnt);
             var t = context.Invoke(next);
             if (t.Exception != null)
             {
-                Listener.Write(LogTypeEnum.MethodException, className, methodName, t.Exception.Message + "\r\nStackTrace:\r\n" + t.Exception.StackTrace);
+                string cont;
+                try
+                {
+                    cont = Newtonsoft.Json.JsonConvert.SerializeObject(t.Exception);
+                }
+                catch { cont = t.Exception.Message + "\r\nStackTrace:\r\n" + t.Exception.StackTrace; }
+                Listener.Write(LogTypeEnum.MethodException, className, methodName, cont);
             }
             else
             {
