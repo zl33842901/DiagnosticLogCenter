@@ -17,6 +17,7 @@ namespace xLiAd.DiagnosticLogCenter.Analyzer
     {
         private readonly IServiceProvider serviceProvider;
         private MqConnAndChannel rabbit;
+        private volatile int vcount = 0;
         public AnalyzerService(IServiceProvider serviceProvider)
         {
             this.serviceProvider = serviceProvider;
@@ -27,7 +28,17 @@ namespace xLiAd.DiagnosticLogCenter.Analyzer
             rabbit = new MqConnAndChannel(config, Consume);
             while (!stoppingToken.IsCancellationRequested)
             {
+                vcount = 0;
                 await Task.Delay(5000);
+                if(vcount <= 0)
+                {
+                    using (var scope = serviceProvider.CreateScope())
+                    {
+                        var sp = scope.ServiceProvider;
+                        var svc = sp.GetService<IAlertServicecs>();
+                        svc.Alert("DiagnosticLogCenter", "PRD", "在时间窗口内没有收到日志", 1, 0, 0);
+                    }
+                }
             }
             Console.WriteLine("哇，AnalyzerService 退出了，说明 stoppingToken.IsCancellationRequested 刚刚为真了，现在是：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
         }
@@ -36,6 +47,7 @@ namespace xLiAd.DiagnosticLogCenter.Analyzer
 
         private void Consume(object model, BasicDeliverEventArgs eventArgs)
         {
+            vcount++;
             using var scope = serviceProvider.CreateScope();
             var sp = scope.ServiceProvider;
             try
