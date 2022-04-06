@@ -18,6 +18,7 @@ namespace xLiAd.DiagnosticLogCenter.Analyzer
         private readonly IServiceProvider serviceProvider;
         private MqConnAndChannel rabbit;
         private volatile int vcount = 0;
+        private volatile int ccount = 0;
         public AnalyzerService(IServiceProvider serviceProvider)
         {
             this.serviceProvider = serviceProvider;
@@ -31,6 +32,14 @@ namespace xLiAd.DiagnosticLogCenter.Analyzer
                 vcount = 0;
                 await Task.Delay(5000);
                 if(vcount <= 0)
+                {
+                    ccount++;
+                }
+                else
+                {
+                    ccount = 0;
+                }
+                if(ccount >= 12)//连续12次（1分钟） 无日志，则可以认定不正常，需注意。
                 {
                     using (var scope = serviceProvider.CreateScope())
                     {

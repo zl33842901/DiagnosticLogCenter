@@ -11,6 +11,7 @@ namespace xLiAd.DiagnosticLogCenter.Agent
         /// 总开关
         /// </summary>
         public bool Enable { get; set; } = true;
+        public bool EnableAspNetCore { get; set; } = true;
         public bool EnableDapperEx { get; set; } = true;
         public bool EnableHttpClient { get; set; } = true;
         public bool EnableSqlClient { get; set; } = true;

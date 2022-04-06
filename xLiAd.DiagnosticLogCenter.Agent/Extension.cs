@@ -19,7 +19,8 @@ namespace xLiAd.DiagnosticLogCenter.Agent
             if (!config.Enable)
                 return services;
             DiagnosticLogConfig.Config = config;
-            services.AddSingleton<ITracingDiagnosticProcessor, AspNetCoreDiagnosticProcessor>();
+            if(config.EnableAspNetCore)
+                services.AddSingleton<ITracingDiagnosticProcessor, AspNetCoreDiagnosticProcessor>();
             if (config.EnableDapperEx)
                 services.AddSingleton<ITracingDiagnosticProcessor, DapperExDiagnosticProcessor>();
             if (config.EnableHttpClient)
