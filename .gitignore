@@ -2,7 +2,7 @@
 # 此 .gitignore 文件已由 Microsoft(R) Visual Studio 自动创建。
 ################################################################################
 
-/.vs/xLiAd.DiagnosticLogCenter/v16
+/.vs/
 /xLiAd.DiagnosticLogCenter/bin/Debug/netstandard2.0
 /xLiAd.DiagnosticLogCenter/obj
 /xLiAd.DiagnosticLogCenter.Abstract/bin/Debug/netstandard2.0
@@ -63,5 +63,4 @@
 /xLiAd.DiagnosticLogCenter.Analyzer/bin/Release/netcoreapp3.1
 /xLiAd.DiagnosticLogCenter.Agent/xLiAd.DiagnosticLogCenter.Agent.csproj.user
 *.user
-/.vs/xLiAd.DiagnosticLogCenter/v17
-/.vs/xLiAd.DiagnosticLogCenter
+

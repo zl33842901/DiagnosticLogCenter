@@ -80,9 +80,9 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
             var method = httpContext.Request.Method;
             string stackTrace;
             if (isStart)
-                stackTrace = $"地址：{url}\r\nIP：{httpContext.Connection.RemoteIpAddress.MapToIPv4().ToString()}:{httpContext.Connection.RemotePort}\r\n本地IP：{httpContext.Connection.LocalIpAddress.MapToIPv4().ToString()}:{httpContext.Connection.LocalPort}\r\nUserAgent：{(httpContext.Request.Headers.ContainsKey("User-Agent") ? httpContext.Request.Headers["User-Agent"].ToString() : null)}";
+                stackTrace = $"Url：{url}\r\nIP：{httpContext.Connection.RemoteIpAddress.MapToIPv4().ToString()}:{httpContext.Connection.RemotePort}\r\nLocalIP：{httpContext.Connection.LocalIpAddress.MapToIPv4().ToString()}:{httpContext.Connection.LocalPort}\r\nHeaders：\r\n{string.Join("\r\n", httpContext.Request.Headers.Select(x => $"{x.Key}:{x.Value.ToString()}"))}";
             else
-                stackTrace = GetUser(httpContext);
+                stackTrace = GetUser(httpContext) + "\r\n" + GetBackInfo(httpContext);
             LogEntity log = new LogEntity()
             {
                 Message = path,
@@ -98,6 +98,12 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
                 ParentHttpId = GuidHolder.ParentHttpHolder.Value
             };
             return log;
+        }
+
+        private string GetBackInfo(HttpContext httpContext)
+        {
+            var headers = string.Join("\r\n", httpContext.Response.Headers.Select(x => $"{x.Key}:{x.Value.ToString()}"));
+            return $"StatusCode:{httpContext.Response.StatusCode}\r\nHeaders:\r\n{headers}";
         }
 
         private string GetUser(HttpContext httpContext)
