@@ -10,6 +10,10 @@ namespace xLiAd.DiagnosticLogCenter
     public class AspectLogAttribute : AbstractInterceptorAttribute
     {
         internal static bool Enable { get; set; } = true;
+        /// <summary>
+        /// 是否等待任务
+        /// </summary>
+        protected virtual bool WaitTasks => true;
         public override Task Invoke(AspectContext context, AspectDelegate next)
         {
             if (!Enable)
@@ -38,20 +42,32 @@ namespace xLiAd.DiagnosticLogCenter
             {
                 try
                 {
-                    bool isTask = context.ImplementationMethod.ReturnType.IsGenericType && context.ImplementationMethod.ReturnType.GetGenericTypeDefinition() == typeof(Task<>);
                     object realResult;
-                    if (isTask)
-                        realResult = context.ImplementationMethod.ReturnType.GetProperty("Result", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).GetValue(context.ReturnValue);
+                    if (context.IsAsync())
+                    {
+                        if (WaitTasks)
+                            t.ConfigureAwait(false).GetAwaiter().GetResult();
+                        var tp = context.ImplementationMethod.ReturnType.GetProperty("Result", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                        realResult = tp.GetValue(context.ReturnValue);
+                    }
                     else
+                    {
                         realResult = context.ReturnValue;
+                    }
+
                     Listener.Write(LogTypeEnum.MethodLeave, className, methodName, Newtonsoft.Json.JsonConvert.SerializeObject(realResult));
                 }
-                catch
+                catch(Exception ex)
                 {
                     Listener.Write(LogTypeEnum.MethodLeave, className, methodName, "没有获取到方法返回值。");
                 }
             }
             return t;
         }
+    }
+
+    public class AspectLogUnWaitAttribute : AspectLogAttribute
+    {
+        protected override bool WaitTasks => false;
     }
 }

@@ -82,7 +82,10 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
             if (isStart)
                 stackTrace = $"Url：{url}\r\nIP：{httpContext.Connection.RemoteIpAddress.MapToIPv4().ToString()}:{httpContext.Connection.RemotePort}\r\nLocalIP：{httpContext.Connection.LocalIpAddress.MapToIPv4().ToString()}:{httpContext.Connection.LocalPort}\r\nHeaders：\r\n{string.Join("\r\n", httpContext.Request.Headers.Select(x => $"{x.Key}:{x.Value.ToString()}"))}";
             else
-                stackTrace = GetUser(httpContext) + "\r\n" + GetBackInfo(httpContext);
+            {
+                var u = GetUser(httpContext);
+                stackTrace = u + (u.NullOrEmpty() ? "" : "\r\n") + GetBackInfo(httpContext);
+            }
             LogEntity log = new LogEntity()
             {
                 Message = path,

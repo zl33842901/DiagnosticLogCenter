@@ -46,12 +46,14 @@ namespace xLiAd.DiagnosticLogCenter.SampleFulluseAspNetCore.Services
 
         public async Task<string> Test()
         {
+            await Task.Delay(3000);
             return "abc";
         }
 
-        public async Task Test1()
+        public Task<string> Test1()
         {
-
+            Task.Delay(3000).ConfigureAwait(false).GetAwaiter().GetResult();
+            return Task.FromResult("abc");
         }
 
         public void Test2()
@@ -65,7 +67,7 @@ namespace xLiAd.DiagnosticLogCenter.SampleFulluseAspNetCore.Services
         int QueryDb(int inputParam);
         string RequestWeb(string url);
         Task<string> Test();
-        Task Test1();
+        Task<string> Test1();
         void Test2();
     }
 }
