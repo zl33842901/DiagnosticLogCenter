@@ -30,13 +30,7 @@ namespace xLiAd.DiagnosticLogCenter
             var t = context.Invoke(next);
             if (t.Exception != null)
             {
-                string cont;
-                try
-                {
-                    cont = Newtonsoft.Json.JsonConvert.SerializeObject(t.Exception);
-                }
-                catch { cont = t.Exception.Message + "\r\nStackTrace:\r\n" + t.Exception.StackTrace; }
-                Listener.Write(LogTypeEnum.MethodException, className, methodName, cont);
+                MethodException(t.Exception, className, methodName);
             }
             else
             {
@@ -48,21 +42,31 @@ namespace xLiAd.DiagnosticLogCenter
                         if (WaitTasks)
                             t.ConfigureAwait(false).GetAwaiter().GetResult();
                         var tp = context.ImplementationMethod.ReturnType.GetProperty("Result", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-                        realResult = tp.GetValue(context.ReturnValue);
+                        realResult = tp?.GetValue(context.ReturnValue);
                     }
                     else
                     {
                         realResult = context.ReturnValue;
                     }
-
                     Listener.Write(LogTypeEnum.MethodLeave, className, methodName, Newtonsoft.Json.JsonConvert.SerializeObject(realResult));
                 }
                 catch(Exception ex)
                 {
-                    Listener.Write(LogTypeEnum.MethodLeave, className, methodName, "没有获取到方法返回值。");
+                    MethodException(ex, className, methodName);
+                    //Listener.Write(LogTypeEnum.MethodLeave, className, methodName, "没有获取到方法返回值。");
                 }
             }
             return t;
+        }
+        private void MethodException(Exception ex, string className, string methodName)
+        {
+            string cont;
+            try
+            {
+                cont = Newtonsoft.Json.JsonConvert.SerializeObject(ex);
+            }
+            catch { cont = ex.Message + "\r\nStackTrace:\r\n" + ex.StackTrace; }
+            Listener.Write(LogTypeEnum.MethodException, className, methodName, cont);
         }
     }
 

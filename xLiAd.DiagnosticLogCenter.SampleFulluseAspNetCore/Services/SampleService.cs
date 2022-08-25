@@ -47,6 +47,7 @@ namespace xLiAd.DiagnosticLogCenter.SampleFulluseAspNetCore.Services
         public async Task<string> Test()
         {
             await Task.Delay(3000);
+            throw new NotImplementedException("这是一个异常");
             return "abc";
         }
 
@@ -60,6 +61,11 @@ namespace xLiAd.DiagnosticLogCenter.SampleFulluseAspNetCore.Services
         {
             System.Threading.Thread.Sleep(5000);
         }
+
+        public async Task Test3()
+        {
+            await Task.Delay(3000);
+        }
     }
 
     public interface ISampleService
@@ -69,5 +75,6 @@ namespace xLiAd.DiagnosticLogCenter.SampleFulluseAspNetCore.Services
         Task<string> Test();
         Task<string> Test1();
         void Test2();
+        Task Test3();
     }
 }
