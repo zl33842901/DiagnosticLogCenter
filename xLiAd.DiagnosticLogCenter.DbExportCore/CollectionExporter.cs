@@ -86,7 +86,7 @@ namespace xLiAd.DiagnosticLogCenter.DbExportCore
             if (completed.Any())
             {
                 exportLog?.Info($"压缩开始，需要压缩的文件数量：{completed.Count}");
-                result = completed.Where(x => x.Item1.NameModel is LogCollectionNameModel).Select(x => ((LogCollectionNameModel)x.Item1.NameModel).ClientName).Distinct().ToStringBy("-") + "_" + maxDate.ToString("yyyy-MM-dd") + "_" + index + ".zip";
+                result = completed.Where(x => x.Item1.NameModel is LogCollectionNameModel).Select(x => ((LogCollectionNameModel)x.Item1.NameModel).ClientName).Distinct().Take(8).ToStringBy("-") + "_" + maxDate.ToString("yyyy-MM-dd") + "_" + index + ".zip";
                 result = Path.Combine(savefolder, result);
                 using (FileStream zipToOpen = new FileStream(result, FileMode.Create))
                 {
