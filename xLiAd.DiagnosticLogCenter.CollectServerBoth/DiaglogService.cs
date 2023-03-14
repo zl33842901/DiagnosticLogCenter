@@ -13,15 +13,15 @@ namespace xLiAd.DiagnosticLogCenter.CollectServerBoth
         //private readonly CollectServerByEs.Services.ILogBatchService logBatchServiceEs;
         private readonly ITraceAndGroupService traceAndGroupService;
         private readonly IRabbitMqService rabbitMqService;
-        private readonly IRabbitMqBehaviorService rabbitMqBehaviorService;
-        public DiaglogService(CollectServer.Services.ILogBatchService logBatchService, //CollectServerByEs.Services.ILogBatchService logBatchServiceEs,
-            ITraceAndGroupService traceAndGroupService, IRabbitMqService rabbitMqService, IRabbitMqBehaviorService rabbitMqBehaviorService)
+        //private readonly IRabbitMqBehaviorService rabbitMqBehaviorService;
+        public DiaglogService(CollectServer.Services.ILogBatchService logBatchService, //CollectServerByEs.Services.ILogBatchService logBatchServiceEs,, IRabbitMqBehaviorService rabbitMqBehaviorService
+            ITraceAndGroupService traceAndGroupService, IRabbitMqService rabbitMqService)
         {
             this.logBatchService = logBatchService;
             //this.logBatchServiceEs = logBatchServiceEs;
             this.traceAndGroupService = traceAndGroupService;
             this.rabbitMqService = rabbitMqService;
-            this.rabbitMqBehaviorService = rabbitMqBehaviorService;
+            //this.rabbitMqBehaviorService = rabbitMqBehaviorService;
         }
 
         public override async Task<LogReply> PostLog(LogDto request, ServerCallContext context)
@@ -44,10 +44,10 @@ namespace xLiAd.DiagnosticLogCenter.CollectServerBoth
                 var anglist = datas.Where(x => x.Item2.Addtions.Any(y => y.LogType == Abstract.LogTypeEnum.RequestEndSuccess || y.LogType == Abstract.LogTypeEnum.RequestEndException));
                 foreach (var ang in anglist)
                 {
-                    try
-                    {
-                        rabbitMqBehaviorService.Publish(Newtonsoft.Json.JsonConvert.SerializeObject(ang));
-                    }catch(Exception ex) { Console.WriteLine(ex.Message); Console.WriteLine(ex.StackTrace); }
+                    //try
+                    //{
+                    //    rabbitMqBehaviorService.Publish(Newtonsoft.Json.JsonConvert.SerializeObject(ang));
+                    //}catch(Exception ex) { Console.WriteLine(ex.Message); Console.WriteLine(ex.StackTrace); }
                     rabbitMqService.Publish(Newtonsoft.Json.JsonConvert.SerializeObject(new
                     {
                         ang.Item2.ClientName,

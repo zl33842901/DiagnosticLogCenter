@@ -33,6 +33,7 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
             var log = ToLog(httpContext, true);
             log.LogType = LogTypeEnum.RequestBegin;
             Helper.PostHelper.ProcessLog(log);
+            DiagnosticLogConfig.Config.CallAspNetCoreBeginRequest(GuidHolder.Holder.Value, httpContext);
         }
 
         private void SetTraceAndPageId(HttpContext httpContext)
@@ -142,6 +143,7 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
             var log = ToLog(httpContext);
             log.LogType = LogTypeEnum.RequestEndSuccess;
             Helper.PostHelper.ProcessLog(log);
+            DiagnosticLogConfig.Config.CallAspNetCoreEndRequest(GuidHolder.Holder.Value, httpContext);
         }
 
         [DiagnosticName("Microsoft.AspNetCore.Diagnostics.UnhandledException")]
@@ -154,6 +156,7 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
             log.Message = exception.Message;
             log.StackTrace = exception.StackTrace;
             Helper.PostHelper.ProcessLog(log);
+            DiagnosticLogConfig.Config.CallAspNetCoreException(GuidHolder.Holder.Value, httpContext, exception);
         }
 
         [DiagnosticName("Microsoft.AspNetCore.Hosting.UnhandledException")]
@@ -166,6 +169,7 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
             log.Message = exception.Message;
             log.StackTrace = exception.StackTrace;
             Helper.PostHelper.ProcessLog(log);
+            DiagnosticLogConfig.Config.CallAspNetCoreException(GuidHolder.Holder.Value, httpContext, exception);
         }
 
         //[DiagnosticName("Microsoft.AspNetCore.Mvc.BeforeAction")]

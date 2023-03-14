@@ -9,6 +9,7 @@ using AspectCore.Extensions.Autofac;
 using Autofac;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,6 +26,19 @@ namespace xLiAd.DiagnosticLogCenter.SampleFulluseAspNetCore
             Configuration = configuration;
         }
 
+        private static void BeginRequest(Guid guid, HttpContext httpContext)
+        {
+
+        }
+        private static void EndRequest(Guid guid, HttpContext httpContext)
+        {
+
+        }
+        private static void RequestException(Guid guid, HttpContext httpContext, Exception exception)
+        {
+
+        }
+
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -34,6 +48,9 @@ namespace xLiAd.DiagnosticLogCenter.SampleFulluseAspNetCore
                 x.CollectServerAddress = "172.16.101.28:8814";
                 x.ClientName = "TMW";
                 x.EnvName = "DEV";
+                //x.OnAspNetCoreBeginRequest += BeginRequest;
+                //x.OnAspNetCoreEndRequest+= EndRequest;
+                x.OnAspNetCoreException += RequestException;
             });
             services.AddScoped<IDbConnection>(x => new SqlConnection("server=127.0.0.1;user id=sa;password=zhanglei;database=zhanglei;"));
             services.AddHttpClient();

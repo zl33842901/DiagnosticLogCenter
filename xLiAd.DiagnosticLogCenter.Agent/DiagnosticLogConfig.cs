@@ -1,9 +1,12 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace xLiAd.DiagnosticLogCenter.Agent
 {
+    public delegate void AspNetCoreRequest(Guid guid, HttpContext httpContext);
+    public delegate void AspNetCoreRequestException(Guid guid, HttpContext httpContext, Exception exception);
     public class DiagnosticLogConfig
     {
         internal static DiagnosticLogConfig Config { get; set; }
@@ -38,5 +41,13 @@ namespace xLiAd.DiagnosticLogCenter.Agent
         public string ClientName { get; set; } = "Sample";
         public string EnvName { get; set; } = "PRD";
         public int TimeoutBySecond { get; set; } = 5;
+
+        public event AspNetCoreRequest OnAspNetCoreBeginRequest;
+        public event AspNetCoreRequest OnAspNetCoreEndRequest;
+        public event AspNetCoreRequestException OnAspNetCoreException;
+
+        internal void CallAspNetCoreBeginRequest(Guid guid, HttpContext httpContext) => OnAspNetCoreBeginRequest?.Invoke(guid, httpContext);
+        internal void CallAspNetCoreEndRequest(Guid guid, HttpContext httpContext) => OnAspNetCoreEndRequest?.Invoke(guid, httpContext);
+        internal void CallAspNetCoreException(Guid guid, HttpContext httpContext, Exception exception) => OnAspNetCoreException?.Invoke(guid, httpContext, exception);
     }
 }

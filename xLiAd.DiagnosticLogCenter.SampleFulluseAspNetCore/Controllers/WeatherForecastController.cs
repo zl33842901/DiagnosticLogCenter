@@ -27,7 +27,7 @@ namespace xLiAd.DiagnosticLogCenter.SampleFulluseAspNetCore.Controllers
             //var dbresult = sampleService.QueryDb(2);
             //var httpResult = sampleService.RequestWeb("https://www.baidu.com/");
             //return new { dbresult, httpResult };
-            sampleService.Test();
+            var a = sampleService.Test().Result;
             return "5";
         }
     }
