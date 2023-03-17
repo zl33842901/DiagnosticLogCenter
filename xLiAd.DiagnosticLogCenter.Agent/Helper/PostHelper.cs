@@ -39,14 +39,11 @@ namespace xLiAd.DiagnosticLogCenter.Agent.Helper
                 }
                 catch (Exception ex)
                 {
-                    var color = Console.ForegroundColor;
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("DiagnosticLogCenter 组件调用 Grpc 写入过程时出现错误，报错信息如下：");
-                    Console.ForegroundColor = color;
+                    Console.WriteLine("DiagnosticLogCenter: An error occurred while call Grpc:");
                     Console.WriteLine(ex.Message);
                     Console.WriteLine(ex.StackTrace);
                     if (localCacheHelper.WriteLog(dto))
-                        Console.WriteLine("DiagnosticLogCenter 组件已将日志缓存到本地。");
+                        Console.WriteLine("DiagnosticLogCenter: Component has cached logs locally.");
                 }
             }
             if (shouldClearCacheLogs)
