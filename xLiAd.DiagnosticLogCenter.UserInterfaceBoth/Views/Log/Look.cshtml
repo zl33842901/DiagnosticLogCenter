@@ -131,7 +131,7 @@
                     方法：{{CurrentAddtion[CurrentAddtionIndex].MethodName}}
                 </el-col>
             </el-row>
-            <el-row class="bottomspace" v-if="CurrentAddtion[CurrentAddtionIndex].LogType==11">
+            <el-row class="bottomspace" v-if="CurrentAddtion[CurrentAddtionIndex].LogType==11 || CurrentAddtion[CurrentAddtionIndex].LogType==41">
                 <el-col :span="12">
                     数据源：{{CurrentAddtion[CurrentAddtionIndex].DataSource}}
                 </el-col>
