@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Text;
 using xLiAd.DiagnosticLogCenter.Abstract;
 using xLiAd.DiagnosticLogCenter.Agent.Helper;
@@ -11,7 +13,7 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
         public string ListenerName => "DapperExDiagnosticListener";
 
         [DiagnosticName("xLiAd.DapperEx.CommandBefore")]
-        public void BeforeExecuteCommand([Property(Name = "SqlString")] string sqlCommand, [Property(Name = "Params")] object para, [Property(Name = "OperationId")]Guid operationId)
+        public void BeforeExecuteCommand([Property(Name = "SqlString")] string sqlCommand, [Property(Name = "Params")] object para, [Property(Name = "OperationId")]Guid operationId, [Property(Name = "DbConnection")]IDbConnection connection)
         {
             if (GuidHolder.Holder.Value == Guid.Empty)
                 return;
@@ -27,7 +29,9 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
                 TraceId = GuidHolder.TraceIdHolder.Value,
                 ParentGuid = GuidHolder.ParentHolder.Value,
                 ParentHttpId = GuidHolder.ParentHttpHolder.Value,
-                HttpId = operationId.ToString()
+                HttpId = operationId.ToString(),
+                Database = connection.Database,
+                DataSource = connection.GetType().GetProperty("DataSource", System.Reflection.BindingFlags.Public| System.Reflection.BindingFlags.Instance)?.GetValue(connection)?.ToString()
             };
             Helper.PostHelper.ProcessLog(log);
         }
