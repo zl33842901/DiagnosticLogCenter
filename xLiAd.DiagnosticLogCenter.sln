@@ -41,7 +41,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xLiAd.DiagnosticLogCenter.S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xLiAd.DiagnosticLogCenter.SampleGrpcServer", "xLiAd.DiagnosticLogCenter.SampleGrpcServer\xLiAd.DiagnosticLogCenter.SampleGrpcServer.csproj", "{9368AC83-32C9-4983-B6B3-3A8829A07783}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xLiAd.DiagnosticLogCenter.Analyzer", "xLiAd.DiagnosticLogCenter.Analyzer\xLiAd.DiagnosticLogCenter.Analyzer.csproj", "{02386101-D3B0-4C0F-ABB1-C471D49E1C13}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xLiAd.DiagnosticLogCenter.Analyzer", "xLiAd.DiagnosticLogCenter.Analyzer\xLiAd.DiagnosticLogCenter.Analyzer.csproj", "{02386101-D3B0-4C0F-ABB1-C471D49E1C13}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xLiAd.DiagnosticLogCenter.CollectServerProxy", "xLiAd.DiagnosticLogCenter.CollectServerProxy\xLiAd.DiagnosticLogCenter.CollectServerProxy.csproj", "{425622C1-3378-4CC1-8833-C8691CEBFB11}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xLiAd.DiagnosticLogCenter.AgentFramework", "xLiAd.DiagnosticLogCenter.AgentFramework\xLiAd.DiagnosticLogCenter.AgentFramework.csproj", "{C110D2D0-A535-499D-81DB-0EE7F95D7C7F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -121,6 +125,14 @@ Global
 		{02386101-D3B0-4C0F-ABB1-C471D49E1C13}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02386101-D3B0-4C0F-ABB1-C471D49E1C13}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02386101-D3B0-4C0F-ABB1-C471D49E1C13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{425622C1-3378-4CC1-8833-C8691CEBFB11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{425622C1-3378-4CC1-8833-C8691CEBFB11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{425622C1-3378-4CC1-8833-C8691CEBFB11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{425622C1-3378-4CC1-8833-C8691CEBFB11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C110D2D0-A535-499D-81DB-0EE7F95D7C7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C110D2D0-A535-499D-81DB-0EE7F95D7C7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C110D2D0-A535-499D-81DB-0EE7F95D7C7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C110D2D0-A535-499D-81DB-0EE7F95D7C7F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

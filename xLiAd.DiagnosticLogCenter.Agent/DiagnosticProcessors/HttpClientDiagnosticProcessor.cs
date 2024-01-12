@@ -28,7 +28,7 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
             Helper.PostHelper.ProcessLog(log);
         }
 
-        private LogEntity ToLog(HttpRequestMessage request, Guid requestId)
+        private LogEntity ToLog(HttpRequestMessage request, Guid? requestId)
         {
             var uri = request.RequestUri.ToString();
             var host = request.RequestUri.Host;
@@ -45,7 +45,7 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
                 PageId = GuidHolder.PageIdHolder.Value,
                 TraceId = GuidHolder.TraceIdHolder.Value,
                 ParentGuid = GuidHolder.ParentHolder.Value,
-                HttpId = requestId.ToString(),
+                HttpId = requestId?.ToString(),
                 ParentHttpId = GuidHolder.ParentHttpHolder.Value
             };
             return log;
@@ -76,7 +76,7 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
 
         [DiagnosticName("System.Net.Http.Exception")]
         public void HttpException([Property(Name = "Request")] HttpRequestMessage request,
-            [Property(Name = "Exception")] Exception exception, [Property(Name = "LoggingRequestId")] Guid requestId)
+            [Property(Name = "Exception")] Exception exception, [Property(Name = "LoggingRequestId")] Guid? requestId)
         {
             if (GuidHolder.Holder.Value == Guid.Empty)
                 return;

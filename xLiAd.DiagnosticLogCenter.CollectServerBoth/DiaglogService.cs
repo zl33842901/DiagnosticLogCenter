@@ -15,12 +15,12 @@ namespace xLiAd.DiagnosticLogCenter.CollectServerBoth
         private readonly IRabbitMqService rabbitMqService;
         //private readonly IRabbitMqBehaviorService rabbitMqBehaviorService;
         public DiaglogService(CollectServer.Services.ILogBatchService logBatchService, //CollectServerByEs.Services.ILogBatchService logBatchServiceEs,, IRabbitMqBehaviorService rabbitMqBehaviorService
-            ITraceAndGroupService traceAndGroupService, IRabbitMqService rabbitMqService)
+            ITraceAndGroupService traceAndGroupService)//, IRabbitMqService rabbitMqService
         {
             this.logBatchService = logBatchService;
             //this.logBatchServiceEs = logBatchServiceEs;
             this.traceAndGroupService = traceAndGroupService;
-            this.rabbitMqService = rabbitMqService;
+            //this.rabbitMqService = rabbitMqService;
             //this.rabbitMqBehaviorService = rabbitMqBehaviorService;
         }
 
@@ -32,7 +32,7 @@ namespace xLiAd.DiagnosticLogCenter.CollectServerBoth
             {
                 await logBatchService.ProcessWriteDown(datas);
             }
-            catch { }
+            catch(Exception ex) { Console.WriteLine(ex.Message);Console.WriteLine(ex.StackTrace); }
             //try
             //{
             //    await logBatchServiceEs.Process(request);
@@ -41,23 +41,26 @@ namespace xLiAd.DiagnosticLogCenter.CollectServerBoth
             //最后发送到分析队列
             try
             {
-                var anglist = datas.Where(x => x.Item2.Addtions.Any(y => y.LogType == Abstract.LogTypeEnum.RequestEndSuccess || y.LogType == Abstract.LogTypeEnum.RequestEndException));
-                foreach (var ang in anglist)
+                if (rabbitMqService != null)
                 {
-                    //try
-                    //{
-                    //    rabbitMqBehaviorService.Publish(Newtonsoft.Json.JsonConvert.SerializeObject(ang));
-                    //}catch(Exception ex) { Console.WriteLine(ex.Message); Console.WriteLine(ex.StackTrace); }
-                    rabbitMqService.Publish(Newtonsoft.Json.JsonConvert.SerializeObject(new
+                    var anglist = datas.Where(x => x.Item2.Addtions.Any(y => y.LogType == Abstract.LogTypeEnum.RequestEndSuccess || y.LogType == Abstract.LogTypeEnum.RequestEndException));
+                    foreach (var ang in anglist)
                     {
-                        ang.Item2.ClientName,
-                        ang.Item2.EnvironmentName,
-                        ang.Item2.HappenTime,
-                        ang.Item2.Guid,
-                        ang.Item2.Message,
-                        ang.Item2.Success,
-                        ang.Item2.TotalMillionSeconds
-                    }));
+                        //try
+                        //{
+                        //    rabbitMqBehaviorService.Publish(Newtonsoft.Json.JsonConvert.SerializeObject(ang));
+                        //}catch(Exception ex) { Console.WriteLine(ex.Message); Console.WriteLine(ex.StackTrace); }
+                        rabbitMqService.Publish(Newtonsoft.Json.JsonConvert.SerializeObject(new
+                        {
+                            ang.Item2.ClientName,
+                            ang.Item2.EnvironmentName,
+                            ang.Item2.HappenTime,
+                            ang.Item2.Guid,
+                            ang.Item2.Message,
+                            ang.Item2.Success,
+                            ang.Item2.TotalMillionSeconds
+                        }));
+                    }
                 }
             }
             catch(Exception ex) { Console.WriteLine(ex.Message);Console.WriteLine(ex.StackTrace); }

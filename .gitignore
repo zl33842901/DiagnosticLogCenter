@@ -3,6 +3,9 @@
 ################################################################################
 
 /.vs/
+/packages/
+[Bb]in/
+[Oo]bj/
 /xLiAd.DiagnosticLogCenter/bin/Debug/netstandard2.0
 /xLiAd.DiagnosticLogCenter/obj
 /xLiAd.DiagnosticLogCenter.Abstract/bin/Debug/netstandard2.0
