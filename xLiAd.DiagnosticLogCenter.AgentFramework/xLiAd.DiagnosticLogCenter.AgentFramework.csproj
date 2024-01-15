@@ -53,15 +53,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AspnetRequestRecorder.cs" />
+    <Compile Include="DatabaseOperationRecorder.cs" />
     <Compile Include="DiagnosticLogConfig.cs" />
     <Compile Include="FilterRule.cs" />
     <Compile Include="GuidHolder.cs" />
+    <Compile Include="HttpRequest\HttpRequestRecorder.cs" />
+    <Compile Include="HttpRequest\HttpWebRequestX.cs" />
+    <Compile Include="HttpRequest\HttpWebResponse.cs" />
     <Compile Include="InitHelper.cs" />
     <Compile Include="LocalCacheHelper.cs" />
     <Compile Include="LogEntity.cs" />
     <Compile Include="LogHttpModule.cs" />
     <Compile Include="PostHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SqlParameterHelper.cs" />
     <Compile Include="TracePageIdValue.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -10,7 +10,7 @@ using System.Web;
 
 namespace xLiAd.DiagnosticLogCenter.AgentFramework
 {
-    public class AspnetRequestRecorder
+    public static class AspnetRequestRecorder
     {
         public const string TraceIdName = "Trace-Id";
         public const string PageIdName = "Page-Id";
@@ -29,6 +29,7 @@ namespace xLiAd.DiagnosticLogCenter.AgentFramework
             var guid = Guid.NewGuid();
             GuidHolder.Holder.Value = guid;
             SetTraceAndPageId(httpContext);
+            httpContext.Response.Headers.Add("DLC-Guids", $"{guid}|{GuidHolder.ParentHolder.Value}|{GuidHolder.ParentHttpHolder.Value}|{GuidHolder.TraceIdHolder.Value}|{GuidHolder.PageIdHolder.Value}");
             var log = ToLog(httpContext, true);
             log.LogType = LogTypeEnum.RequestBegin;
             PostHelper.ProcessLog(log);
@@ -96,12 +97,30 @@ namespace xLiAd.DiagnosticLogCenter.AgentFramework
             return $"StatusCode:{httpContext.Response.StatusCode}\r\nHeaders:\r\n{headers}";
         }
 
+        public static void LoadGuidsFromResponse(HttpContext httpContext)
+        {
+            if (httpContext != null && httpContext.Response != null && !httpContext.Response.Headers["DLC-Guids"].NullOrEmpty())
+            {
+                var ss = httpContext.Response.Headers["DLC-Guids"].Split('|');
+                if(ss.Length == 5)
+                {
+                    GuidHolder.Holder.Value = Guid.Parse(ss[0]);
+                    GuidHolder.ParentHolder.Value = ss[1];
+                    GuidHolder.ParentHttpHolder.Value = ss[2];
+                    GuidHolder.TraceIdHolder.Value = ss[3];
+                    GuidHolder.PageIdHolder.Value = ss[4];
+                }
+            }
+        }
+
         public static void OnEndRequest(object sender, EventArgs e)
         {
-            if (GuidHolder.Holder.Value == Guid.Empty)
-                return;
             var httpApplication = sender as HttpApplication;
             var httpContext = httpApplication.Context;
+            if (GuidHolder.Holder.Value == Guid.Empty)
+                LoadGuidsFromResponse(httpContext);
+            if (GuidHolder.Holder.Value == Guid.Empty)
+                return;
             var log = ToLog(httpContext);
             log.LogType = LogTypeEnum.RequestEndSuccess;
             PostHelper.ProcessLog(log);
