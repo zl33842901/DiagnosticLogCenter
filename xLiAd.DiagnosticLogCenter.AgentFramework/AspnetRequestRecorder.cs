@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Net.Http;
 using System.Runtime.Remoting.Messaging;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
@@ -69,11 +70,13 @@ namespace xLiAd.DiagnosticLogCenter.AgentFramework
             var method = httpContext.Request.RequestType;//.Method;
             string stackTrace;
             if (isStart)
+            {
                 stackTrace = $"Url：{url}\r\nIP：{httpContext.Request.UserHostAddress.ToString()}\r\nLocalIP：{httpContext.Request.ServerVariables.ToString()}\r\nHeaders：\r\n{string.Join("\r\n", ConvertToString(httpContext.Request.Headers))}";
+            }
             else
             {
-                //var u = GetUser(httpContext);
-                stackTrace = GetBackInfo(httpContext);
+                var u = GetUser(httpContext);
+                stackTrace = u + (u.NullOrEmpty() ? "" : "\r\n") + GetBackInfo(httpContext);
             }
             LogEntity log = new LogEntity()
             {
@@ -125,6 +128,43 @@ namespace xLiAd.DiagnosticLogCenter.AgentFramework
             log.LogType = LogTypeEnum.RequestEndSuccess;
             PostHelper.ProcessLog(log);
             DiagnosticLogConfig.Config.CallAspNetCoreEndRequest(GuidHolder.Holder.Value, httpContext);
+        }
+        private static string GetUser(HttpContext httpContext)
+        {
+            if (httpContext == null)
+                return string.Empty;
+            string id, code, cname, domainAccount, departid;
+            if (httpContext.Session == null)
+            {
+                if (httpContext.Response != null && !httpContext.Response.Headers["DLC-User"].NullOrEmpty())
+                {
+                    var ss = httpContext.Response.Headers["DLC-User"].Split('|');
+                    if (ss.Length == 5)
+                    {
+                        id = ss[0];
+                        code = ss[1];
+                        domainAccount = ss[2];
+                        cname = ss[3];
+                        departid = ss[4];
+                    }
+                    else
+                        return string.Empty;
+                }
+                else
+                    return string.Empty;
+            }
+            else
+            {
+                id = httpContext.Session?["UserID"]?.ToString();
+                code = httpContext?.Session?["UserCode"]?.ToString();
+                cname = httpContext?.Session?["TrueName"]?.ToString();
+                domainAccount = httpContext?.Session?["ADName"]?.ToString();
+                departid = httpContext?.Session?["DepartID"]?.ToString();
+            }
+            if (id == null && cname == null && domainAccount == null)
+                return string.Empty;
+            else
+                return $"用户Id：{id}\r\n编号：{code}\r\n用户姓名：{cname}\r\n用户域帐号：{domainAccount}\r\n用户部门：{departid}";
         }
 
         public static IEnumerable<string> ConvertToString(NameValueCollection nameValueCollection)
