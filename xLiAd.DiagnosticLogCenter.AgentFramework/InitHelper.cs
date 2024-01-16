@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 using System.Web;
 using xLiAd.DiagnosticLogCenter.AgentFramework;
+using System.Diagnostics;
 
 [assembly: PreApplicationStartMethod(typeof(InitHelper), nameof(InitHelper.Init))]
 namespace xLiAd.DiagnosticLogCenter.AgentFramework
@@ -30,6 +31,7 @@ namespace xLiAd.DiagnosticLogCenter.AgentFramework
             FilterRule.ForbbidenPath = config.ForbbidenPath;
             PostHelper.Init(config.CollectServerAddress, config.ClientName, config.EnvName, config.TimeoutBySecond);
             DynamicModuleUtility.RegisterModule(typeof(LogHttpModule));
+            DiagnosticListener.AllListeners.Subscribe(new TracingDiagnosticProcessorObserver(new ITracingDiagnosticProcessor[] { new DapperExDiagnosticProcessor() }));
         }
     }
 }
