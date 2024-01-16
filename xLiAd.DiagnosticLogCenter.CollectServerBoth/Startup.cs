@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -33,7 +34,10 @@ namespace xLiAd.DiagnosticLogCenter.CollectServer
             //services.AddSingleton(x => new ConnectionSettings(new Uri(conf.EsUrl)));
             //services.AddScoped(x => new ElasticClient(x.GetService<ConnectionSettings>()));
             services.AddSingleton(conf);
-
+            services.Configure<KestrelServerOptions>(options =>
+            {
+                options.Limits.MaxRequestBodySize = 104857600;
+            });
 
             services.AddScoped<CollectServer.Repositories.IClientRepository, CollectServer.Repositories.ClientRepository>();
             services.AddScoped<CollectServer.Repositories.ILogRepository, CollectServer.Repositories.LogRepository>();

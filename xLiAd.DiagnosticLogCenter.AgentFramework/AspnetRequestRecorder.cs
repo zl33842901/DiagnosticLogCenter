@@ -126,6 +126,13 @@ namespace xLiAd.DiagnosticLogCenter.AgentFramework
                 return;
             var log = ToLog(httpContext);
             log.LogType = LogTypeEnum.RequestEndSuccess;
+            if (httpContext.Error != null)
+            {
+                var err = httpContext.Error.GetInnerException();
+                log.LogType = LogTypeEnum.RequestEndException;
+                log.Message = err.Message;
+                log.StackTrace += $"\r\n{err.StackTrace}";
+            }
             PostHelper.ProcessLog(log);
             DiagnosticLogConfig.Config.CallAspNetCoreEndRequest(GuidHolder.Holder.Value, httpContext);
         }

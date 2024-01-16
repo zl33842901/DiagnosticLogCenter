@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AspnetRequestRecorder.cs" />
+    <Compile Include="ConsoleRecorder.cs" />
     <Compile Include="DapperEx\DapperExDiagnosticProcessor.cs" />
     <Compile Include="DapperEx\DiagnosticName.cs" />
     <Compile Include="DapperEx\IParameterResolver.cs" />
@@ -82,10 +83,12 @@
     <Compile Include="DapperEx\TracingDiagnosticObserver.cs" />
     <Compile Include="DapperEx\TracingDiagnosticProcessorObserver.cs" />
     <Compile Include="DatabaseOperationRecorder.cs" />
+    <Compile Include="DiagnosticLogCenter.cs" />
     <Compile Include="DiagnosticLogConfig.cs" />
     <Compile Include="FilterRule.cs" />
     <Compile Include="GuidHolder.cs" />
     <Compile Include="HttpRequest\HttpRequestRecorder.cs" />
+    <Compile Include="HttpRequest\HttpTracingHandler.cs" />
     <Compile Include="HttpRequest\HttpWebRequestX.cs" />
     <Compile Include="HttpRequest\HttpWebResponse.cs" />
     <Compile Include="InitHelper.cs" />
