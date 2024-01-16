@@ -185,20 +185,10 @@ namespace xLiAd.DiagnosticLogCenter.AgentFramework
         {
             HttpWebResponseX result;
 
-            //var tracingContext = ServiceLocator.Current.GetInstance<ITracingContext>();
             var operationName = this.requesturl;
             var networkAddress = $"{this.requesturi.Host}:{this.requesturi.Port}";
-            //var context = tracingContext.CreateExitSegmentContext(operationName, networkAddress,
-            //    new CarrierHeaderCollection(this.Headers));
             try
             {
-                //context.Span.SpanLayer = SpanLayer.HTTP;
-                //context.Span.Component = Common.Components.HTTPCLIENT;
-                //context.Span.AddTag(Common.Tags.URL, this.requesturi.ToString());
-                //context.Span.AddTag(Common.Tags.PATH, this.requesturi.PathAndQuery);
-                //context.Span.AddTag(Common.Tags.HTTP_METHOD, this.Method.ToString());
-
-
                 var response = httpWebRequest.GetResponse();
 
                 Stream myResponseStream = response.GetResponseStream();
@@ -211,7 +201,6 @@ namespace xLiAd.DiagnosticLogCenter.AgentFramework
                 //myStreamReader.Close();
                 ms.Seek(0, SeekOrigin.Begin);
 
-                //context.Span.AddTag("Body", retString);
                 result = new HttpWebResponseX((HttpWebResponse)response);
                 result.SetStream(ms);
 
@@ -219,12 +208,11 @@ namespace xLiAd.DiagnosticLogCenter.AgentFramework
             }
             catch (Exception exception)
             {
-                //context.Span.ErrorOccurred(exception);
                 throw;
             }
             finally
             {
-                //tracingContext.Release(context);
+
             }
 
             return null;

@@ -17,6 +17,8 @@ namespace xLiAd.DiagnosticLogCenter.AgentFramework
         public static void BeforeExecuteCommand(string sqlCommand, object para, Guid operationId, IDbConnection connection)
         {
             if (GuidHolder.Holder.Value == Guid.Empty)
+                AspnetRequestRecorder.LoadGuidsFromResponse(System.Web.HttpContext.Current);
+            if (GuidHolder.Holder.Value == Guid.Empty)
                 return;
             BeforeExecuteCommandDo(connection.GetType().GetProperty("DataSource", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance)?.GetValue(connection)?.ToString(),
                 connection.Database, sqlCommand, para, operationId);
