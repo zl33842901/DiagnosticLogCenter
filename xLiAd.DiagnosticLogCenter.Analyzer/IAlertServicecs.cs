@@ -17,6 +17,8 @@ namespace xLiAd.DiagnosticLogCenter.Analyzer
         /// <param name="exceptioncount"></param>
         void Alert(string clientName, string envName, string message, int minutes, int logcount, int exceptioncount);
 
+        void Alert(LogModel logModel);
+
         AlertDetailConfig GetAlertConfig(string clientName);
     }
 

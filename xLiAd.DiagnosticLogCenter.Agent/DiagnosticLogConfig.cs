@@ -42,6 +42,21 @@ namespace xLiAd.DiagnosticLogCenter.Agent
         public string EnvName { get; set; } = "PRD";
         public int TimeoutBySecond { get; set; } = 5;
 
+        /// <summary>
+        /// 记录最大的请求包大小（默认 256 K）
+        /// </summary>
+        public int RecordHttpClientRequestBodyMax { get; set; } = 262144;
+
+        /// <summary>
+        /// 记录最大的响应包大小（默认 256 K）
+        /// </summary>
+        public int RecordHttpClientResponseBodyMax { get; set; } = 262144;
+
+        /// <summary>
+        /// 当请求/响应包体为 json 时，记录完整的包体
+        /// </summary>
+        public bool RecordHttpClientFullWhenJson { get; set;} = true;
+
         public event AspNetCoreRequest OnAspNetCoreBeginRequest;
         public event AspNetCoreRequest OnAspNetCoreEndRequest;
         public event AspNetCoreRequestException OnAspNetCoreException;

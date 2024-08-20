@@ -34,6 +34,9 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
             var host = request.RequestUri.Host;
             var method = request.Method.ToString();
             var content = request?.Content?.ReadAsStringAsync()?.Result;
+            bool isjson = content != null && ((content.Trim().StartsWith("{") && content.Trim().EndsWith("}")) || (content.Trim().StartsWith("[") && content.Trim().EndsWith("]")));
+            if (!content.NullOrEmpty() && content.Length > DiagnosticLogConfig.Config.RecordHttpClientRequestBodyMax && (!isjson || !DiagnosticLogConfig.Config.RecordHttpClientFullWhenJson))
+                content = content.Substring(0, DiagnosticLogConfig.Config.RecordHttpClientRequestBodyMax);
             LogEntity log = new LogEntity()
             {
                 Message = uri,
@@ -58,6 +61,9 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
                 return;
             int statuCode = (int?)response?.StatusCode ?? 0;
             var content = (DiagnosticLogConfig.Config?.RecordHttpClientBody ?? false) ? response?.Content?.ReadAsStringAsync()?.Result : string.Empty;
+            bool isjson = content != null && ((content.Trim().StartsWith("{") && content.Trim().EndsWith("}")) || (content.Trim().StartsWith("[") && content.Trim().EndsWith("]")));
+            if (!content.NullOrEmpty() && content.Length > DiagnosticLogConfig.Config.RecordHttpClientResponseBodyMax && (!isjson || !DiagnosticLogConfig.Config.RecordHttpClientFullWhenJson))
+                content = content.Substring(0, DiagnosticLogConfig.Config.RecordHttpClientResponseBodyMax);
             LogEntity log = new LogEntity()
             {
                 StatuCode = statuCode,

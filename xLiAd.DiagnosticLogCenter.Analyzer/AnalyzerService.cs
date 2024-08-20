@@ -75,6 +75,7 @@ namespace xLiAd.DiagnosticLogCenter.Analyzer
                 if (!dto.Success && dto.HappenTime > DateTime.Now.AddMinutes(-5))//只有未成功时需要处理，再过滤掉可能是缓存的；假设服务器间时间差不大于5分钟。
                 {
                     var svc = sp.GetService<IAlertServicecs>();
+                    svc.Alert(dto);
                     var config = svc.GetAlertConfig(dto.ClientName);
                     var baseTime = dto.HappenTime.AddMinutes(-config.MinutesCatchedForProcess);
                     var callCount = DataHolder[key].Count(x => x.HappenTime > baseTime);

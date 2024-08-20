@@ -7,8 +7,8 @@
     <Description>DiagnosticLogCenter 侵入性很低的请求日系统统；代理部分。</Description>
     <Copyright>Copyright © zhanglei 2020</Copyright>
     <PackageProjectUrl>https://github.com/zl33842901/DiagnosticLogCenter</PackageProjectUrl>
-    <Version>1.4.5</Version>
-    <AssemblyVersion>1.4.5.0</AssemblyVersion>
+    <Version>1.4.6</Version>
+    <AssemblyVersion>1.4.6.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>

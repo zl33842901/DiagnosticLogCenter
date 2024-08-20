@@ -28,11 +28,12 @@ namespace xLiAd.DiagnosticLogCenter.UserInterface.Controllers
         }
         // GET: /<controller>/
         [Route("[controller]/[action]/{ClientName}/{EnvName}/{Date}")]
-        public IActionResult Look(string ClientName, string EnvName, DateTime Date)
+        public IActionResult Look(string ClientName, string EnvName, DateTime Date, string key)
         {
             ViewBag.ClientName = ClientName;
             ViewBag.EnvName = EnvName;
             ViewBag.Date = Date.ToString("yyyy-MM-dd");
+            ViewBag.Key = key;
             return View();
         }
         [HttpPost]
