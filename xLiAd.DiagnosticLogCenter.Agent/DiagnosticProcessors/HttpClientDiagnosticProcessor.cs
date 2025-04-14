@@ -192,9 +192,10 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
             string content;
             if(DiagnosticLogConfig.Config?.RecordHttpClientBody ?? false)//是否需要记录
             {
-                bool contentTypeIsText = response.Content.Headers.ContentType?.MediaType?.StartsWith("text/") == true ||
-                    response.Content.Headers.ContentType?.MediaType?.Contains("json") == true ||
-                    response.Content.Headers.ContentType?.MediaType?.Contains("xml") == true;
+                //bool contentTypeIsText = response.Content.Headers.ContentType?.MediaType?.StartsWith("text/") == true ||
+                //    response.Content.Headers.ContentType?.MediaType?.Contains("json") == true ||
+                //    response.Content.Headers.ContentType?.MediaType?.Contains("xml") == true;
+                // 上面这种方式不准， 比如 word 文档就是 application/xml
                 response.Content = new RepeatableHttpContent(response.Content);//让 HttpContent 可以重复读取
                 var bytes = response.Content?.ReadAsByteArrayAsync().Result;
                 var stream = new MemoryStream(bytes);
@@ -203,7 +204,7 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
 
                 // 如果读取后位置未移动到末尾，说明可能有无效字符
                 bool isBinary = stream.Position != stream.Length || text.Contains('\uFFFD');
-                if (isBinary && !contentTypeIsText)
+                if (isBinary)
                 {
                     content = $"Content-Type: {response.Content?.Headers.ContentType.MediaType}\nContent-Length: {response.Content?.Headers.ContentLength?.ToString()}\n检测到二进制，将提取一些文本：\n";
                     try
@@ -215,11 +216,11 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
                 else
                 {
                     bool isjson = (text.Trim().StartsWith("{") && text.Trim().EndsWith("}")) || (text.Trim().StartsWith("[") && text.Trim().EndsWith("]"));
-
+                    content = $"Content-Type: {response.Content?.Headers.ContentType.MediaType}\nContent-Length: {response.Content?.Headers.ContentLength?.ToString()}\n";
                     if (text.Length > DiagnosticLogConfig.Config.RecordHttpClientResponseBodyMax && (!isjson || !DiagnosticLogConfig.Config.RecordHttpClientFullWhenJson))
-                        content = text.Substring(0, DiagnosticLogConfig.Config.RecordHttpClientResponseBodyMax);
+                        content += text.Substring(0, DiagnosticLogConfig.Config.RecordHttpClientResponseBodyMax);
                     else
-                        content = text;
+                        content += text;
                 }
             }
             else
