@@ -186,14 +186,16 @@ namespace xLiAd.DiagnosticLogCenter.Agent.DiagnosticProcessors
         {
             if (GuidHolder.Holder.Value == Guid.Empty)
                 return;
-            int statuCode = (int?)response?.StatusCode ?? 0;
+            if (response == null)//这种情况是报异常了。
+                return;
+            int statuCode = (int?)response.StatusCode ?? 0;
             string content;
             if(DiagnosticLogConfig.Config?.RecordHttpClientBody ?? false)//是否需要记录
             {
                 bool contentTypeIsText = response.Content.Headers.ContentType?.MediaType?.StartsWith("text/") == true ||
                     response.Content.Headers.ContentType?.MediaType?.Contains("json") == true ||
                     response.Content.Headers.ContentType?.MediaType?.Contains("xml") == true;
-
+                response.Content = new RepeatableHttpContent(response.Content);//让 HttpContent 可以重复读取
                 var bytes = response.Content?.ReadAsByteArrayAsync().Result;
                 var stream = new MemoryStream(bytes);
                 var reader = new StreamReader(stream, Encoding.UTF8, true);
