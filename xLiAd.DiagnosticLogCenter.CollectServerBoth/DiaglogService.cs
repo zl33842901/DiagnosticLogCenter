@@ -15,12 +15,12 @@ namespace xLiAd.DiagnosticLogCenter.CollectServerBoth
         private readonly IRabbitMqService rabbitMqService;
         //private readonly IRabbitMqBehaviorService rabbitMqBehaviorService;
         public DiaglogService(CollectServer.Services.ILogBatchService logBatchService, //CollectServerByEs.Services.ILogBatchService logBatchServiceEs,, IRabbitMqBehaviorService rabbitMqBehaviorService
-            ITraceAndGroupService traceAndGroupService)//, IRabbitMqService rabbitMqService
+            ITraceAndGroupService traceAndGroupService, IRabbitMqService rabbitMqService)//
         {
             this.logBatchService = logBatchService;
             //this.logBatchServiceEs = logBatchServiceEs;
             this.traceAndGroupService = traceAndGroupService;
-            //this.rabbitMqService = rabbitMqService;
+            this.rabbitMqService = rabbitMqService;
             //this.rabbitMqBehaviorService = rabbitMqBehaviorService;
         }
 
@@ -41,11 +41,14 @@ namespace xLiAd.DiagnosticLogCenter.CollectServerBoth
             //最后发送到分析队列
             try
             {
+                Console.WriteLine("prepare send to angz service");
                 if (rabbitMqService != null)
                 {
+                    Console.WriteLine("prepare send to angz service;rabbitMqService is not null");
                     var anglist = datas.Where(x => x.Item2.Addtions.Any(y => y.LogType == Abstract.LogTypeEnum.RequestEndSuccess || y.LogType == Abstract.LogTypeEnum.RequestEndException));
                     foreach (var ang in anglist)
                     {
+                        Console.WriteLine("prepare send to angz service; there is valid data;");
                         //try
                         //{
                         //    rabbitMqBehaviorService.Publish(Newtonsoft.Json.JsonConvert.SerializeObject(ang));
@@ -60,6 +63,7 @@ namespace xLiAd.DiagnosticLogCenter.CollectServerBoth
                             ang.Item2.Success,
                             ang.Item2.TotalMillionSeconds
                         }));
+                        Console.WriteLine("prepare send to angz service; there is valid data; send success");
                     }
                 }
             }

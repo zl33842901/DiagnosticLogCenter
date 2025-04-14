@@ -13,7 +13,11 @@ namespace xLiAd.DiagnosticLogCenter.UserInterfaceBoth
             List<Log> result = new List<Log>();
             foreach(var log in logs)
             {
-                ProcessEndAndException(log);
+                try
+                {
+                    ProcessEndAndException(log);
+                }
+                catch { }
             }
         }
 

@@ -133,7 +133,11 @@ namespace xLiAd.DiagnosticLogCenter.UserInterface.Repositories
             var list = result.ToList();
             foreach (var i in list)
             {
-                i.PrepareLogForRead();
+                try
+                {
+                    i.PrepareLogForRead();
+                }
+                catch { }
             }
             return (list, result.TotalItemCount);
         }

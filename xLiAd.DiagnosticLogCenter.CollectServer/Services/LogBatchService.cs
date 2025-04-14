@@ -41,7 +41,7 @@ namespace xLiAd.DiagnosticLogCenter.CollectServer.Services
                     log.Id = MongoDB.Bson.ObjectId.GenerateNewId().ToString();
                     logRepository.AddLog(log);
                 }
-                cacheService.Set("GUID_" + key, log, TimeSpan.FromMinutes(6));
+                cacheService.Set("GUID_" + key, log, TimeSpan.FromMinutes(35));
             }
         }
         public async Task Process(LogDto logDto)

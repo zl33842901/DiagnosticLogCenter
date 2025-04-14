@@ -39,13 +39,20 @@ namespace xLiAd.DiagnosticLogCenter.UserInterface.Controllers
         [HttpPost]
         public async Task<IActionResult> Look(LogLookQuery query)
         {
-            var client = (await configService.GetAllClients()).Where(x => x.Name == query.ClientName).FirstOrDefault();
-            if(client == null)
-                return Json(new { Succes = false, Message = "未找到此客户端配置" });
-            var p = query.GetIndexName();
-            (var l, var count) = logService.GetLogData(query, query.PageIndex, query.PageSize);
-            l.ProcessEndAndException();
-            return Json(new { Succes = true, Items = l, Total = count });
+            try
+            {
+                var client = (await configService.GetAllClients()).Where(x => x.Name == query.ClientName).FirstOrDefault();
+                if (client == null)
+                    return Json(new { Succes = false, Message = "未找到此客户端配置" });
+                var p = query.GetIndexName();
+                (var l, var count) = logService.GetLogData(query, query.PageIndex, query.PageSize);
+                l.ProcessEndAndException();
+                return Json(new { Succes = true, Items = l, Total = count });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Success = false, Message = ex.Message, ex.StackTrace });
+            }
         }
         [HttpPost]
         public async Task<IActionResult> GetTracePageExist(string traceId, string pageId, string guid, DateTime happenTime)
