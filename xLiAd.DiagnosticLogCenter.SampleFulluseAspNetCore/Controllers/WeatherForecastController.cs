@@ -25,7 +25,7 @@ namespace xLiAd.DiagnosticLogCenter.SampleFulluseAspNetCore.Controllers
         public object Get()
         {
             //var dbresult = sampleService.QueryDb(2);
-            //var httpResult = sampleService.RequestWeb("https://www.baidu.com/");
+            var httpResult = sampleService.RequestWeb("http://oa-didi.cig.com.cn/didiapi/Test");
             //return new { dbresult, httpResult };
             var a = sampleService.Test().Result;
             return "5";

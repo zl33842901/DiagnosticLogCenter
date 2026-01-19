@@ -97,9 +97,12 @@
                 <el-col :span="9">
                     动作：{{CurrentAddtion[CurrentAddtionIndex].LogTypeString}}
                 </el-col>
-                <el-col :span="15">
+                <el-col :span="8">
                     <span>时间：{{CurrentAddtion[CurrentAddtionIndex].HappenTimeString}}</span>
                 </el-col>
+                <el-col :span="4"><el-input v-model="AdditionSearch.Keywords" :disabled="AdditionSearch.KeywordsDisabled" size="mini"></el-input></el-col>
+                <el-col :span="1">&nbsp;</el-col>
+                <el-col :span="2"><el-button size="mini" v-show="!AdditionSearch.KeywordsDisabled" v-on:click="AdditionSearchFuc">搜索</el-button><el-button size="mini" v-show="AdditionSearch.KeywordsDisabled" v-on:click="AdditionSearchClear">清空</el-button></el-col>
             </el-row>
 
             <el-row class="bottomspace" v-if="CurrentAddtion[CurrentAddtionIndex].WithEnd">
@@ -246,7 +249,7 @@
                 },
                 tableData: [],
                 pager: {
-                    pageSizes: [10, 20, 30, 50, 100, 500],
+                    pageSizes: [1, 10, 20, 30, 50, 100, 500],
                     total: 0
                 },
                 showLookAddtion: false,//是否显示追加信息
@@ -255,9 +258,45 @@
                 CurrentHasTrace: false,
                 CurrentHasPage: false,
                 showTrace: false,
-                CurrentTraces: []
+                CurrentTraces: [],
+                AdditionSearch:{
+                    Keywords:"",
+                    KeywordsDisabled:false,
+                    CurrentAddtionBak:[]
+                }
             },
             methods: {
+                AdditionSearchFuc:function(){
+                    var k = this.AdditionSearch.Keywords;
+                    if(k == null || k == undefined || k == "")
+                        return;
+                    this.CurrentAddtionBak = this.CurrentAddtion;
+                    var l = [];
+                    for(var i = 0; i < this.CurrentAddtion.length; i++){
+                        var a = this.CurrentAddtion[i];
+                        if(
+                            (a.MethodName && a.MethodName.indexOf(k)>-1) ||
+                            (a.ClassName && a.ClassName.indexOf(k)>-1) ||
+                            (a.DataSource && a.DataSource.indexOf(k)>-1) ||
+                            (a.DataBase && a.DataBase.indexOf(k)>-1) ||
+                            (a.CommandText && a.CommandText.indexOf(k)>-1) ||
+                            (a.Parameters && a.Parameters.indexOf(k)>-1) ||
+                            (a.Message && a.Message.indexOf(k)>-1) ||
+                            (a.Content && a.Content.indexOf(k)>-1)
+                          )
+                            l.push(a)
+                    }
+                    this.CurrentAddtion = l;
+                    this.AdditionSearch.KeywordsDisabled = true;
+                    this.CurrentAddtionIndex = 0;
+                },
+                AdditionSearchClear:function(){
+                    this.CurrentAddtion = this.CurrentAddtionBak;
+                    this.AdditionSearch.Keywords = "";
+                    this.AdditionSearch.KeywordsDisabled = false;
+                    this.CurrentAddtionBak = [];
+                    this.CurrentAddtionIndex = 0;
+                },
                 CurrentAddtionIndexChange: function (pi) {
                     this.CurrentAddtionIndex = pi - 1;
                 },

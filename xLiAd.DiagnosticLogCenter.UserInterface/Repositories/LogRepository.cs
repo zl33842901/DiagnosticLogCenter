@@ -126,6 +126,20 @@ namespace xLiAd.DiagnosticLogCenter.UserInterface.Repositories
             return expression;
         }
 
+        private bool ProcessSplits(Log log)
+        {
+            if (!log.IsSplitPart)
+                return false;
+            var repo = GetRepository($"VLarge-{log.HappenTime:yyyy-MM}");
+            var list = repo.Where(x => x.ClientName == log.ClientName && x.EnvironmentName == log.EnvironmentName && x.Guid == log.Guid).OrderBy(x => x.PartIndex).ToList();
+            foreach ( var item in list)
+            {
+                item.PrepareLogForRead();
+                log.Addtions = log.Addtions.Union(item.Addtions).ToArray();
+            }
+            return true;
+        }
+
         public (List<Log>, long) GetLogData(LogLookQuery query, int pageIndex, int pageSize)
         {
             var repo = GetRepository(query);
@@ -136,6 +150,8 @@ namespace xLiAd.DiagnosticLogCenter.UserInterface.Repositories
                 try
                 {
                     i.PrepareLogForRead();
+                    i.AddtionsString = string.Empty;//不发到前端
+                    ProcessSplits(i);
                 }
                 catch { }
             }

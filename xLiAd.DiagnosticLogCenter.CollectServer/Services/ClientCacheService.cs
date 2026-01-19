@@ -33,10 +33,10 @@ namespace xLiAd.DiagnosticLogCenter.CollectServer.Services
             mc.Remove(key);
         }
 
-        private async Task<Clients[]> GetAllClient()
+        private async Task<Clients[]> GetAllClient(bool forceRefresh = false)
         {
             var obj = Get(cache_key) as Clients[];
-            if (obj == null)
+            if (obj == null || forceRefresh)
             {
                 obj = (await clientRepository.AllAsync()).ToArray();
                 Set(cache_key, obj, TimeSpan.FromMinutes(3));
@@ -48,6 +48,11 @@ namespace xLiAd.DiagnosticLogCenter.CollectServer.Services
         {
             var clients = await GetAllClient();
             var client = clients.Where(x => x.Name.Equals(log.ClientName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+            if(client == null)
+            {
+                clients = await GetAllClient(true);
+                client = clients.Where(x => x.Name.Equals(log.ClientName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+            }
             if (client == null)
             {
                 await clientRepository.AddAsync(new Clients()

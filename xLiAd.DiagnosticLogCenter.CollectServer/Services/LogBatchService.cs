@@ -35,13 +35,14 @@ namespace xLiAd.DiagnosticLogCenter.CollectServer.Services
                 if (!log.Id.NullOrEmpty())
                 {
                     logRepository.Update(log);
+                    cacheService.Set("GUID_" + key, log, TimeSpan.FromMinutes(35));
                 }
                 else
                 {
                     log.Id = MongoDB.Bson.ObjectId.GenerateNewId().ToString();
+                    cacheService.Set("GUID_" + key, log, TimeSpan.FromMinutes(35));
                     logRepository.AddLog(log);
                 }
-                cacheService.Set("GUID_" + key, log, TimeSpan.FromMinutes(35));
             }
         }
         public async Task Process(LogDto logDto)

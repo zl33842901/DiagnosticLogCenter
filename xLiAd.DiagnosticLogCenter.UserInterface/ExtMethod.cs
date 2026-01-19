@@ -20,25 +20,25 @@ namespace xLiAd.DiagnosticLogCenter.UserInterface
             var url = "/Log/Look/" + cliEnvDate.ClientName + "/" + cliEnvDate.EnvironmentName + "/" + cliEnvDate.HappenTime.ToString("yyyy-MM-dd");
             return url;
         }
-        public static void PrepareLogForWrite(this Log log)
-        {
-            log.AddtionsString = string.Join(SplitString, log.Addtions.Select(x => x.Content));
-            log.Addtions = log.Addtions.Select(x => new LogAdditionItem() 
-            { 
-                Content = null, 
-                HappenTime = x.HappenTime,
-                StatuCode = x.StatuCode,
-                ClassName = x.ClassName,
-                Parameters = x.Parameters,
-                MethodName = x.MethodName,
-                Message = x.Message,
-                LogType = x.LogType,
-                Ip = x.Ip,
-                DataSource = x.DataSource,
-                CommandText = x.CommandText,
-                Database = x.Database
-            }).ToArray();
-        }
+        //public static void PrepareLogForWrite(this Log log)
+        //{
+        //    log.AddtionsString = string.Join(SplitString, log.Addtions.Select(x => x.Content));
+        //    log.Addtions = log.Addtions.Select(x => new LogAdditionItem() 
+        //    { 
+        //        Content = null, 
+        //        HappenTime = x.HappenTime,
+        //        StatuCode = x.StatuCode,
+        //        ClassName = x.ClassName,
+        //        Parameters = x.Parameters,
+        //        MethodName = x.MethodName,
+        //        Message = x.Message,
+        //        LogType = x.LogType,
+        //        Ip = x.Ip,
+        //        DataSource = x.DataSource,
+        //        CommandText = x.CommandText,
+        //        Database = x.Database
+        //    }).ToArray();
+        //}
         public static void PrepareLogForRead(this Log log)
         {
             if (string.IsNullOrEmpty(log.AddtionsString))

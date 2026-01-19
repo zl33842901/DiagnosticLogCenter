@@ -1,4 +1,5 @@
 ﻿using LinqKit;
+using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using System;
 using System.Collections.Concurrent;
@@ -19,11 +20,37 @@ namespace xLiAd.DiagnosticLogCenter.CollectServer.Repositories
         {
             this.mongoUrl = mongoUrl;
         }
+
+        private bool ProcessSplitLogs(Log[] logs, DateTime happenTime)
+        {
+            var repo = GetRepository($"VLarge-{happenTime:yyyy-MM}");
+            foreach(var log in logs)
+            {
+                if(repo.Any(x => x.Id == log.Id))
+                {
+                    var result = repo.Update(x => x.Id == log.Id,
+                        Builders<Log>.Update
+                        .Set(x => x.AddtionsString, log.AddtionsString)
+                        .Set(x => x.Success, log.Success)
+                        .Set(x => x.TotalMillionSeconds, log.TotalMillionSeconds)
+                        .Set(x => x.Addtions, log.Addtions));
+                }
+                else
+                {
+                    repo.Add(log);
+                }
+            }
+            return true;
+        }
+
         public string AddLog(Log log)
         {
-            log.PrepareLogForWrite();
-            var repo = GetRepository(log);
-            var result = repo.Add(log);
+            var logs = log.PrepareLogForWrite();
+            var nlog = logs.Where(x => x.PartIndex == 0).SingleOrDefault();
+            var otherlogs = logs.Where(x => x.PartIndex > 0).ToArray();
+            var repo = GetRepository(nlog);
+            var result = repo.Add(nlog);
+            ProcessSplitLogs(otherlogs, log.HappenTime);
             return result.Id;
         }
         private MongoRepository<Log> GetRepository(string logTable)
@@ -41,24 +68,39 @@ namespace xLiAd.DiagnosticLogCenter.CollectServer.Repositories
 
         public bool Update(Log log)
         {
-            log.PrepareLogForWrite();
-            var repo = GetRepository(log);
+            var logs = log.PrepareLogForWrite();
+            var nlog = logs.Where(x => x.PartIndex == 0).SingleOrDefault();
+            var otherlogs = logs.Where(x => x.PartIndex > 0).ToArray();
+            var repo = GetRepository(nlog);
             UpdateResult result;
             try
             {
-                result = repo.Update(x => x.Id == log.Id,
-                Builders<Log>.Update
-                .Set(x => x.AddtionsString, log.AddtionsString)
-                .Set(x => x.Success, log.Success)
-                .Set(x => x.TotalMillionSeconds, log.TotalMillionSeconds)
-                .Set(x => x.Addtions, log.Addtions));
+                if(!otherlogs.AnyX() || nlog.Success || nlog.TotalMillionSeconds > 0)
+                {
+                    result = repo.Update(x => x.Id == nlog.Id,
+                    Builders<Log>.Update
+                    .Set(x => x.AddtionsString, nlog.AddtionsString)
+                    .Set(x => x.Success, nlog.Success)
+                    .Set(x => x.IsSplitPart, nlog.IsSplitPart)
+                    .Set(x => x.TotalMillionSeconds, nlog.TotalMillionSeconds)
+                    .Set(x => x.Addtions, nlog.Addtions));
+                }
+                else if(nlog.IsSplitPart)
+                {
+                    result = repo.Update(x => x.Id == nlog.Id,
+                    Builders<Log>.Update
+                    .Set(x => x.IsSplitPart, nlog.IsSplitPart)
+                    .Set(x => x.TotalMillionSeconds, nlog.TotalMillionSeconds));
+                }
+                return ProcessSplitLogs(otherlogs, log.HappenTime);
             }
             catch
             {
-                result = repo.Update(x => x.Id == log.Id,
+                result = repo.Update(x => x.Id == nlog.Id,
                 Builders<Log>.Update
-                .Set(x => x.Success, log.Success)
-                .Set(x => x.TotalMillionSeconds, log.TotalMillionSeconds));
+                .Set(x => x.Success, nlog.Success)
+                .Set(x => x.IsSplitPart, nlog.IsSplitPart)
+                .Set(x => x.TotalMillionSeconds, nlog.TotalMillionSeconds));
             }
             return result.ModifiedCount > 0;
         }

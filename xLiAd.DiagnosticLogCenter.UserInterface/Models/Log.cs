@@ -55,6 +55,16 @@ namespace xLiAd.DiagnosticLogCenter.UserInterface.Models
         public string Guid { get; set; }
 
         public string ParentHttpId { get; set; }
+
+        /// <summary>
+        /// 日志是否由于太大而放到了超大集合里
+        /// </summary>
+        public bool IsSplitPart { get; set; }
+
+        /// <summary>
+        /// 超大集合序号
+        /// </summary>
+        public int PartIndex { get; set; }
     }
     /// <summary>
     /// 追加日志

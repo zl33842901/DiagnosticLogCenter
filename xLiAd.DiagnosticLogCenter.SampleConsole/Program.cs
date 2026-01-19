@@ -17,13 +17,13 @@ namespace xLiAd.DiagnosticLogCenter.SampleConsole
             ServiceCollection services = new ServiceCollection();
             services.AddDiagnosticLog(x =>
             {
-                x.CollectServerAddress = "172.16.101.28:8814";
-                x.ClientName = "abs";
+                x.CollectServerAddress = "127.0.0.1:5000";//172.16.101.28:8814
+                x.ClientName = "TEST";
                 x.EnvName = "DEV";
                 x.RecordHttpClientBody = false;
                 x.RecordSqlParameters = true;
             });
-            services.AddScoped<IDbConnection>(x => new SqlConnection("server=127.0.0.1;user id=sa;password=zhanglei;database=zhanglei;"));
+            services.AddScoped<IDbConnection>(x => new SqlConnection("server=172.16.101.138;user id=Developer;password=ZAQ!zaq1;database=APF2;"));
             var sp = services.BuildServiceProvider();
             var ss = sp.GetService<IEnumerable<IHostedService>>();
             foreach (var s in ss)
@@ -37,7 +37,16 @@ namespace xLiAd.DiagnosticLogCenter.SampleConsole
                 dlg.BeginRequest();
                 var db = serviceProvider.GetService<IDbConnection>();
                 var repo = new Repository<Student>(db);
-                var rst = repo.Where(x => x.Id == 2);
+
+                for(var j = 0; j < 10000; j++)
+                {
+                    var rst = repo.Where(x => x.Id == 2);
+                    if(j % 1000 == 0)
+                    {
+                        System.Threading.Thread.Sleep(1000);
+                    }
+                }
+
                 if (i == 0)
                     dlg.EndRequest();
                 else
