@@ -24,10 +24,10 @@ import java.util.UUID;
 @Component
 public class HttpServletDiagnosticProcessor implements Filter, ITracingDiagnosticProcessor {
 
-    public static final String TRACE_ID_NAME = "x-diagnostic-trace-id";
-    public static final String PAGE_ID_NAME = "x-diagnostic-page-id";
-    public static final String PARENT_GUID_NAME = "x-diagnostic-parent-guid";
-    public static final String PARENT_HTTP_ID_NAME = "x-diagnostic-parent-http-id";
+    public static final String TRACE_ID_NAME = "Trace-Id";
+    public static final String PAGE_ID_NAME = "Page-Id";
+    public static final String PARENT_GUID_NAME = "Guid";
+    public static final String PARENT_HTTP_ID_NAME = "Parent-Http-Id";
 
     public HttpServletDiagnosticProcessor() {
         System.out.println("=== HttpServletDiagnosticProcessor 实例化 ===");
