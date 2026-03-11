@@ -187,11 +187,11 @@ public class PostHelper {
                 .toInstant()                          // 转换为UTC时间戳（会自动减去8小时）
                 .toEpochMilli();
         // 验证
-        System.out.println("=== Time Conversion ===");
-        System.out.println("Original LocalDateTime (Asia/Shanghai): " + happenTime);
-        System.out.println("Timestamp: " + timestamp);
-        System.out.println("Converted back to Asia/Shanghai: " +
-                Instant.ofEpochMilli(timestamp).atZone(ZoneId.of("Asia/Shanghai")).toLocalDateTime());
+//        System.out.println("=== Time Conversion ===");
+//        System.out.println("Original LocalDateTime (Asia/Shanghai): " + happenTime);
+//        System.out.println("Timestamp: " + timestamp);
+//        System.out.println("Converted back to Asia/Shanghai: " +
+//                Instant.ofEpochMilli(timestamp).atZone(ZoneId.of("Asia/Shanghai")).toLocalDateTime());
 
         // 构建 LogDtoItem
         LogDtoItem logDtoItem = LogDtoItem.newBuilder()

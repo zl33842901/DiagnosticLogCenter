@@ -107,6 +107,14 @@ public class DiagnosticLogAutoConfiguration {
         return new HttpClientDiagnosticProcessor();
     }
 
+    // 新增：Apache HttpClient 5.x 处理器
+    @Bean
+    @ConditionalOnMissingBean
+    @ConditionalOnProperty(prefix = "diagnostic.log", name = "enable-httpclient", havingValue = "true", matchIfMissing = true)
+    public ApacheHttpClient5DiagnosticProcessor apacheHttpClient5DiagnosticProcessor() {
+        return new ApacheHttpClient5DiagnosticProcessor();
+    }
+
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnProperty(prefix = "diagnostic.log", name = "enable-method", havingValue = "true", matchIfMissing = true)
