@@ -1,0 +1,76 @@
+{
+  "groups": [
+    {
+      "name": "diagnostic.log",
+      "type": "com.xliad.diagnosticlogcenter.agent.config.DiagnosticLogProperties",
+      "sourceType": "com.xliad.diagnosticlogcenter.agent.config.DiagnosticLogProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "diagnostic.log.enable",
+      "type": "java.lang.Boolean",
+      "description": "是否启用诊断日志",
+      "defaultValue": true
+    },
+    {
+      "name": "diagnostic.log.enable-aspnetcore",
+      "type": "java.lang.Boolean",
+      "description": "是否启用HTTP请求跟踪",
+      "defaultValue": true
+    },
+    {
+      "name": "diagnostic.log.enable-httpclient",
+      "type": "java.lang.Boolean",
+      "description": "是否启用HTTP客户端跟踪",
+      "defaultValue": true
+    },
+    {
+      "name": "diagnostic.log.enable-sqlclient",
+      "type": "java.lang.Boolean",
+      "description": "是否启用SQL跟踪",
+      "defaultValue": true
+    },
+    {
+      "name": "diagnostic.log.enable-method",
+      "type": "java.lang.Boolean",
+      "description": "是否启用方法跟踪",
+      "defaultValue": true
+    },
+    {
+      "name": "diagnostic.log.enable-system-log",
+      "type": "java.lang.Boolean",
+      "description": "是否启用系统日志",
+      "defaultValue": true
+    },
+    {
+      "name": "diagnostic.log.record-sql-parameters",
+      "type": "java.lang.Boolean",
+      "description": "是否记录SQL参数",
+      "defaultValue": true
+    },
+    {
+      "name": "diagnostic.log.record-httpclient-body",
+      "type": "java.lang.Boolean",
+      "description": "是否记录HTTP客户端请求/响应体",
+      "defaultValue": true
+    },
+    {
+      "name": "diagnostic.log.collect-server-address",
+      "type": "java.lang.String",
+      "description": "日志收集服务器地址"
+    },
+    {
+      "name": "diagnostic.log.client-name",
+      "type": "java.lang.String",
+      "description": "客户端名称",
+      "defaultValue": "Sample"
+    },
+    {
+      "name": "diagnostic.log.env-name",
+      "type": "java.lang.String",
+      "description": "环境名称",
+      "defaultValue": "PRD"
+    }
+  ]
+}

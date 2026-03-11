@@ -67,4 +67,5 @@
 /xLiAd.DiagnosticLogCenter.Agent/xLiAd.DiagnosticLogCenter.Agent.csproj.user
 /xLiAd.DiagnosticLogCenter.CollectServerBoth/xLiAd.DiagnosticLogCenter.CollectServerBoth.csproj.user
 *.user
-
+/DiagnosticLogCenter-Java/.idea/
+/DiagnosticLogCenter-Java/target/
