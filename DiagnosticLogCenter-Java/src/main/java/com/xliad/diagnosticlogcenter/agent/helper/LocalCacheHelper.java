@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Stream;
 
 public class LocalCacheHelper {
     private String realSavePath;
@@ -91,15 +92,20 @@ public class LocalCacheHelper {
 
         try {
             Path dir = Paths.get(realSavePath);
-            Optional<Path> oldestFile = Files.list(dir)
-                    .filter(p -> p.toString().endsWith(".dlc"))
-                    .min((p1, p2) -> {
-                        try {
-                            return Files.getLastModifiedTime(p1).compareTo(Files.getLastModifiedTime(p2));
-                        } catch (IOException e) {
-                            return 0;
-                        }
-                    });
+
+            // 使用 try-with-resources 确保 Stream 被关闭
+            Optional<Path> oldestFile;
+            try (Stream<Path> stream = Files.list(dir)) {
+                oldestFile = stream
+                        .filter(p -> p.toString().endsWith(".dlc"))
+                        .min((p1, p2) -> {
+                            try {
+                                return Files.getLastModifiedTime(p1).compareTo(Files.getLastModifiedTime(p2));
+                            } catch (IOException e) {
+                                return 0;
+                            }
+                        });
+            }  // ← 这里 Stream 会自动关闭
 
             if (oldestFile.isPresent()) {
                 Path file = oldestFile.get();

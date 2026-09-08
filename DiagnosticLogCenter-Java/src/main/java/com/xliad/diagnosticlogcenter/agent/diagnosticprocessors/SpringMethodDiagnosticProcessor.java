@@ -1,5 +1,6 @@
 package com.xliad.diagnosticlogcenter.agent.diagnosticprocessors;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xliad.diagnosticlogcenter.abstracts.LogEntity;
 import com.xliad.diagnosticlogcenter.abstracts.LogTypeEnum;
 import com.xliad.diagnosticlogcenter.agent.GuidHolder;
@@ -41,9 +42,14 @@ public class SpringMethodDiagnosticProcessor implements ITracingDiagnosticProces
         String methodName = pjp.getSignature().getName();
         String operationId = UUID.randomUUID().toString();
 
+        // 获取方法参数
+        Object[] args = pjp.getArgs();
+        String methodParams = formatMethodParams(args);
+
         // 记录方法进入
         LogEntity entryLog = createMethodLog(className, methodName, operationId);
         entryLog.setLogType(LogTypeEnum.METHOD_ENTRY);
+        entryLog.setStackTrace(methodParams);
         PostHelper.processLog(entryLog);
 
         try {
@@ -65,6 +71,33 @@ public class SpringMethodDiagnosticProcessor implements ITracingDiagnosticProces
             PostHelper.processLog(errorLog);
 
             throw e;
+        }
+    }
+
+    // 格式化参数
+    private String formatMethodParams(Object[] args) {
+        if (args == null || args.length == 0) {
+            return "[]";
+        }
+
+        try {
+            // 使用 Jackson 或 Gson 转换
+            return new ObjectMapper().writeValueAsString(args);
+        } catch (Exception e) {
+            // 如果序列化失败，使用简单的 toString
+            StringBuilder sb = new StringBuilder("[");
+            for (int i = 0; i < args.length; i++) {
+                if (i > 0) sb.append(", ");
+                if (args[i] != null) {
+                    sb.append(args[i].getClass().getSimpleName())
+                            .append(": ")
+                            .append(args[i].toString());
+                } else {
+                    sb.append("null");
+                }
+            }
+            sb.append("]");
+            return sb.toString();
         }
     }
 

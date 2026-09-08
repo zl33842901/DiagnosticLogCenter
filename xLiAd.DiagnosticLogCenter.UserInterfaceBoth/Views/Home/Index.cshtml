@@ -54,6 +54,7 @@
         <template slot-scope="scope">
             <span style="margin-left: 1px">
                 <a :href="scope.row.LookUrl" target="_blank" v-if="scope.row.Exist">查看</a>
+                <a :href="scope.row.LookUrl.substring(0, scope.row.LookUrl.lastIndexOf('/')).replace('/Look/','/LookMultiDate/')" target="_blank" v-if="scope.row.Exist">多天检索</a>
                 <a :href="scope.row.DownUrl" target="_blank" v-if="scope.row.Exist">下载</a>
             </span>
         </template>

@@ -36,6 +36,15 @@ namespace xLiAd.DiagnosticLogCenter.UserInterface.Controllers
             ViewBag.Key = key;
             return View();
         }
+        // GET: /<controller>/
+        [Route("[controller]/[action]/{ClientName}/{EnvName}")]
+        public IActionResult LookMultiDate(string ClientName, string EnvName, string key)
+        {
+            ViewBag.ClientName = ClientName;
+            ViewBag.EnvName = EnvName;
+            ViewBag.Key = key;
+            return View();
+        }
         [HttpPost]
         public async Task<IActionResult> Look(LogLookQuery query)
         {
@@ -54,6 +63,40 @@ namespace xLiAd.DiagnosticLogCenter.UserInterface.Controllers
                 return Json(new { Success = false, Message = ex.Message, ex.StackTrace });
             }
         }
+        [HttpPost]
+        public async Task<IActionResult> LookMultiDate(LogLookQuery query)
+        {
+            try
+            {
+                if(query.HappenTimeRegion == null || !query.HappenTimeRegion.Any())
+                    return Json(new { Succes = false, Message = "请指定查询日期" });
+                if (query.Key.NullOrEmpty())
+                    return Json(new { Succes = false, Message = "请指定关键字" });
+                var client = (await configService.GetAllClients()).Where(x => x.Name == query.ClientName).FirstOrDefault();
+                if (client == null)
+                    return Json(new { Succes = false, Message = "未找到此客户端配置" });
+                var p = query.GetIndexName();
+                var start = query.HappenTimeRegion.FirstOrDefault();
+                var end = query.HappenTimeRegion.LastOrDefault();
+                List<Log> result = new List<Log>();
+                var curDate = start.Date;
+                while(curDate <= end.Date)
+                {
+                    query.HappenTime = curDate;
+                    query.HappenTimeRegion = new DateTime[0];
+                    (var l, var count) = logService.GetLogData(query, 1, 10000);
+                    l.ProcessEndAndException();
+                    result.AddRange(l);
+                    curDate = curDate.AddDays(1);
+                }
+                return Json(new { Succes = true, Items = result, Total = result.Count });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Success = false, Message = ex.Message, ex.StackTrace });
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> GetTracePageExist(string traceId, string pageId, string guid, DateTime happenTime)
         {

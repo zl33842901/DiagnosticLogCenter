@@ -19,6 +19,7 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.boot.version>3.4.3</spring.boot.version> <!-- 升级到 Spring Boot 3.x -->
+        <spring.framework.version>6.1.14</spring.framework.version>
         <slf4j.version>2.0.16</slf4j.version> <!-- 升级 SLF4J -->
         <jackson.version>2.18.2</jackson.version> <!-- 升级 Jackson -->
         <okhttp.version>4.12.0</okhttp.version> <!-- 升级 OkHttp -->
@@ -177,6 +178,20 @@
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
             <version>${protobuf.version}</version>
+        </dependency>
+        <!-- 确保 Spring Web 完整依赖 -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.framework.version}</version>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- 显式添加 multipart 支持 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 

@@ -363,8 +363,19 @@ public class SqlClientDiagnosticAspect {
 
         private void errorExecute(Exception e) {
             try {
+                // 打印完整的异常链
+                System.err.println("SQL Execution Error: " + e.getMessage());
+                e.printStackTrace();  // 这会打印完整的堆栈
+
+                // 获取根本原因
+                Throwable cause = e.getCause();
+                if (cause != null) {
+                    System.err.println("Caused by: " + cause.getMessage());
+                    cause.printStackTrace();
+                }
                 LogEntity log = new LogEntity();
-                log.setMessage(e.getMessage());
+                log.setMessage(e.getMessage() + (cause != null ? " | Caused by: " + cause.getMessage() : ""));
+                //log.setMessage(e.getMessage());
                 log.setStackTrace(getStackTraceAsString(e));
                 log.setLogType(LogTypeEnum.SQL_EXCEPTION);
                 log.setHappenTime(LocalDateTime.now());
